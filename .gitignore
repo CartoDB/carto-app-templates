@@ -1,5 +1,8 @@
 node_modules
 
+sandbox/*
+!sandbox/.gitkeep
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
