@@ -61,21 +61,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carto/create-angular@workspace:packages/create-carto-angular":
+"@carto/create-angular@workspace:templates/create-carto-angular":
   version: 0.0.0-use.local
-  resolution: "@carto/create-angular@workspace:packages/create-carto-angular"
+  resolution: "@carto/create-angular@workspace:templates/create-carto-angular"
   languageName: unknown
   linkType: soft
 
-"@carto/create-react@workspace:packages/create-carto-react":
+"@carto/create-react@workspace:templates/create-carto-react":
   version: 0.0.0-use.local
-  resolution: "@carto/create-react@workspace:packages/create-carto-react"
+  resolution: "@carto/create-react@workspace:templates/create-carto-react"
   languageName: unknown
   linkType: soft
 
-"@carto/create-vue@workspace:packages/create-carto-vue":
+"@carto/create-vue@workspace:templates/create-carto-vue":
   version: 0.0.0-use.local
-  resolution: "@carto/create-vue@workspace:packages/create-carto-vue"
+  resolution: "@carto/create-vue@workspace:templates/create-carto-vue"
   dependencies:
     "@tsconfig/node20": "npm:^20.1.4"
     "@types/node": "npm:^20.14.5"
@@ -87,6 +87,8 @@ __metadata:
     vue: "npm:^3.4.29"
     vue-router: "npm:^4.3.3"
     vue-tsc: "npm:^2.0.21"
+  bin:
+    create-vue: ./scripts/create.js
   languageName: unknown
   linkType: soft
 

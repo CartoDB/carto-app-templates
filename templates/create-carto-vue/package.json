@@ -3,6 +3,7 @@
   "packageManager": "yarn@4.2.2",
   "version": "0.0.0",
   "type": "module",
+  "bin": "./scripts/create.js",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
