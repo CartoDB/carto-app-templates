@@ -131,7 +131,7 @@ html, body {
  */
 
 .map {
-    background: var(--secondary-color);
+    position: relative;
 }
 
 /******************************************************************************

@@ -10,8 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@carto/api-client": "^0.0.1-2",
+    "@deck.gl/aggregation-layers": "^9.0.24",
+    "@deck.gl/carto": "^9.0.24",
+    "@deck.gl/core": "^9.0.24",
+    "@deck.gl/extensions": "^9.0.24",
+    "@deck.gl/geo-layers": "^9.0.24",
+    "@deck.gl/json": "^9.0.24",
+    "@deck.gl/layers": "^9.0.24",
+    "@deck.gl/mesh-layers": "^9.0.24",
+    "@deck.gl/react": "^9.0.24",
+    "@loaders.gl/core": "^4.2.2",
+    "@luma.gl/core": "^9.0.16",
+    "maplibre-gl": "^4.5.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-map-gl": "^7.1.7"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

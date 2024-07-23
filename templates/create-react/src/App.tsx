@@ -1,37 +1,6 @@
-import { createContext, useContext } from 'react'
-import cartoLogo from '/carto.svg'
-
-interface AppContextProps {
-  title: string,
-  logo?: {
-    src: string,
-    alt: string,
-  },
-  pages: { name: string, href: string }[],
-  theme: {
-    textColor: string,
-    backgroundColor: string,
-    primaryColor: string,
-    secondaryColor: string,
-  },
-}
-
-const DEFAULT_APP_CONTEXT = {
-  title: /* replace:title:begin */'Untitled'/* replace:title:end */,
-  logo: {
-    src: cartoLogo,
-    alt: 'CARTO logo',
-  },
-  pages: [{name: 'default', href: '/'}],
-  theme: {
-    textColor: '#000000',
-    backgroundColor: '#FFFFFF',
-    primaryColor: '#162945',
-    secondaryColor: '#45546A',
-  },
-};
-
-const AppContext = createContext<AppContextProps>(DEFAULT_APP_CONTEXT)
+import { useContext } from 'react'
+import { AppContext, DEFAULT_APP_CONTEXT } from './context'
+import { Map } from './components/Map'
 
 function App() {
   const context = useContext(AppContext)
@@ -52,7 +21,9 @@ function App() {
         </header>
         <div className="container">
           <aside className="sidebar"></aside>
-          <main className="map"></main>
+          <main className="map">
+            <Map />
+          </main>
         </div>
       </AppContext.Provider>
     </>
