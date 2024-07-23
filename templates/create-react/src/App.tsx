@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createContext, useContext } from 'react'
+import cartoLogo from '/carto.svg'
+
+interface AppContextProps {
+  title: string,
+  logo?: {
+    src: string,
+    alt: string,
+  },
+  pages: { name: string, href: string }[],
+  theme: {
+    textColor: string,
+    backgroundColor: string,
+    primaryColor: string,
+    secondaryColor: string,
+  },
+}
+
+const DEFAULT_APP_CONTEXT = {
+  title: /* replace:title:begin */'Untitled'/* replace:title:end */,
+  logo: {
+    src: cartoLogo,
+    alt: 'CARTO logo',
+  },
+  pages: [{name: 'default', href: '/'}],
+  theme: {
+    textColor: '#000000',
+    backgroundColor: '#FFFFFF',
+    primaryColor: '#162945',
+    secondaryColor: '#45546A',
+  },
+};
+
+const AppContext = createContext<AppContextProps>(DEFAULT_APP_CONTEXT)
 
 function App() {
-  const [count, setCount] = useState(0)
+  const context = useContext(AppContext)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AppContext.Provider value={DEFAULT_APP_CONTEXT}>
+        <header className="header">
+          {context.logo && <img className="header-logo" src={context.logo.src} alt={context.logo.alt} />}
+          <span className="header-text">
+              {context.title}
+          </span>
+          <nav className="header-nav">
+            <ul>
+              {context.pages.length > 1 && context.pages.map(({ name, href }) => <a href={href}>{name}</a>)}
+            </ul>
+          </nav>
+        </header>
+        <div className="container">
+          <aside className="sidebar"></aside>
+          <main className="map"></main>
+        </div>
+      </AppContext.Provider>
     </>
   )
 }
