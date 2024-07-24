@@ -1,6 +1,13 @@
 {
   "name": "@carto/create-react",
-  "private": true,
+  "description": "Template for creating CARTO applications in React",
+  "repository": "github:CartoDB/carto-app-templates",
+  "author": "Don McCurdy <donmccurdy@carto.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -22,6 +29,7 @@
     "@deck.gl/react": "^9.0.24",
     "@loaders.gl/core": "^4.2.2",
     "@luma.gl/core": "^9.0.16",
+    "@luma.gl/engine": "^9.0.16",
     "maplibre-gl": "^4.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
