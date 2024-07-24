@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../context";
 
 import {Map as Basemap} from 'react-map-gl/maplibre';
@@ -13,8 +13,8 @@ const MAP_STYLE =
 
 export function Map() {
   const context = useContext(AppContext)
+  const [attributionHTML, setAttributionHTML] = useState('');
   // const [viewState, setViewState] = useState({...context.viewState});
-  // const [attributionHTML, setAttributionHTML] = useState('');
 
   // Update sources.
   const data = useMemo(() => {
@@ -37,9 +37,9 @@ export function Map() {
     ];
   }, [data]);
 
-  // useEffect(() => {
-  //   data?.then(({attribution}) => setAttributionHTML(attribution));
-  // }, [data]);
+  useEffect(() => {
+    data?.then(({attribution}) => setAttributionHTML(attribution));
+  }, [data]);
 
   return <DeckGL
     layers={layers}
@@ -49,5 +49,9 @@ export function Map() {
     // onViewStateChange={({viewState}) => setViewState(viewState)}
   >
     <Basemap reuseMaps mapStyle={MAP_STYLE} />
+    <footer
+      className="map-footer"
+      dangerouslySetInnerHTML={{__html: attributionHTML}}
+    ></footer>
   </DeckGL>
 }
