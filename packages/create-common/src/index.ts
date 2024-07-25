@@ -106,6 +106,14 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         type: 'text',
         message: 'Base URL for CARTO API (optional)',
       },
+      {
+        name: 'basemap',
+        type: 'toggle',
+        message: 'Basemap',
+        inactive: 'maplibre',
+        active: 'google maps',
+        initial: false, // maplibre
+      },
     ],
     {
       onCancel: () => {
@@ -142,7 +150,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   pkg.private = true;
   await writeFile(pkgPath, JSON.stringify(pkg, null, 2));
 
-  // TODO(feat): Populate title, access token, and api base URL.
+  // TODO(feat): Populate config data.
 
   // Create empty yarn.lock. Required when working in sandbox/.
   await writeFile(resolve(targetDir, 'yarn.lock'), '');
