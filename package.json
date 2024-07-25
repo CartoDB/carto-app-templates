@@ -9,8 +9,8 @@
     "dev": "lerna run dev",
     "build": "lerna run build",
     "lint": "lerna run lint",
-    "preview": "lerna run preview",
-    "clean": "lerna run clean"
+    "test": "lerna run test",
+    "clean": "rimraf --glob packages/*/build/* sandbox/*"
   },
   "devDependencies": {
     "@types/meow": "^6.0.0",
@@ -20,6 +20,7 @@
     "lerna": "^8.1.6",
     "meow": "^13.2.0",
     "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   },
