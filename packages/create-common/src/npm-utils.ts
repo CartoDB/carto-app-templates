@@ -1,0 +1,53 @@
+/******************************************************************************
+ * NPM utilities.
+ */
+
+// Source: https://github.com/vitejs/vite/blob/main/packages/create-vite/src/index.ts
+const VALIDATE_PKG_NAME_REGEX =
+  /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/;
+
+export function toValidPackageName(projectName: string) {
+  if (VALIDATE_PKG_NAME_REGEX.test(projectName)) {
+    return projectName;
+  }
+
+  return projectName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/^[._]/, "")
+    .replace(/[^a-z\d\-~]+/g, "-");
+}
+
+export function removePkgDependencies<T extends Record<string, unknown>>(
+  pkg: T,
+  excludeDeps: string[],
+): T {
+  const dependencyTypes = [
+    "dependencies",
+    "devDependencies",
+    "optionalDependencies",
+    "peerDependencies",
+  ];
+
+  for (const exclude of excludeDeps) {
+    for (const type of dependencyTypes) {
+      const dependencies = pkg[type] as Record<string, string> | undefined;
+      if (dependencies && dependencies[exclude]) {
+        delete dependencies[exclude];
+      }
+    }
+  }
+
+  return pkg;
+}
+
+export function removePkgFields<T extends Record<string, unknown>>(
+  pkg: T,
+  excludeFields: string[],
+): T {
+  for (const field of excludeFields) {
+    delete pkg[field];
+  }
+  return pkg;
+}
