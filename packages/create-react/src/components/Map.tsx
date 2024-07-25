@@ -1,20 +1,23 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { AppContext } from "../context";
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { AppContext } from '../context';
 
-import {Map as Basemap} from 'react-map-gl/maplibre';
+import { Map as Basemap } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
-import { MapView } from "@deck.gl/core";
+import { MapView } from '@deck.gl/core';
 import { VectorTileLayer } from '@deck.gl/carto';
 import { vectorTableSource } from '@carto/api-client';
 
-const MAP_VIEW = new MapView({repeat: true});
+const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
 export function Map() {
-  const context = useContext(AppContext)
+  const context = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
   // const [viewState, setViewState] = useState({...context.viewState});
+
+  // TODO: the challenge with colocating Map, sources, and layers will be
+  // that now we need to duplicate the entire component for each view.
 
   // Update sources.
   const data = useMemo(() => {
@@ -38,20 +41,22 @@ export function Map() {
   }, [data]);
 
   useEffect(() => {
-    data?.then(({attribution}) => setAttributionHTML(attribution));
+    data?.then(({ attribution }) => setAttributionHTML(attribution));
   }, [data]);
 
-  return <DeckGL
-    layers={layers}
-    views={MAP_VIEW}
-    initialViewState={context.viewState}
-    controller={{dragRotate: false}}
-    // onViewStateChange={({viewState}) => setViewState(viewState)}
-  >
-    <Basemap reuseMaps mapStyle={MAP_STYLE} />
-    <footer
-      className="map-footer"
-      dangerouslySetInnerHTML={{__html: attributionHTML}}
-    ></footer>
-  </DeckGL>
+  return (
+    <DeckGL
+      layers={layers}
+      views={MAP_VIEW}
+      initialViewState={context.viewState}
+      controller={{ dragRotate: false }}
+      // onViewStateChange={({viewState}) => setViewState(viewState)}
+    >
+      <Basemap reuseMaps mapStyle={MAP_STYLE} />
+      <footer
+        className="map-footer"
+        dangerouslySetInnerHTML={{ __html: attributionHTML }}
+      ></footer>
+    </DeckGL>
+  );
 }
