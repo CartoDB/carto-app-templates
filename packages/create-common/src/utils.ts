@@ -1,5 +1,5 @@
-import { rm, stat, copyFile, mkdir, readdir } from "node:fs/promises";
-import { resolve } from "node:path";
+import { rm, stat, copyFile, mkdir, readdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 /******************************************************************************
  * Disk utilities.
@@ -27,12 +27,12 @@ export async function copyDir(srcDir: string, destDir: string): Promise<void> {
 
 export async function isEmpty(path: string): Promise<boolean> {
   const files = await readdir(path);
-  return files.length === 0 || (files.length === 1 && files[0] === ".git");
+  return files.length === 0 || (files.length === 1 && files[0] === '.git');
 }
 
 export async function emptyDir(dir: string): Promise<void> {
   for (const file of await readdir(dir)) {
-    if (file === ".git") {
+    if (file === '.git') {
       continue;
     }
     await rm(resolve(dir, file), { recursive: true, force: true });
@@ -55,9 +55,9 @@ export function toValidPkgName(projectName: string) {
   return projectName
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/^[._]/, "")
-    .replace(/[^a-z\d\-~]+/g, "-");
+    .replace(/\s+/g, '-')
+    .replace(/^[._]/, '')
+    .replace(/[^a-z\d\-~]+/g, '-');
 }
 
 export function removePkgDependencies<T extends Record<string, unknown>>(
@@ -65,10 +65,10 @@ export function removePkgDependencies<T extends Record<string, unknown>>(
   excludeDeps: string[],
 ): T {
   const dependencyTypes = [
-    "dependencies",
-    "devDependencies",
-    "optionalDependencies",
-    "peerDependencies",
+    'dependencies',
+    'devDependencies',
+    'optionalDependencies',
+    'peerDependencies',
   ];
 
   for (const exclude of excludeDeps) {

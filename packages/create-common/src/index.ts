@@ -1,8 +1,8 @@
-import { existsSync } from "node:fs";
-import { rm, readFile, writeFile, mkdir } from "node:fs/promises";
-import { resolve } from "node:path";
-import prompts from "prompts";
-import { green, bold, dim, yellow } from "kolorist";
+import { existsSync } from 'node:fs';
+import { rm, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import prompts from 'prompts';
+import { green, bold, dim, yellow } from 'kolorist';
 import {
   copyDir,
   emptyDir,
@@ -10,30 +10,30 @@ import {
   removePkgDependencies,
   removePkgFields,
   toValidPkgName,
-} from "./utils";
+} from './utils';
 
 /** List of relative paths in the template to be _removed_ from new projects. */
-const TEMPLATE_EXCLUDE_PATHS = ["node_modules", "scripts"];
+const TEMPLATE_EXCLUDE_PATHS = ['node_modules', 'scripts'];
 
 /** List of dependencies in the template to be _removed_ from new projects. */
-const TEMPLATE_EXCLUDE_DEPS = ["@carto/create-common"];
+const TEMPLATE_EXCLUDE_DEPS = ['@carto/create-common'];
 
 /**
  * List of package.json fields to clear from new projects.
  * See: https://docs.npmjs.com/cli/v10/configuring-npm/package-json
  */
 const TEMPLATE_EXCLUDE_PKG_FIELDS = [
-  "author",
-  "bin",
-  "bugs",
-  "description",
-  "files",
-  "homepage",
-  "keywords",
-  "license",
-  "publishConfig",
-  "repository",
-  "version",
+  'author',
+  'bin',
+  'bugs',
+  'description',
+  'files',
+  'homepage',
+  'keywords',
+  'license',
+  'publishConfig',
+  'repository',
+  'version',
 ];
 
 /**
@@ -49,11 +49,11 @@ export async function createProject(
   const targetDir = resolve(process.cwd(), inputTargetDir);
 
   console.log(`
-${green("✔")} ${bold("Template directory")} ${dim("…")} ${templateDir}
-${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
+${green('✔')} ${bold('Template directory')} ${dim('…')} ${templateDir}
+${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   `);
 
-  console.log(dim("…\n"));
+  console.log(dim('…\n'));
 
   /****************************************************************************
    * Validate target directory.
@@ -68,8 +68,8 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
   if (existsSync(targetDir) && !isEmpty(targetDir)) {
     const { overwrite } = await prompts([
       {
-        type: "confirm",
-        name: "overwrite",
+        type: 'confirm',
+        name: 'overwrite',
         message: `Target directory "${targetDir}" is not empty. Overwrite?`,
       },
     ]);
@@ -89,22 +89,22 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
   const config = await prompts(
     [
       {
-        name: "title",
-        type: "text",
-        message: "Title for the application",
-        validate: (text) => (text.length === 0 ? "Title is required" : true),
+        name: 'title',
+        type: 'text',
+        message: 'Title for the application',
+        validate: (text) => (text.length === 0 ? 'Title is required' : true),
       },
       {
-        name: "accessToken",
-        type: "password",
-        message: "Access token for CARTO API",
+        name: 'accessToken',
+        type: 'password',
+        message: 'Access token for CARTO API',
         validate: (text) =>
-          text.length === 0 ? "Access token is required" : true,
+          text.length === 0 ? 'Access token is required' : true,
       },
       {
-        name: "apiBaseUrl",
-        type: "text",
-        message: "Base URL for CARTO API (optional)",
+        name: 'apiBaseUrl',
+        type: 'text',
+        message: 'Base URL for CARTO API (optional)',
       },
     ],
     {
@@ -115,7 +115,7 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
     },
   );
 
-  console.log(dim("\n…"));
+  console.log(dim('\n…'));
 
   /****************************************************************************
    * Populate project directory.
@@ -134,8 +134,8 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
   }
 
   // Set up package.json.
-  const pkgPath = resolve(targetDir, "package.json");
-  const pkg = JSON.parse(await readFile(pkgPath, "utf8"));
+  const pkgPath = resolve(targetDir, 'package.json');
+  const pkg = JSON.parse(await readFile(pkgPath, 'utf8'));
   removePkgDependencies(pkg, TEMPLATE_EXCLUDE_DEPS);
   removePkgFields(pkg, TEMPLATE_EXCLUDE_PKG_FIELDS);
   pkg.name = toValidPkgName(config.title);
@@ -145,20 +145,20 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
   // TODO(feat): Populate title, access token, and api base URL.
 
   // Create empty yarn.lock. Required when working in sandbox/.
-  await writeFile(resolve(targetDir, "yarn.lock"), "");
+  await writeFile(resolve(targetDir, 'yarn.lock'), '');
 
   // Suggest next steps
   const steps = [
-    ...(inputTargetDir !== "." ? [`${dim("$")} cd ${inputTargetDir}`] : []),
-    `${dim("$")} yarn`,
-    `${dim("$")} yarn dev`,
+    ...(inputTargetDir !== '.' ? [`${dim('$')} cd ${inputTargetDir}`] : []),
+    `${dim('$')} yarn`,
+    `${dim('$')} yarn dev`,
   ];
 
   console.log(`
-${green("✔")} ${bold(`Project "${config.title}" was created!`)}
+${green('✔')} ${bold(`Project "${config.title}" was created!`)}
 
-${bold(yellow("!"))} ${bold("Next steps")}:
+${bold(yellow('!'))} ${bold('Next steps')}:
 
-${steps.join("\n")}
+${steps.join('\n')}
   `);
 }
