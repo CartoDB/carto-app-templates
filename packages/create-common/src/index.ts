@@ -4,11 +4,13 @@ import { resolve } from "node:path";
 import prompts from "prompts";
 import { green, bold, dim, yellow } from "kolorist";
 import {
+  copyDir,
+  emptyDir,
+  isEmpty,
   removePkgDependencies,
   removePkgFields,
   toValidPkgName,
-} from "./npm-utils";
-import { copyDir, emptyDir, isEmpty } from "./disk-utils";
+} from "./utils";
 
 /** List of relative paths in the template to be _removed_ from new projects. */
 const TEMPLATE_EXCLUDE_PATHS = ["node_modules", "scripts"];

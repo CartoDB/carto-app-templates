@@ -1,12 +1,12 @@
 {
-  "include": ["packages/*/src/**/*.ts", "templates/*/src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["es2022", "DOM", "DOM.Iterable"],
+    "lib": ["es2022"],
     "strict": true
   }
 }
