@@ -6,7 +6,7 @@ import { green, bold, dim, yellow } from "kolorist";
 import {
   removePkgDependencies,
   removePkgFields,
-  toValidPackageName,
+  toValidPkgName,
 } from "./npm-utils";
 import { copyDir, emptyDir, isEmpty } from "./disk-utils";
 
@@ -134,13 +134,16 @@ ${green("✔")} ${bold("Target directory")} ${dim("…")} ${targetDir}
   // Set up package.json.
   const pkgPath = resolve(targetDir, "package.json");
   const pkg = JSON.parse(await readFile(pkgPath, "utf8"));
-
   removePkgDependencies(pkg, TEMPLATE_EXCLUDE_DEPS);
   removePkgFields(pkg, TEMPLATE_EXCLUDE_PKG_FIELDS);
-  pkg.name = toValidPackageName(config.title);
+  pkg.name = toValidPkgName(config.title);
   pkg.private = true;
-
   await writeFile(pkgPath, JSON.stringify(pkg, null, 2));
+
+  // TODO(feat): Populate title, access token, and api base URL.
+
+  // Create empty yarn.lock. Required when working in sandbox/.
+  await writeFile(resolve(targetDir, "yarn.lock"), "");
 
   // Suggest next steps
   const steps = [

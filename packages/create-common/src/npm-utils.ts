@@ -6,7 +6,7 @@
 const VALIDATE_PKG_NAME_REGEX =
   /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/;
 
-export function toValidPackageName(projectName: string) {
+export function toValidPkgName(projectName: string) {
   if (VALIDATE_PKG_NAME_REGEX.test(projectName)) {
     return projectName;
   }
