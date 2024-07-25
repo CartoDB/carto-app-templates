@@ -3,20 +3,23 @@
   "private": true,
   "packageManager": "yarn@4.2.2",
   "workspaces": [
-    "packages/*",
-    "templates/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
     "lint": "lerna run lint",
-    "preview": "lerna run preview"
+    "preview": "lerna run preview",
+    "clean": "lerna run clean"
   },
   "devDependencies": {
+    "@types/meow": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "eslint": "^8.57.0",
     "lerna": "^8.1.6",
+    "meow": "^13.2.0",
+    "prettier": "^3.3.3",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   },

@@ -2,6 +2,7 @@
   "name": "@carto/create-common",
   "packageManager": "yarn@4.2.2",
   "author": "Don McCurdy <donmccurdy@carto.com>",
+  "version": "0.0.0",
   "license": "MIT",
   "publishConfig": {
     "access": "public",
@@ -21,9 +22,9 @@
     }
   },
   "browserslist": [
-      "defaults",
-      "not IE 11",
-      "node >= 18"
+    "defaults",
+    "not IE 11",
+    "node >= 18"
   ],
   "scripts": {
     "build": "microbundle --format cjs,modern --no-compress --define VERSION=$npm_package_version",
@@ -36,9 +37,11 @@
   },
   "dependencies": {
     "kolorist": "^1.8.0",
+    "meow": "^13.2.0",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
+    "@types/meow": "^6.0.0",
     "@types/prompts": "^2.4.9",
     "microbundle": "^0.15.1"
   }

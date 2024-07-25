@@ -2,6 +2,8 @@ node_modules
 
 *.local
 
+packages/*/build
+
 sandbox/*
 !sandbox/.gitkeep
 

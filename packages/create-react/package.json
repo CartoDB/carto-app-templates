@@ -10,6 +10,7 @@
   },
   "version": "0.0.0",
   "type": "module",
+  "bin": "scripts/create.js",
   "scripts": {
     "dev": "vite --port 4001",
     "build": "tsc -b && vite build",
@@ -18,6 +19,7 @@
   },
   "dependencies": {
     "@carto/api-client": "^0.0.1-2",
+    "@carto/create-common": "^0.0.0",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",
     "@deck.gl/core": "^9.0.24",
