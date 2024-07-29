@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { Map as Basemap } from 'react-map-gl/maplibre';
+import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
 import { MapView, MapViewState } from '@deck.gl/core';
 import { VectorTileLayer } from '@deck.gl/carto';
@@ -9,6 +9,7 @@ import { vectorTableSource } from '@carto/api-client';
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
+
 const INITIAL_VIEW_STATE: MapViewState = {
   latitude: 31.8028,
   longitude: -103.0078,
@@ -20,7 +21,7 @@ export default function Default() {
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
   /****************************************************************************
-   * Sources ()
+   * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
    */
 
   const data = useMemo(() => {
@@ -32,7 +33,7 @@ export default function Default() {
   }, []);
 
   /****************************************************************************
-   * Layers ()
+   * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
   const layers = useMemo(() => {
@@ -76,7 +77,7 @@ export default function Default() {
           controller={{ dragRotate: false }}
           onViewStateChange={({ viewState }) => setViewState(viewState)}
         >
-          <Basemap reuseMaps mapStyle={MAP_STYLE} />
+          <Map mapStyle={MAP_STYLE} />
           <footer
             className="map-footer"
             dangerouslySetInnerHTML={{ __html: attributionHTML }}

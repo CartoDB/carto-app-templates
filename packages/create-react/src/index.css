@@ -239,6 +239,7 @@ body {
 
 .map {
   position: relative;
+  overflow: hidden;
 }
 
 .map-footer {

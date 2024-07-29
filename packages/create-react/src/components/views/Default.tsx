@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { Map as Basemap } from 'react-map-gl/maplibre';
+import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
 import { MapView, MapViewState } from '@deck.gl/core';
 import { VectorTileLayer } from '@deck.gl/carto';
@@ -78,7 +78,7 @@ export default function Default() {
           controller={{ dragRotate: false }}
           onViewStateChange={({ viewState }) => setViewState(viewState)}
         >
-          <Basemap reuseMaps mapStyle={MAP_STYLE} />
+          <Map mapStyle={MAP_STYLE} />
           <footer
             className="map-footer"
             dangerouslySetInnerHTML={{ __html: attributionHTML }}
