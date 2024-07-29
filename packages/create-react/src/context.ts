@@ -1,36 +1,35 @@
 import { createContext } from 'react';
-import cartoLogo from '/carto.svg'
+import cartoLogo from '/carto.svg';
 
 export interface AppContextProps {
-  title: string,
+  title: string;
   logo?: {
-    src: string,
-    alt: string,
-  },
+    src: string;
+    alt: string;
+  };
   viewState: {
-    latitude: number,
-    longitude: number,
-    zoom: number,
-  },
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
   credentials: {
-    accessToken: string,
-    apiVersion?: string,
-    apiBaseUrl?: string,
-  },
-  googleApiKey?: string,
-  googleMapId?: string,
-  accountsUrl?: string,
-  pages: { name: string, href: string }[],
+    accessToken: string;
+    apiVersion?: string;
+    apiBaseUrl?: string;
+  };
+  googleApiKey?: string;
+  googleMapId?: string;
+  accountsUrl?: string;
   theme: {
-    textColor: string,
-    backgroundColor: string,
-    primaryColor: string,
-    secondaryColor: string,
-  },
+    textColor: string;
+    backgroundColor: string;
+    primaryColor: string;
+    secondaryColor: string;
+  };
 }
 
 export const DEFAULT_APP_CONTEXT = {
-  title: /* replace:title:begin */'Untitled'/* replace:title:end */,
+  title: /* replace:title:begin */ 'Untitled' /* replace:title:end */,
   logo: {
     src: cartoLogo,
     alt: 'CARTO logo',
@@ -44,7 +43,6 @@ export const DEFAULT_APP_CONTEXT = {
     accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
   },
   accountsUrl: 'http://app.carto.com/',
-  pages: [{name: 'default', href: '/'}],
   theme: {
     textColor: '#000000',
     backgroundColor: '#FFFFFF',
@@ -53,4 +51,4 @@ export const DEFAULT_APP_CONTEXT = {
   },
 };
 
-export const AppContext = createContext<AppContextProps>(DEFAULT_APP_CONTEXT)
+export const AppContext = createContext<AppContextProps>(DEFAULT_APP_CONTEXT);

@@ -11,7 +11,7 @@ const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
-export function Map() {
+export default function Map() {
   const context = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
   // const [viewState, setViewState] = useState({...context.viewState});

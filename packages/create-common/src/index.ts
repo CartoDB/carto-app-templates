@@ -94,6 +94,8 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         message: 'Title for the application',
         validate: (text) => (text.length === 0 ? 'Title is required' : true),
       },
+      // TODO(impl): Prompt about authentication?
+      // TODO(impl): When using authentication, do we still need this access token?
       {
         name: 'accessToken',
         type: 'password',
