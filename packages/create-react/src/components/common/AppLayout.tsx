@@ -1,10 +1,19 @@
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { AppContext } from '../../context';
 import { NAV_ROUTES } from '../../routes';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 export default function AppLayout() {
   const context = useContext(AppContext);
+
+  let navLinks: ReactNode[] | null = null;
+  if (NAV_ROUTES.length > 1) {
+    navLinks = NAV_ROUTES.map(({ text, path }) => (
+      <NavLink key={path} to={path} className="body2 strong" reloadDocument>
+        {text}
+      </NavLink>
+    ));
+  }
 
   return (
     <>
@@ -16,17 +25,8 @@ export default function AppLayout() {
             alt={context.logo.alt}
           />
         )}
-        <span className="header-text">{context.title}</span>
-        <nav className="header-nav">
-          <ul>
-            {NAV_ROUTES.length > 1 &&
-              NAV_ROUTES.map(({ text, path }) => (
-                <a href={path} key={path}>
-                  {text}
-                </a>
-              ))}
-          </ul>
-        </nav>
+        <span className="header-text body1 strong">{context.title}</span>
+        <nav className="header-nav">{navLinks}</nav>
       </header>
       <div className="container">
         <Outlet />

@@ -1,5 +1,3 @@
-// import { useRoutes } from 'react-router-dom';
-
 import { RouterProvider } from 'react-router-dom';
 import { AppContext, DEFAULT_APP_CONTEXT } from './context';
 import { router } from './routes';
