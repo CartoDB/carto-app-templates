@@ -8,6 +8,9 @@
   --border-color: #cccccc;
   --primary-color: #162945;
   --secondary-color: #45546a;
+
+  --header-height: 48px;
+  --sidebar-width: 350px;
 }
 
 /******************************************************************************
@@ -118,6 +121,21 @@ body {
   text-transform: uppercase;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 1rem;
+}
+
+p,
+ul,
+figure {
+  margin-bottom: 1rem;
+}
+
 /******************************************************************************
  * PAGE LAYOUT
  */
@@ -141,7 +159,7 @@ body {
   flex-shrink: 0;
   box-sizing: border-box;
   width: 100%;
-  height: 48px;
+  height: var(--header-height);
 }
 
 .container {
@@ -154,7 +172,7 @@ body {
 }
 
 .container > .sidebar {
-  flex-basis: 350px;
+  flex-basis: var(--sidebar-width);
   flex-grow: 1;
 }
 
@@ -196,8 +214,8 @@ body {
   text-decoration: none;
   padding: 0 1em;
   display: inline-block;
-  height: 48px;
-  line-height: 48px;
+  height: var(--header-height);
+  line-height: var(--header-height);
 }
 
 .header-nav:not(:hover) a.active,
@@ -212,6 +230,7 @@ body {
 
 .sidebar {
   background: var(--background-color);
+  padding: 2em 1em;
 }
 
 /******************************************************************************
@@ -247,3 +266,16 @@ body {
 /******************************************************************************
  * LEGEND
  */
+
+/******************************************************************************
+ * SKELETONS
+ */
+
+.skeleton {
+  display: block;
+  width: var(--sidebar-width);
+  background: var(--border-color);
+  filter: brightness(120%);
+  border-radius: 8px;
+  margin: 1rem 0;
+}

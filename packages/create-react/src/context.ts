@@ -7,11 +7,6 @@ export interface AppContextProps {
     src: string;
     alt: string;
   };
-  viewState: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
   credentials: {
     accessToken: string;
     apiVersion?: string;
@@ -33,11 +28,6 @@ export const DEFAULT_APP_CONTEXT = {
   logo: {
     src: cartoLogo,
     alt: 'CARTO logo',
-  },
-  viewState: {
-    latitude: 31.8028,
-    longitude: -103.0078,
-    zoom: 2,
   },
   credentials: {
     accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,

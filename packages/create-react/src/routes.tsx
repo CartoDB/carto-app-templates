@@ -11,16 +11,16 @@ const Login = lazy(() => import('./components/views/Login'));
 // TODO: /logout ?
 export const RoutePath: Record<string, string> = {
   DEFAULT: '/',
-  SECONDARY: 'secondary',
+  US_POPULATION: '/usa-population',
 
-  LOGIN: 'login',
-  LOGOUT: 'logout',
-  NOT_FOUND: '404',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
+  NOT_FOUND: '/404',
 };
 
 export const NAV_ROUTES: { text: string; path: string }[] = [
-  { text: 'Default', path: RoutePath.DEFAULT },
-  { text: 'Secondary', path: RoutePath.SECONDARY },
+  { text: 'Cell towers', path: RoutePath.DEFAULT },
+  { text: 'U.S. population', path: RoutePath.US_POPULATION },
 ];
 
 export const routes: RouteObject[] = [
@@ -33,7 +33,7 @@ export const routes: RouteObject[] = [
     ),
     children: [
       { path: RoutePath.DEFAULT, element: <Default /> },
-      { path: RoutePath.SECONDARY, element: <Secondary /> },
+      { path: RoutePath.US_POPULATION, element: <Secondary /> },
     ],
   },
   { path: RoutePath.LOGIN, element: <Login /> },
