@@ -39,16 +39,23 @@ export default function Default() {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
+  const [layerVisibility, setLayerVisibility] = useState<
+    Record<string, boolean>
+  >({
+    'U.S. population': true,
+  });
+
   const layers = useMemo(() => {
     return [
       new VectorTileLayer({
         id: 'U.S. population',
+        visible: layerVisibility['U.S. population'],
         data,
         pointRadiusMinPixels: 4,
         getFillColor: [200, 0, 80],
       }),
     ];
-  }, [data]);
+  }, [data, layerVisibility]);
 
   useEffect(() => {
     data?.then(({ attribution }) => setAttributionHTML(attribution));
@@ -83,7 +90,11 @@ export default function Default() {
         >
           <Map mapStyle={MAP_STYLE} />
         </DeckGL>
-        <Layers layers={layers} />
+        <Layers
+          layers={layers}
+          layerVisibility={layerVisibility}
+          onLayerVisibilityChange={setLayerVisibility}
+        />
         <Legend />
         <aside
           className="map-footer"
