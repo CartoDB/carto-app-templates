@@ -353,9 +353,11 @@ summary.card-summary::after {
   right: 0.8rem;
   color: var(--control-color);
 }
+
 details[open].card summary.card-summary:after {
   content: ' ▼';
 }
+
 details.card summary.card-summary:hover:after {
   color: var(--control-color-hover);
 }
@@ -381,4 +383,19 @@ summary .card-summary-title {
   background: var(--border-color);
   filter: brightness(110%);
   border-radius: var(--border-radius);
+}
+
+/******************************************************************************
+ * FORMS
+ */
+
+label {
+  cursor: pointer;
+  user-select: none;
+}
+
+input[type='checkbox'] {
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 1em;
 }

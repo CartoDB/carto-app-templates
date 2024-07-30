@@ -42,7 +42,7 @@ export default function Default() {
   const layers = useMemo(() => {
     return [
       new VectorTileLayer({
-        id: 'retail_stores',
+        id: 'U.S. population',
         data,
         pointRadiusMinPixels: 4,
         getFillColor: [200, 0, 80],
@@ -83,7 +83,7 @@ export default function Default() {
         >
           <Map mapStyle={MAP_STYLE} />
         </DeckGL>
-        <Layers />
+        <Layers layers={layers} />
         <Legend />
         <aside
           className="map-footer"
