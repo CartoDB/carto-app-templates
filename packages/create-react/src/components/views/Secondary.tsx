@@ -5,6 +5,9 @@ import DeckGL from '@deck.gl/react';
 import { MapView, MapViewState } from '@deck.gl/core';
 import { VectorTileLayer } from '@deck.gl/carto';
 import { vectorTableSource } from '@carto/api-client';
+import { Legend } from '../common/Legend';
+import { Layers } from '../common/Layers';
+import { Card } from '../common/Card';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -54,20 +57,21 @@ export default function Default() {
   return (
     <>
       <aside className="sidebar">
-        <h1 className="title">U.S. population</h1>
-        <p className="body1">
-          Chupa chups chocolate cupcake cake soufflé. Wafer carrot cake danish
-          gummi bears jelly. Sugar plum wafer cake chocolate bar caramels sesame
-          snaps fruitcake tiramisu.
-        </p>
-        <div className="skeleton" style={{ height: '8em' }} />
-        <p className="body1">
-          Chocolate cake pastry pie apple pie oat cake dessert macaroon. Pastry
-          sugar plum pie carrot cake biscuit. Bear claw sugar plum topping cake
-          danish cotton candy pudding.
-        </p>
-        <div className="skeleton" style={{ height: '4em' }} />
-        <div className="skeleton" style={{ height: '6em' }} />
+        <Card>
+          <p className="overline">✨👀 You're viewing</p>
+          <h1 className="title">U.S. population</h1>
+          <p className="body1">
+            Chupa chups chocolate cupcake cake soufflé. Wafer carrot cake danish
+            gummi bears jelly. Sugar plum wafer cake chocolate bar caramels
+            sesame snaps fruitcake tiramisu.
+          </p>
+          <p className="body1">
+            Chocolate cake pastry pie apple pie oat cake dessert macaroon.
+            Pastry sugar plum pie carrot cake biscuit. Bear claw sugar plum
+            topping cake danish cotton candy pudding.
+          </p>
+        </Card>
+        <span className="flex-space" />
       </aside>
       <main className="map">
         <DeckGL
@@ -78,11 +82,13 @@ export default function Default() {
           onViewStateChange={({ viewState }) => setViewState(viewState)}
         >
           <Map mapStyle={MAP_STYLE} />
-          <footer
-            className="map-footer"
-            dangerouslySetInnerHTML={{ __html: attributionHTML }}
-          ></footer>
         </DeckGL>
+        <Layers />
+        <Legend />
+        <aside
+          className="map-footer"
+          dangerouslySetInnerHTML={{ __html: attributionHTML }}
+        ></aside>
       </main>
     </>
   );

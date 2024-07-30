@@ -17,16 +17,16 @@ export default function AppLayout() {
 
   return (
     <>
-      <header className="header">
+      <header className="app-bar">
         {context.logo && (
           <img
-            className="header-logo"
+            className="app-bar-logo"
             src={context.logo.src}
             alt={context.logo.alt}
           />
         )}
-        <span className="header-text body1 strong">{context.title}</span>
-        <nav className="header-nav">{navLinks}</nav>
+        <span className="app-bar-text body1 strong">{context.title}</span>
+        <nav className="app-bar-nav">{navLinks}</nav>
       </header>
       <div className="container">
         <Outlet />
