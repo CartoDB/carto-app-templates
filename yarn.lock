@@ -2134,6 +2134,7 @@ __metadata:
   dependencies:
     "@types/meow": "npm:^6.0.0"
     "@types/prompts": "npm:^2.4.9"
+    glob: "npm:^11.0.0"
     kolorist: "npm:^1.8.0"
     meow: "npm:^13.2.0"
     microbundle: "npm:^0.15.1"

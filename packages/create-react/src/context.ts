@@ -24,7 +24,7 @@ export interface AppContextProps {
 }
 
 export const DEFAULT_APP_CONTEXT = {
-  title: /* replace:title:begin */ 'Untitled' /* replace:title:end */,
+  title: '$title',
   logo: {
     src: cartoLogo,
     alt: 'CARTO logo',

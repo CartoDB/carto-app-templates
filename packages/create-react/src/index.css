@@ -192,10 +192,6 @@ body {
   min-inline-size: 50%;
 }
 
-.flex-space {
-  flex-grow: 1;
-}
-
 /******************************************************************************
  * APP BAR
  */
@@ -257,6 +253,10 @@ body {
   gap: var(--padding);
   background: var(--card-background-surface);
   border-right: 1px solid var(--border-color);
+}
+
+.sidebar .flex-space {
+  flex-grow: 1;
 }
 
 /******************************************************************************

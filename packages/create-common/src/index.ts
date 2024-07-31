@@ -3,6 +3,7 @@ import { rm, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import prompts from 'prompts';
 import { green, bold, dim, yellow } from 'kolorist';
+import { glob } from 'glob';
 import {
   copyDir,
   emptyDir,
@@ -13,7 +14,7 @@ import {
 } from './utils';
 
 /** List of relative paths in the template to be _removed_ from new projects. */
-const TEMPLATE_EXCLUDE_PATHS = ['node_modules', 'scripts'];
+const TEMPLATE_EXCLUDE_PATHS = ['node_modules', 'dist', 'scripts'];
 
 /** List of dependencies in the template to be _removed_ from new projects. */
 const TEMPLATE_EXCLUDE_DEPS = ['@carto/create-common'];
@@ -35,6 +36,17 @@ const TEMPLATE_EXCLUDE_PKG_FIELDS = [
   'repository',
   'version',
 ];
+
+/**
+ * List of template-relative paths that may contain tokens for replacement,
+ * such as `<!-- replace:title:begin -->`.
+ */
+const TEMPLATE_UPDATE_PATHS = ['index.html', 'src/context.ts', '.env'];
+
+interface ProjectConfig {
+  title: string;
+  accessToken: string;
+}
 
 /**
  * Creates a new CARTO app in the target directory, given a template.
@@ -86,7 +98,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    * Project configuration.
    */
 
-  const config = await prompts(
+  const config: ProjectConfig = await prompts(
     [
       {
         name: 'title',
@@ -94,8 +106,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         message: 'Title for the application',
         validate: (text) => (text.length === 0 ? 'Title is required' : true),
       },
-      // TODO(impl): Prompt about authentication?
-      // TODO(impl): When using authentication, do we still need this access token?
+      // TODO(impl): Prompt about authentication, enable/disable access token prompt.
       {
         name: 'accessToken',
         type: 'password',
@@ -103,19 +114,19 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         validate: (text) =>
           text.length === 0 ? 'Access token is required' : true,
       },
-      {
-        name: 'apiBaseUrl',
-        type: 'text',
-        message: 'Base URL for CARTO API (optional)',
-      },
-      {
-        name: 'basemap',
-        type: 'toggle',
-        message: 'Basemap',
-        inactive: 'maplibre',
-        active: 'google maps',
-        initial: false, // maplibre
-      },
+      // {
+      //   name: 'apiBaseUrl',
+      //   type: 'text',
+      //   message: 'Base URL for CARTO API (optional)',
+      // },
+      // {
+      //   name: 'basemap',
+      //   type: 'toggle',
+      //   message: 'Basemap',
+      //   inactive: 'maplibre',
+      //   active: 'google maps',
+      //   initial: false, // maplibre
+      // },
     ],
     {
       onCancel: () => {
@@ -152,7 +163,14 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   pkg.private = true;
   await writeFile(pkgPath, JSON.stringify(pkg, null, 2));
 
-  // TODO(feat): Populate config data.
+  // Apply config data — set title, access token, etc.
+  const updatePaths = await glob(TEMPLATE_UPDATE_PATHS, {
+    cwd: targetDir,
+    absolute: true,
+  });
+  for (const path of updatePaths) {
+    updateTemplate(path, config);
+  }
 
   // Create empty yarn.lock. Required when working in sandbox/.
   await writeFile(resolve(targetDir, 'yarn.lock'), '');
@@ -171,4 +189,18 @@ ${bold(yellow('!'))} ${bold('Next steps')}:
 
 ${steps.join('\n')}
   `);
+}
+
+async function updateTemplate(
+  path: string,
+  config: ProjectConfig,
+): Promise<void> {
+  let content = await readFile(path, 'utf8');
+
+  for (const key in config) {
+    const value = config[key as keyof ProjectConfig];
+    content = content.replaceAll(`$${key}`, value);
+  }
+
+  await writeFile(path, content);
 }
