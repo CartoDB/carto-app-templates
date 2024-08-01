@@ -1,4 +1,12 @@
-import { rm, stat, copyFile, mkdir, readdir } from 'node:fs/promises';
+import {
+  rm,
+  stat,
+  copyFile,
+  mkdir,
+  readdir,
+  readFile,
+  writeFile,
+} from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 /******************************************************************************
@@ -8,11 +16,11 @@ import { resolve } from 'node:path';
  * - https://github.com/vitejs/vite/blob/main/packages/create-vite/src/index.ts
  */
 
-export async function copy(src: string, dest: string) {
+export async function copy(src: string, dst: string) {
   if ((await stat(src)).isDirectory()) {
-    await copyDir(src, dest);
+    await copyDir(src, dst);
   } else {
-    await copyFile(src, dest);
+    await copyFile(src, dst);
   }
 }
 
@@ -37,6 +45,18 @@ export async function emptyDir(dir: string): Promise<void> {
     }
     await rm(resolve(dir, file), { recursive: true, force: true });
   }
+}
+
+export type Token = [string, string];
+export async function updateTemplate(
+  path: string,
+  tokens: Token[],
+): Promise<void> {
+  let content = await readFile(path, 'utf8');
+  for (const [token, value] of tokens) {
+    content = content.replaceAll(token, value);
+  }
+  await writeFile(path, content);
 }
 
 /******************************************************************************

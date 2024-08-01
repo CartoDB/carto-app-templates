@@ -10,16 +10,17 @@
   },
   "type": "module",
   "sideEffects": false,
-  "source": "src/index.ts",
-  "types": "./build/index.d.ts",
+  "source": "src/create.ts",
+  "types": "./build/create.d.ts",
   "main": "./build/create.cjs",
   "module": "./build/create.modern.js",
   "exports": {
     ".": {
-      "types": "./build/index.d.ts",
+      "types": "./build/create.d.ts",
       "require": "./build/create.cjs",
       "default": "./build/create.modern.js"
-    }
+    },
+    "./style.css": "./style.css"
   },
   "browserslist": [
     "defaults",

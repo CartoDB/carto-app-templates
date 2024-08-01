@@ -11,15 +11,28 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 4002",
+    "dev": "vite --host --port 4002",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.3",
+    "@carto/api-client": "^0.0.41",
+    "@carto/create-common": "workspace:^",
+    "@deck.gl/aggregation-layers": "^9.0.24",
+    "@deck.gl/core": "^9.0.24",
+    "@deck.gl/extensions": "^9.0.24",
+    "@deck.gl/geo-layers": "^9.0.24",
+    "@deck.gl/json": "^9.0.24",
+    "@deck.gl/layers": "^9.0.24",
+    "@deck.gl/mesh-layers": "^9.0.24",
+    "@loaders.gl/core": "^4.2.2",
+    "@luma.gl/core": "^9.0.17",
+    "@luma.gl/engine": "^9.0.17",
     "vue": "^3.4.31"
   },
   "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",

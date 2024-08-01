@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
-import { rm, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { rm, copyFile, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import prompts from 'prompts';
 import { green, bold, dim, yellow } from 'kolorist';
 import { glob } from 'glob';
@@ -11,42 +12,27 @@ import {
   removePkgDependencies,
   removePkgFields,
   toValidPkgName,
+  updateTemplate,
+  Token,
 } from './utils';
-
-/** List of relative paths in the template to be _removed_ from new projects. */
-const TEMPLATE_EXCLUDE_PATHS = ['node_modules', 'dist', 'scripts'];
-
-/** List of dependencies in the template to be _removed_ from new projects. */
-const TEMPLATE_EXCLUDE_DEPS = ['@carto/create-common'];
-
-/**
- * List of package.json fields to clear from new projects.
- * See: https://docs.npmjs.com/cli/v10/configuring-npm/package-json
- */
-const TEMPLATE_EXCLUDE_PKG_FIELDS = [
-  'author',
-  'bin',
-  'bugs',
-  'description',
-  'files',
-  'homepage',
-  'keywords',
-  'license',
-  'publishConfig',
-  'repository',
-  'version',
-];
-
-/**
- * List of template-relative paths that may contain tokens for replacement,
- * such as `<!-- replace:title:begin -->`.
- */
-const TEMPLATE_UPDATE_PATHS = ['index.html', 'src/context.ts', '.env'];
+import {
+  TEMPLATE_EXCLUDE_DEPS,
+  TEMPLATE_EXCLUDE_PATHS,
+  TEMPLATE_EXCLUDE_PKG_FIELDS,
+  TEMPLATE_UPDATE_PATHS,
+} from './constants';
 
 interface ProjectConfig {
   title: string;
   accessToken: string;
 }
+
+// TODO: Unit tests:
+// - correct template and target dir
+// - overwrite target dir must prompt
+// - no change to template dir
+// - config applied to target dir
+// - files added/removed as expected
 
 /**
  * Creates a new CARTO app in the target directory, given a template.
@@ -77,7 +63,9 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   }
 
   // If target directory contains existing files, prompt user before overwriting.
-  if (existsSync(targetDir) && !isEmpty(targetDir)) {
+  const targetDirExists = existsSync(targetDir);
+  const targetDirEmpty = targetDirExists && (await isEmpty(targetDir));
+  if (targetDirExists && !targetDirEmpty) {
     const { overwrite } = await prompts([
       {
         type: 'confirm',
@@ -90,7 +78,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
       console.warn(`Project creation cancelled.`);
       process.exit(2);
     }
-  } else if (!existsSync(targetDir)) {
+  } else if (!targetDirExists) {
     await mkdir(targetDir, { recursive: true });
   }
 
@@ -98,6 +86,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    * Project configuration.
    */
 
+  // TODO(impl): Prompt about authentication, enable/disable access token prompt.
   const config: ProjectConfig = await prompts(
     [
       {
@@ -106,7 +95,6 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         message: 'Title for the application',
         validate: (text) => (text.length === 0 ? 'Title is required' : true),
       },
-      // TODO(impl): Prompt about authentication, enable/disable access token prompt.
       {
         name: 'accessToken',
         type: 'password',
@@ -114,19 +102,6 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
         validate: (text) =>
           text.length === 0 ? 'Access token is required' : true,
       },
-      // {
-      //   name: 'apiBaseUrl',
-      //   type: 'text',
-      //   message: 'Base URL for CARTO API (optional)',
-      // },
-      // {
-      //   name: 'basemap',
-      //   type: 'toggle',
-      //   message: 'Basemap',
-      //   inactive: 'maplibre',
-      //   active: 'google maps',
-      //   initial: false, // maplibre
-      // },
     ],
     {
       onCancel: () => {
@@ -143,7 +118,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    */
 
   // Overwrite was explicitly approved by user above.
-  if (existsSync(targetDir) && !isEmpty(targetDir)) {
+  if (targetDirExists && !targetDirEmpty) {
     await emptyDir(targetDir);
   }
 
@@ -163,13 +138,18 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   pkg.private = true;
   await writeFile(pkgPath, JSON.stringify(pkg, null, 2));
 
-  // Apply config data — set title, access token, etc.
-  const updatePaths = await glob(TEMPLATE_UPDATE_PATHS, {
-    cwd: targetDir,
-    absolute: true,
-  });
-  for (const path of updatePaths) {
-    updateTemplate(path, config);
+  // Replace `@carto/create-common/style.css` dependency with local file, so
+  // users can easily modify project CSS.
+  await copyFile(
+    resolve(fileURLToPath(import.meta.url), '..', '..', 'style.css'),
+    resolve(targetDir, 'src', 'style.css'),
+  );
+
+  // Replace known tokens ($title, $accessToken, ...) in template files.
+  const tokenList = createTokenList(config);
+  const globConfig = { cwd: targetDir, absolute: true };
+  for (const path of await glob(TEMPLATE_UPDATE_PATHS, globConfig)) {
+    await updateTemplate(path, tokenList);
   }
 
   // Create empty yarn.lock. Required when working in sandbox/.
@@ -191,16 +171,15 @@ ${steps.join('\n')}
   `);
 }
 
-async function updateTemplate(
-  path: string,
-  config: ProjectConfig,
-): Promise<void> {
-  let content = await readFile(path, 'utf8');
-
-  for (const key in config) {
-    const value = config[key as keyof ProjectConfig];
-    content = content.replaceAll(`$${key}`, value);
-  }
-
-  await writeFile(path, content);
+/**
+ * Given a project config, creates a list of tokens to be replaced in project
+ * source files. For example, "$title" and "$accessToken" are replaced with values
+ * given during project initialization.
+ */
+function createTokenList(config: ProjectConfig): Token[] {
+  const configTokens: Token[] = Object.keys(config).map((key) => [
+    `$${key}`,
+    config[key as keyof ProjectConfig],
+  ]);
+  return [...configTokens, ['@carto/create-common/style.css', './style.css']];
 }

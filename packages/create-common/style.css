@@ -165,11 +165,11 @@ body {
   height: 100%;
 }
 
-.header {
+.app-bar {
   flex-shrink: 0;
   box-sizing: border-box;
   width: 100%;
-  height: var(--header-height);
+  height: var(--app-bar-height);
 }
 
 .container {

@@ -1,7 +1,6 @@
-import { createContext } from 'react';
 import cartoLogo from '/carto.svg';
 
-export interface AppContextProps {
+export interface AppContext {
   title: string;
   logo?: {
     src: string;
@@ -17,7 +16,7 @@ export interface AppContextProps {
   accountsUrl?: string;
 }
 
-export const DEFAULT_APP_CONTEXT = {
+export const DEFAULT_APP_CONTEXT: AppContext = {
   title: '$title',
   logo: {
     src: cartoLogo,
@@ -29,4 +28,4 @@ export const DEFAULT_APP_CONTEXT = {
   accountsUrl: 'http://app.carto.com/',
 };
 
-export const AppContext = createContext<AppContextProps>(DEFAULT_APP_CONTEXT);
+export const context: AppContext = { ...DEFAULT_APP_CONTEXT };
