@@ -295,7 +295,8 @@ body {
   */
 
 .layers {
-  width: var(--sidebar-width);
+  width: 33%;
+  max-width: var(--sidebar-width);
   max-height: 45vh;
   position: absolute;
   top: var(--padding);
@@ -307,7 +308,8 @@ body {
  */
 
 .legend {
-  width: var(--sidebar-width);
+  width: 33%;
+  max-width: var(--sidebar-width);
   max-height: 45vh;
   position: absolute;
   bottom: var(--padding);
