@@ -9,7 +9,7 @@
     "build": "lerna run build",
     "lint": "lerna run lint",
     "test": "lerna run test",
-    "clean": "rimraf --glob packages/*/build/* sandbox/*",
+    "clean": "rimraf --glob 'packages/*/dist/*' 'sandbox/*'",
     "preversion": "yarn lint",
     "version": "yarn clean && yarn build",
     "postpublish": "git push && git push --tags"
