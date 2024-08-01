@@ -28,8 +28,7 @@ function setVisibility(id: string, visible: boolean) {
             ({ target }) =>
               setVisibility(layer.id, (target as HTMLInputElement).checked)
           "
-        />
-        {{ layer.id }}
+        />{{ layer.id }}
       </label>
     </Card>
   </aside>
