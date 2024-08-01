@@ -314,6 +314,27 @@ body {
   right: var(--padding);
 }
 
+.legend-section-title,
+.legend-section-subtitle {
+  margin-bottom: 0.5em;
+}
+
+.legend-list {
+  margin: 0;
+}
+
+.legend-list-item-swatch {
+  display: inline-block;
+  vertical-align: middle;
+  height: 12px;
+  width: 12px;
+  border-radius: 6px;
+}
+
+.legend-list-item-title {
+  margin-left: 0.5em;
+}
+
 /******************************************************************************
  * CARDS
  */

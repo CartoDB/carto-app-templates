@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
-import { MapView, MapViewState } from '@deck.gl/core';
-import { VectorTileLayer } from '@deck.gl/carto';
-import { vectorTableSource } from '@carto/api-client';
+import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
+import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
+import { vectorQuerySource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
 import { Card } from '../common/Card';
 import { Layers } from '../common/Layers';
@@ -19,6 +19,14 @@ const INITIAL_VIEW_STATE: MapViewState = {
   zoom: 3.5,
 };
 
+// TODO: Fetch categories from Widgets API?
+const RADIO_DOMAIN = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
+const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
+  attr: 'radio',
+  domain: RADIO_DOMAIN,
+  colors: 'Bold',
+});
+
 export default function Default() {
   const [attributionHTML, setAttributionHTML] = useState('');
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
@@ -28,10 +36,11 @@ export default function Default() {
    */
 
   const data = useMemo(() => {
-    return vectorTableSource({
+    return vectorQuerySource({
       accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
       connectionName: 'carto_dw',
-      tableName: 'carto-demo-data.demo_tables.retail_stores',
+      sqlQuery:
+        'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
     });
   }, []);
 
@@ -42,17 +51,17 @@ export default function Default() {
   const [layerVisibility, setLayerVisibility] = useState<
     Record<string, boolean>
   >({
-    'Retail stores': true,
+    'Cell towers': true,
   });
 
   const layers = useMemo(() => {
     return [
       new VectorTileLayer({
-        id: 'Retail stores',
-        visible: layerVisibility['Retail stores'],
+        id: 'Cell towers',
+        visible: layerVisibility['Cell towers'],
         data,
         pointRadiusMinPixels: 4,
-        getFillColor: [200, 0, 80],
+        getFillColor: RADIO_COLORS,
       }),
     ];
   }, [data, layerVisibility]);
@@ -102,7 +111,18 @@ export default function Default() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Legend />
+        <Legend
+          entries={[
+            // TODO: Cleaner way to generate a legend?
+            {
+              title: 'Cell towers',
+              subtitle: 'By Radio',
+              values: RADIO_DOMAIN,
+              getSwatchColor: (value: string) =>
+                RADIO_COLORS({ properties: { radio: value } }, null!),
+            },
+          ]}
+        />
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}
