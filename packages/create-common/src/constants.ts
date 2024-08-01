@@ -3,6 +3,7 @@ export const TEMPLATE_EXCLUDE_PATHS = [
   'node_modules',
   'dist',
   'scripts',
+  '.angular',
   '.vscode',
   '.yarn',
   '.env.local',

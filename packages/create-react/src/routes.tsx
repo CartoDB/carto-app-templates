@@ -3,9 +3,13 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import AppLayout from './components/common/AppLayout';
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Default = lazy(() => import('./components/views/Default'));
+// eslint-disable-next-line react-refresh/only-export-components
 const Secondary = lazy(() => import('./components/views/Secondary'));
+// eslint-disable-next-line react-refresh/only-export-components
 const NotFound = lazy(() => import('./components/views/NotFound'));
+// eslint-disable-next-line react-refresh/only-export-components
 const Login = lazy(() => import('./components/views/Login'));
 
 // TODO: /logout ?

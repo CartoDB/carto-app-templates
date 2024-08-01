@@ -11,17 +11,24 @@
   "type": "module",
   "sideEffects": false,
   "source": "src/create.ts",
-  "types": "./build/create.d.ts",
-  "main": "./build/create.cjs",
-  "module": "./build/create.modern.js",
+  "types": "./dist/create.d.ts",
+  "main": "./dist/create.cjs",
+  "module": "./dist/create.modern.js",
   "exports": {
     ".": {
-      "types": "./build/create.d.ts",
-      "require": "./build/create.cjs",
-      "default": "./build/create.modern.js"
+      "types": "./dist/create.d.ts",
+      "require": "./dist/create.cjs",
+      "default": "./dist/create.modern.js"
     },
     "./style.css": "./style.css"
   },
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE.md",
+    "style.css"
+  ],
   "browserslist": [
     "defaults",
     "not IE 11",

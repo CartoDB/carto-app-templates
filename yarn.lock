@@ -6682,23 +6682,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"carto-app-templates@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "carto-app-templates@workspace:."
-  dependencies:
-    "@types/meow": "npm:^6.0.0"
-    "@typescript-eslint/eslint-plugin": "npm:^7.15.0"
-    "@typescript-eslint/parser": "npm:^7.15.0"
-    eslint: "npm:^8.57.0"
-    lerna: "npm:^8.1.6"
-    meow: "npm:^13.2.0"
-    prettier: "npm:^3.3.3"
-    rimraf: "npm:^6.0.1"
-    typescript: "npm:^5.2.2"
-    vite: "npm:^5.3.4"
-  languageName: unknown
-  linkType: soft
-
 "cartocolor@npm:^5.0.2":
   version: 5.0.2
   resolution: "cartocolor@npm:5.0.2"
@@ -14596,6 +14579,23 @@ __metadata:
   checksum: 10c0/1c656853895f6c7d55492db4661c79d37a3046cff465f4924ac5f053b0f80a079e36f901b154dbe819d9e94dcd83e90e51c7f95e7158bef1a07ceb60df736285
   languageName: node
   linkType: hard
+
+"root-workspace-0b6124@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "root-workspace-0b6124@workspace:."
+  dependencies:
+    "@types/meow": "npm:^6.0.0"
+    "@typescript-eslint/eslint-plugin": "npm:^7.15.0"
+    "@typescript-eslint/parser": "npm:^7.15.0"
+    eslint: "npm:^8.57.0"
+    lerna: "npm:^8.1.6"
+    meow: "npm:^13.2.0"
+    prettier: "npm:^3.3.3"
+    rimraf: "npm:^6.0.1"
+    typescript: "npm:^5.2.2"
+    vite: "npm:^5.3.4"
+  languageName: unknown
+  linkType: soft
 
 "run-applescript@npm:^7.0.0":
   version: 7.0.0

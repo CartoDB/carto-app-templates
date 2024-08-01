@@ -1,5 +1,4 @@
 {
-  "name": "carto-app-templates",
   "private": true,
   "packageManager": "yarn@4.2.2",
   "workspaces": [
@@ -10,7 +9,10 @@
     "build": "lerna run build",
     "lint": "lerna run lint",
     "test": "lerna run test",
-    "clean": "rimraf --glob packages/*/build/* sandbox/*"
+    "clean": "rimraf --glob packages/*/build/* sandbox/*",
+    "preversion": "yarn lint",
+    "version": "yarn clean && yarn build",
+    "postpublish": "git push && git push --tags"
   },
   "devDependencies": {
     "@types/meow": "^6.0.0",

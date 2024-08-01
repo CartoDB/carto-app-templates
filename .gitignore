@@ -2,7 +2,7 @@ node_modules
 
 *.local
 
-packages/*/build
+packages/*/dist
 
 sandbox/*
 !sandbox/.gitkeep

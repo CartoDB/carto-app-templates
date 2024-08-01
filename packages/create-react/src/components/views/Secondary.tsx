@@ -95,7 +95,7 @@ export default function Default() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Legend />
+        <Legend entries={[]} />
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}
