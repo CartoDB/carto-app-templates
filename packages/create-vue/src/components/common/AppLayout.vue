@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { context } from '../../context';
-
-const navLinks: unknown[] = [];
+import { routes } from '../../routes';
 </script>
 
 <template>
@@ -13,9 +12,18 @@ const navLinks: unknown[] = [];
       :alt="context.logo.alt"
     />
     <span class="app-bar-text body1 strong">{{ context.title }}</span>
-    <nav v-if="navLinks.length" class="app-bar-nav">TODO</nav>
+    <nav v-if="routes.length > 1" class="app-bar-nav">
+      <RouterLink
+        v-for="route in routes"
+        :to="route.path"
+        :key="route.path"
+        class="body2 strong"
+        :activeClass="'active'"
+        >{{ route.text }}</RouterLink
+      >
+    </nav>
   </header>
   <div class="container">
-    <slot />
+    <RouterView />
   </div>
 </template>
