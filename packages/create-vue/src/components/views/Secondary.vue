@@ -8,9 +8,9 @@ import {
   watchEffect,
 } from 'vue';
 import { Map } from 'maplibre-gl';
-import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
-import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
-import { vectorQuerySource } from '@carto/api-client';
+import { Deck, MapViewState } from '@deck.gl/core';
+import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
+import { h3TableSource } from '@carto/api-client';
 import Layers from '../common/Layers.vue';
 import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
@@ -24,24 +24,18 @@ const INITIAL_VIEW_STATE: MapViewState = {
   zoom: 3.5,
 };
 
-// TODO: Fetch categories from Widgets API?
-const RADIO_DOMAIN = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
-const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
-  attr: 'radio',
-  domain: RADIO_DOMAIN,
-  colors: 'Bold',
-});
-
 /****************************************************************************
  * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
  */
 
 const data = computed(() =>
-  vectorQuerySource({
+  h3TableSource({
     accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
     connectionName: 'carto_dw',
-    sqlQuery:
-      'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
+    tableName:
+      'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
+    spatialDataColumn: 'h3',
+    aggregationExp: 'SUM(population) as population_sum',
   }),
 );
 
@@ -50,18 +44,23 @@ const data = computed(() =>
  */
 
 const layerVisibility = ref<Record<string, boolean>>({
-  'Cell towers': true,
+  'U.S. population': true,
 });
 
-const onLayerVisibilityChange = () => {};
+const onLayerVisibilityChange = (visibility: Record<string, boolean>) => {
+  layerVisibility.value = visibility;
+};
 
 const layers = computed(() => [
-  new VectorTileLayer({
-    id: 'Cell towers',
-    visible: layerVisibility.value['Cell towers'],
+  new H3TileLayer({
+    id: 'U.S. population',
+    visible: layerVisibility.value['U.S. population'],
     data: data.value,
-    pointRadiusMinPixels: 4,
-    getFillColor: RADIO_COLORS,
+    getFillColor: colorContinuous({
+      attr: 'population_sum',
+      domain: [0, 100000], // TODO: Verify min/max.
+      colors: 'PinkYl',
+    }),
   }),
 ]);
 
@@ -138,7 +137,15 @@ onUnmounted(() => {
       style="position: absolute; width: 100%; height: 100%"
     ></canvas>
     <Layers :layers :layerVisibility :onLayerVisibilityChange />
-    <Legend :entries="[]" />
+    <Legend
+      :entries="[
+        {
+          type: 'continuous',
+          title: 'U.S. population',
+          subtitle: 'Sum of population by H3 cell',
+        },
+      ]"
+    />
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
 </template>

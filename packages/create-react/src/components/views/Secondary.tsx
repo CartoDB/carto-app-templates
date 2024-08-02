@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
 import { MapView, MapViewState } from '@deck.gl/core';
-import { VectorTileLayer } from '@deck.gl/carto';
-import { vectorTableSource } from '@carto/api-client';
+import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
+import { h3TableSource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
 import { Layers } from '../common/Layers';
 import { Card } from '../common/Card';
@@ -28,10 +28,13 @@ export default function Default() {
    */
 
   const data = useMemo(() => {
-    return vectorTableSource({
+    return h3TableSource({
       accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
       connectionName: 'carto_dw',
-      tableName: 'carto-demo-data.demo_tables.retail_stores',
+      tableName:
+        'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
+      spatialDataColumn: 'h3',
+      aggregationExp: 'SUM(population) as population_sum',
     });
   }, []);
 
@@ -47,12 +50,15 @@ export default function Default() {
 
   const layers = useMemo(() => {
     return [
-      new VectorTileLayer({
+      new H3TileLayer({
         id: 'U.S. population',
         visible: layerVisibility['U.S. population'],
         data,
-        pointRadiusMinPixels: 4,
-        getFillColor: [200, 0, 80],
+        getFillColor: colorContinuous({
+          attr: 'population_sum',
+          domain: [0, 100000], // TODO: Verify min/max.
+          colors: 'PinkYl',
+        }),
       }),
     ];
   }, [data, layerVisibility]);
@@ -95,7 +101,14 @@ export default function Default() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Legend entries={[]} />
+        <Legend
+          entries={[
+            {
+              title: 'U.S. population',
+              subtitle: 'Sum of population by H3 cell',
+            },
+          ]}
+        />
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

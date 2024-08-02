@@ -53,7 +53,9 @@ const layerVisibility = ref<Record<string, boolean>>({
   'Cell towers': true,
 });
 
-const onLayerVisibilityChange = () => {};
+const onLayerVisibilityChange = (visibility: Record<string, boolean>) => {
+  layerVisibility.value = visibility;
+};
 
 const layers = computed(() => [
   new VectorTileLayer({
@@ -149,6 +151,7 @@ onUnmounted(() => {
       :entries="[
         // TODO: Cleaner way to generate a legend?
         {
+          type: 'categorical',
           title: 'Cell towers',
           subtitle: 'By Radio',
           values: RADIO_DOMAIN,

@@ -115,6 +115,7 @@ export default function Default() {
           entries={[
             // TODO: Cleaner way to generate a legend?
             {
+              type: 'categorical',
               title: 'Cell towers',
               subtitle: 'By Radio',
               values: RADIO_DOMAIN,
