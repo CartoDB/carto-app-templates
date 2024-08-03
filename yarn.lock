@@ -2135,7 +2135,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@carto/create-common@npm:^0.0.2, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
+"@carto/create-common@npm:^0.0.3, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
   version: 0.0.0-use.local
   resolution: "@carto/create-common@workspace:packages/create-common"
   dependencies:
@@ -2155,7 +2155,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
     "@carto/api-client": "npm:^0.0.1-2"
-    "@carto/create-common": "npm:^0.0.2"
+    "@carto/create-common": "npm:^0.0.3"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
     "@deck.gl/carto": "npm:^9.0.24"
     "@deck.gl/core": "npm:^9.0.24"
@@ -2197,6 +2197,7 @@ __metadata:
     "@carto/api-client": "npm:^0.0.41"
     "@carto/create-common": "workspace:^"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
+    "@deck.gl/carto": "npm:^9.0.24"
     "@deck.gl/core": "npm:^9.0.24"
     "@deck.gl/extensions": "npm:^9.0.24"
     "@deck.gl/geo-layers": "npm:^9.0.24"
@@ -2208,6 +2209,7 @@ __metadata:
     "@luma.gl/engine": "npm:^9.0.17"
     "@vitejs/plugin-basic-ssl": "npm:^1.1.0"
     "@vitejs/plugin-vue": "npm:^5.0.5"
+    maplibre-gl: "npm:^4.5.0"
     typescript: "npm:^5.2.2"
     vite: "npm:^5.3.4"
     vue: "npm:^3.4.31"
