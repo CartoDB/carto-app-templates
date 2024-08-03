@@ -4,10 +4,6 @@
   "repository": "github:CartoDB/carto-app-templates",
   "author": "Don McCurdy <donmccurdy@carto.com>",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
-  },
   "version": "0.0.5",
   "type": "module",
   "bin": "./scripts/create.js",
