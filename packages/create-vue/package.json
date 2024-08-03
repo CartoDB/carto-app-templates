@@ -8,11 +8,9 @@
     "access": "public",
     "tag": "alpha"
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
-  "bin": {
-    "create-vue": "./scripts/create.js"
-  },
+  "bin": "./scripts/create.js",
   "scripts": {
     "dev": "vite --host --port 4002",
     "build": "vue-tsc -b && vite build",

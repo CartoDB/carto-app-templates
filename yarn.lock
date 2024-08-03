@@ -2135,7 +2135,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@carto/create-common@npm:^0.0.4, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
+"@carto/create-common@npm:^0.0.5, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
   version: 0.0.0-use.local
   resolution: "@carto/create-common@workspace:packages/create-common"
   dependencies:
@@ -2155,7 +2155,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
     "@carto/api-client": "npm:^0.0.1-2"
-    "@carto/create-common": "npm:^0.0.4"
+    "@carto/create-common": "npm:^0.0.5"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
     "@deck.gl/carto": "npm:^9.0.24"
     "@deck.gl/core": "npm:^9.0.24"
@@ -2185,7 +2185,7 @@ __metadata:
     typescript: "npm:^5.2.2"
     vite: "npm:^5.3.4"
   bin:
-    create-react: scripts/create.js
+    create-react: ./scripts/create.js
   languageName: unknown
   linkType: soft
 
@@ -2216,7 +2216,7 @@ __metadata:
     vue-router: "npm:4"
     vue-tsc: "npm:^2.0.24"
   bin:
-    create-vue: scripts/create.js
+    create-vue: ./scripts/create.js
   languageName: unknown
   linkType: soft
 
