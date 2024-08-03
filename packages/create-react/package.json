@@ -10,7 +10,9 @@
   },
   "version": "0.0.4",
   "type": "module",
-  "bin": "scripts/create.js",
+  "bin": {
+    "create-react": "./scripts/create.js"
+  },
   "scripts": {
     "dev": "vite --host --port 4001",
     "build": "tsc -b && vite build",
