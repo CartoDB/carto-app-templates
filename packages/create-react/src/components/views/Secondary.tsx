@@ -104,6 +104,7 @@ export default function Default() {
         <Legend
           entries={[
             {
+              type: 'continuous',
               title: 'U.S. population',
               subtitle: 'Sum of population by H3 cell',
             },

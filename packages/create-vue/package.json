@@ -21,6 +21,7 @@
     "@carto/api-client": "^0.0.41",
     "@carto/create-common": "workspace:^",
     "@deck.gl/aggregation-layers": "^9.0.24",
+    "@deck.gl/carto": "^9.0.24",
     "@deck.gl/core": "^9.0.24",
     "@deck.gl/extensions": "^9.0.24",
     "@deck.gl/geo-layers": "^9.0.24",
@@ -30,6 +31,7 @@
     "@loaders.gl/core": "^4.2.2",
     "@luma.gl/core": "^9.0.17",
     "@luma.gl/engine": "^9.0.17",
+    "maplibre-gl": "^4.5.0",
     "vue": "^3.4.31",
     "vue-router": "4"
   },
@@ -39,5 +41,6 @@
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
     "vue-tsc": "^2.0.24"
-  }
+  },
+  "packageManager": "yarn@4.2.2"
 }
