@@ -337,6 +337,28 @@ body {
   margin-left: 0.5em;
 }
 
+.legend-gradient {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 1.5em;
+  border-radius: var(--border-radius);
+}
+
+.legend-gradient-label {
+  position: absolute;
+  bottom: -1.5em;
+}
+
+.legend-gradient-label.-min {
+  left: 0;
+}
+
+.legend-gradient-label.-max {
+  right: 0;
+}
+
 /******************************************************************************
  * CARDS
  */

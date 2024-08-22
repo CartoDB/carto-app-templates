@@ -8,7 +8,7 @@ import {
   watchEffect,
 } from 'vue';
 import { Map } from 'maplibre-gl';
-import { Deck, MapViewState } from '@deck.gl/core';
+import { Deck, MapViewState, AccessorFunction, Color } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
 import Layers from '../common/Layers.vue';
@@ -23,6 +23,14 @@ const INITIAL_VIEW_STATE: MapViewState = {
   longitude: -95.7129,
   zoom: 3.5,
 };
+
+// TODO: Fetch domain/range from Widgets API?
+const POP_DOMAIN: [number, number] = [0, 100000];
+const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
+  attr: 'population_sum',
+  domain: POP_DOMAIN,
+  colors: 'PinkYl',
+});
 
 /****************************************************************************
  * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
@@ -56,11 +64,7 @@ const layers = computed(() => [
     id: 'U.S. population',
     visible: layerVisibility.value['U.S. population'],
     data: data.value,
-    getFillColor: colorContinuous({
-      attr: 'population_sum',
-      domain: [0, 100000], // TODO: Verify min/max.
-      colors: 'PinkYl',
-    }),
+    getFillColor: POP_COLORS,
   }),
 ]);
 
@@ -143,6 +147,9 @@ onUnmounted(() => {
           type: 'continuous',
           title: 'U.S. population',
           subtitle: 'Sum of population by H3 cell',
+          domain: POP_DOMAIN,
+          getSwatchColor: (value) =>
+            POP_COLORS({ properties: { population_sum: value } }, null!),
         },
       ]"
     />

@@ -1,20 +1,30 @@
+import { Color } from '@deck.gl/core';
+import { toHexString } from '../../utils';
+
 export type LegendEntryContinuousProps = {
   type: 'continuous';
   title: string;
   subtitle: string;
-  // TODO
+  domain: [number, number];
+  getSwatchColor: (value: number) => Color;
 };
 
 export function LegendEntryContinuous(props: LegendEntryContinuousProps) {
+  const colorLo = toHexString(props.getSwatchColor(props.domain[0]));
+  const colorHi = toHexString(props.getSwatchColor(props.domain[1]));
+
   return (
     <section className="legend-section" key={props.title}>
       <p className="legend-section-title body2">{props.title}</p>
       <p className="legend-section-subtitle caption">{props.subtitle}</p>
       <div
-        className="legend-gradient skeleton overline"
-        style={{ height: '20px' }}
+        className="legend-gradient overline"
+        style={{
+          background: `linear-gradient(to right, ${colorLo}, ${colorHi})`,
+        }}
       >
-        TODO
+        <span className="legend-gradient-label -min">{props.domain[0]}</span>
+        <span className="legend-gradient-label -max">{props.domain[1]}</span>
       </div>
     </section>
   );

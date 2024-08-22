@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Color } from '@deck.gl/core';
+import { toHexString } from '../../utils';
 
 export type LegendEntryCategoricalProps = {
   type: 'categorical';
@@ -12,14 +13,6 @@ export type LegendEntryCategoricalProps = {
 
 <script setup lang="ts">
 const props = defineProps<LegendEntryCategoricalProps>();
-
-function toHexString(color: Color): string {
-  const hex =
-    Math.round(color[0]) * 65536 +
-    Math.round(color[1]) * 256 +
-    Math.round(color[2]);
-  return '#' + ('000000' + hex.toString(16)).slice(-6);
-}
 </script>
 
 <template>

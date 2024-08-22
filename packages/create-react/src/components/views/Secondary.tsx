@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
-import { MapView, MapViewState } from '@deck.gl/core';
+import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
@@ -18,6 +18,14 @@ const INITIAL_VIEW_STATE: MapViewState = {
   longitude: -103.0078,
   zoom: 2,
 };
+
+// TODO: Fetch domain/range from Widgets API?
+const POP_DOMAIN: [number, number] = [0, 100000];
+const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
+  attr: 'population_sum',
+  domain: POP_DOMAIN,
+  colors: 'PinkYl',
+});
 
 export default function Default() {
   const [attributionHTML, setAttributionHTML] = useState('');
@@ -54,11 +62,7 @@ export default function Default() {
         id: 'U.S. population',
         visible: layerVisibility['U.S. population'],
         data,
-        getFillColor: colorContinuous({
-          attr: 'population_sum',
-          domain: [0, 100000], // TODO: Verify min/max.
-          colors: 'PinkYl',
-        }),
+        getFillColor: POP_COLORS,
       }),
     ];
   }, [data, layerVisibility]);
@@ -103,10 +107,14 @@ export default function Default() {
         />
         <Legend
           entries={[
+            // TODO: Cleaner way to generate a legend?
             {
               type: 'continuous',
               title: 'U.S. population',
               subtitle: 'Sum of population by H3 cell',
+              domain: POP_DOMAIN,
+              getSwatchColor: (value) =>
+                POP_COLORS({ properties: { population_sum: value } }, null!),
             },
           ]}
         />

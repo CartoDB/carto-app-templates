@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.3",
-    "@carto/api-client": "^0.0.41",
+    "@carto/api-client": "^0.0.1-2",
     "@carto/create-common": "workspace:^",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",
@@ -25,8 +25,8 @@
     "@deck.gl/layers": "^9.0.24",
     "@deck.gl/mesh-layers": "^9.0.24",
     "@loaders.gl/core": "^4.2.2",
-    "@luma.gl/core": "^9.0.17",
-    "@luma.gl/engine": "^9.0.17",
+    "@luma.gl/core": "^9.0.16",
+    "@luma.gl/engine": "^9.0.16",
     "maplibre-gl": "^4.5.0",
     "vue": "^3.4.31",
     "vue-router": "4"
