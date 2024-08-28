@@ -8,6 +8,9 @@ import { vectorQuerySource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
 import { Card } from '../common/Card';
 import { Layers } from '../common/Layers';
+import { FormulaWidget } from '../widgets/FormulaWidget';
+import { CategoryWidget } from '../widgets/CategoryWidget';
+import { useDebouncedState } from '../../hooks';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -29,7 +32,7 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
 
 export default function Default() {
   const [attributionHTML, setAttributionHTML] = useState('');
-  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
   /****************************************************************************
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
@@ -90,10 +93,20 @@ export default function Default() {
         </Card>
         <span className="flex-space" />
         <Card title="Tower count">
-          <div className="skeleton" style={{ height: '8em' }} />
+          <FormulaWidget
+            data={data}
+            column={''}
+            operation={'count'}
+            viewState={viewState}
+          />
         </Card>
         <Card title="Towers by radio">
-          <div className="skeleton" style={{ height: '6em' }} />
+          <CategoryWidget
+            data={data}
+            column={'radio'}
+            operation={'count'}
+            viewState={viewState}
+          />
         </Card>
       </aside>
       <main className="map">
