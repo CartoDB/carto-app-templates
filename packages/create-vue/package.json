@@ -27,6 +27,7 @@
     "@loaders.gl/core": "^4.2.2",
     "@luma.gl/core": "^9.0.16",
     "@luma.gl/engine": "^9.0.16",
+    "@vueuse/core": "^11.0.3",
     "maplibre-gl": "^4.5.0",
     "vue": "^3.4.31",
     "vue-router": "4"

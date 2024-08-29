@@ -7,6 +7,7 @@ import {
   shallowRef,
   watchEffect,
 } from 'vue';
+import { refDebounced } from '@vueuse/core';
 import { Map } from 'maplibre-gl';
 import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
@@ -14,6 +15,7 @@ import { vectorQuerySource } from '@carto/api-client';
 import Layers from '../common/Layers.vue';
 import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
+import FormulaWidget from '../widgets/FormulaWidget.vue';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -74,6 +76,7 @@ const layers = computed(() => [
 const map = shallowRef<Map | null>(null);
 const deck = shallowRef<Deck | null>(null);
 const viewState = ref<MapViewState>(INITIAL_VIEW_STATE);
+const viewStateDebounced = refDebounced(viewState, 200);
 const attributionHTML = ref<string>('');
 
 watchEffect(() => {
@@ -131,7 +134,10 @@ onUnmounted(() => {
     </Card>
     <span class="flex-space" />
     <Card title="Tower count">
-      <div class="skeleton" style="height: 8em" />
+      <FormulaWidget
+        :data="data"
+        :viewState="viewStateDebounced as MapViewState"
+      />
     </Card>
     <Card title="Towers by radio">
       <div class="skeleton" style="height: 6em" />
