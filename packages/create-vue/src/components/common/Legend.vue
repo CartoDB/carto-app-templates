@@ -18,7 +18,11 @@ const props = withDefaults(
 <template>
   <aside class="legend">
     <Card title="Legend" :open="props.open">
-      <section v-for="entry in entries" class="legend-section" key="{title}">
+      <section
+        v-for="entry in entries"
+        class="legend-section"
+        :key="entry.title"
+      >
         <LegendEntryCategorical
           v-if="entry.type === 'categorical'"
           v-bind="entry"

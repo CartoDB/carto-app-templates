@@ -16,6 +16,7 @@ import Layers from '../common/Layers.vue';
 import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
+import CategoryWidget from '../widgets/CategoryWidget.vue';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -140,7 +141,12 @@ onUnmounted(() => {
       />
     </Card>
     <Card title="Towers by radio">
-      <div class="skeleton" style="height: 6em" />
+      <CategoryWidget
+        :data="data"
+        :column="'radio'"
+        :operation="'count'"
+        :viewState="viewStateDebounced as MapViewState"
+      />
     </Card>
   </aside>
   <main class="map">
