@@ -4,7 +4,7 @@ import {
   CategoryResponse,
   WidgetSource,
 } from '@carto/api-client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   createSpatialFilter,
   WidgetStatus,
@@ -54,6 +54,16 @@ export function CategoryWidget({
     return () => abortController.abort();
   }, [data, column, operation, viewState]);
 
+  const [min, max] = useMemo(() => {
+    let min = Infinity;
+    let max = -Infinity;
+    for (const { value } of response) {
+      min = Math.min(value, min);
+      max = Math.max(value, max);
+    }
+    return [min, max];
+  }, [response]);
+
   if (status === 'loading') {
     return <span className="title">...</span>;
   }
@@ -67,14 +77,23 @@ export function CategoryWidget({
   }
 
   return (
-    <ul>
+    <ul className="category-list">
       {response.map(({ name, value }) => (
-        <li key={name}>
-          <span className="body1 strong">{name}</span>
-          {': '}
-          <data className="body1" value={value}>
-            {numberFormatter.format(value)}
-          </data>
+        <li key={name} className="category-item">
+          <div className="category-item-row">
+            <span className="category-item-label body1 strong">{name}</span>
+            <data className="category-item-value body1" value={value}>
+              {numberFormatter.format(value)}
+            </data>
+          </div>
+          <div className="category-item-row">
+            <meter
+              className="category-item-meter"
+              min={min}
+              max={max}
+              value={value}
+            ></meter>
+          </div>
         </li>
       ))}
     </ul>
