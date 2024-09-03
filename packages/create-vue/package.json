@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.3",
-    "@carto/api-client": "^0.0.1-2",
+    "@carto/api-client": "^0.0.44",
     "@carto/create-common": "workspace:^",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",

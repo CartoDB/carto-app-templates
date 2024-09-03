@@ -2098,10 +2098,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carto/api-client@npm:^0.0.1-2":
-  version: 0.0.1-2
-  resolution: "@carto/api-client@npm:0.0.1-2"
-  checksum: 10c0/efb6fcb09aa686bbd71b1b077dfa3588861bb5fd0fa2317baba1c44a9a0974b2d02ed4403a2a3193c2e0a117853dacfa75eef26a5b1711ddbde4534e74e961b6
+"@carto/api-client@npm:^0.0.44":
+  version: 0.0.44
+  resolution: "@carto/api-client@npm:0.0.44"
+  checksum: 10c0/cd54e960cc31210e50f19f7989038c176513215299d1e34f4afd99429050f3f9788aea1978fa25847ae6ac66d451bc0ce30cf1fdb1d1bd9a8820d84be95e632c
   languageName: node
   linkType: hard
 
@@ -2147,7 +2147,7 @@ __metadata:
   resolution: "@carto/create-react@workspace:packages/create-react"
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
-    "@carto/api-client": "npm:^0.0.1-2"
+    "@carto/api-client": "npm:^0.0.44"
     "@carto/create-common": "npm:^0.0.7"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
     "@deck.gl/carto": "npm:^9.0.24"
@@ -2187,7 +2187,7 @@ __metadata:
   resolution: "@carto/create-vue@workspace:packages/create-vue"
   dependencies:
     "@auth0/auth0-vue": "npm:^2.3.3"
-    "@carto/api-client": "npm:^0.0.1-2"
+    "@carto/api-client": "npm:^0.0.44"
     "@carto/create-common": "workspace:^"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
     "@deck.gl/carto": "npm:^9.0.24"

@@ -14,6 +14,7 @@
   --card-background: #ffffff;
   --card-background-surface: #f8f9f9;
   --text-primary: #2c3032;
+  --text-link: rgb(3, 111, 226);
   --border-color: #e0e0e0;
 
   --app-bar-height: 48px;
@@ -144,6 +145,17 @@ p,
 ul,
 figure {
   margin-bottom: 1rem;
+}
+
+a {
+  color: var(--text-link);
+}
+
+button {
+  color: var(--text-link);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 
 /******************************************************************************
@@ -297,6 +309,8 @@ ul.category-list {
 
 li.category-item {
   margin-bottom: var(--padding);
+  cursor: pointer;
+  user-select: none;
 }
 
 li.category-item:last-child {
@@ -318,6 +332,24 @@ li.category-item:last-child {
 .category-item-meter {
   display: block;
   width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+ul.category-list:has(.selected) li.category-item {
+  filter: saturate(0);
+}
+
+ul.category-list:has(.selected) li.category-item.selected {
+  filter: saturate(1);
+}
+
+li.category-item:hover {
+  filter: saturate(2.5);
+}
+
+ul.category-list + button {
+  float: right;
+  margin-top: 1em;
 }
 
 /******************************************************************************
@@ -473,4 +505,15 @@ input[type='checkbox'] {
   cursor: pointer;
   vertical-align: middle;
   margin-right: 1em;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+button:hover {
+  text-decoration: underline;
 }

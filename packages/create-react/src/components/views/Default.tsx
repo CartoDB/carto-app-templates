@@ -4,7 +4,7 @@ import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
 import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
-import { vectorQuerySource } from '@carto/api-client';
+import { Filter, vectorQuerySource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
 import { Card } from '../common/Card';
 import { Layers } from '../common/Layers';
@@ -31,6 +31,7 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
 });
 
 export default function Default() {
+  const [filters, setFilters] = useState({} as Record<string, Filter>);
   const [attributionHTML, setAttributionHTML] = useState('');
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
@@ -44,8 +45,9 @@ export default function Default() {
       connectionName: 'carto_dw',
       sqlQuery:
         'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
+      filters,
     });
-  }, []);
+  }, [filters]);
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
@@ -106,6 +108,8 @@ export default function Default() {
             column={'radio'}
             operation={'count'}
             viewState={viewState}
+            filters={filters}
+            onFiltersChange={setFilters}
           />
         </Card>
       </aside>

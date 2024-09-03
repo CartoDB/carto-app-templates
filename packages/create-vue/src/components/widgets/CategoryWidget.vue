@@ -5,13 +5,19 @@ import { MapViewState } from '@deck.gl/core';
 import {
   AggregationType,
   CategoryResponse,
+  Filter,
+  FilterType,
   WidgetSource,
+  removeFilter,
+  getFilter,
+  hasFilter,
 } from '@carto/api-client';
 import {
   createSpatialFilter,
   WidgetStatus,
   numberFormatter,
 } from '../../utils';
+import { useToggleFilter } from '../../hooks';
 
 const props = withDefaults(
   defineProps<{
@@ -19,6 +25,8 @@ const props = withDefaults(
     column?: string;
     operation?: AggregationType;
     viewState?: MapViewState;
+    filters?: Record<string, Filter>;
+    onFiltersChange?: (filters: Record<string, Filter>) => void;
   }>(),
   {
     column: '',
@@ -26,6 +34,7 @@ const props = withDefaults(
   },
 );
 
+const owner = ref<string>(crypto.randomUUID());
 const status = ref<WidgetStatus>('loading');
 
 const response = computedAsync<CategoryResponse>(async (onCancel) => {
@@ -45,6 +54,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
         operation,
         spatialFilter: viewState && createSpatialFilter(viewState),
         abortController,
+        filterOwner: owner.value,
       }),
     )
     .then((response) => {
@@ -68,6 +78,35 @@ const minMax = computed<[number, number]>(() => {
   }
   return [min, max];
 });
+
+const selectedCategories = computed(() => {
+  const filter =
+    props.filters &&
+    getFilter(props.filters, {
+      column: props.column,
+      owner: owner.value,
+      type: FilterType.IN,
+    });
+  return new Set((filter?.values || []) as string[]);
+});
+
+const toggleFilter = useToggleFilter({
+  column: props.column,
+  owner: owner.value,
+  filters: props.filters,
+  onChange: props.onFiltersChange,
+});
+
+function onClearFilters() {
+  if (props.filters && props.onFiltersChange) {
+    props.onFiltersChange({
+      ...removeFilter(props.filters, {
+        column: props.column,
+        owner: owner.value,
+      }),
+    });
+  }
+}
 </script>
 
 <template>
@@ -80,8 +119,16 @@ const minMax = computed<[number, number]>(() => {
   </template>
 
   <template v-else>
-    <ul className="category-list">
-      <li v-for="row in response" :key="row.name" class="category-item">
+    <ul class="category-list">
+      <li
+        v-for="row in response"
+        :key="row.name"
+        :class="{
+          'category-item': true,
+          selected: selectedCategories.has(row.name),
+        }"
+        @click="() => toggleFilter(row.name)"
+      >
         <div class="category-item-row">
           <span class="category-item-label body1 strong">{{ row.name }}</span>
           <data class="category-item-value body1" :value="row.value">
@@ -98,5 +145,11 @@ const minMax = computed<[number, number]>(() => {
         </div>
       </li>
     </ul>
+    <button
+      v-if="filters && onFiltersChange && hasFilter(filters, { column })"
+      @click="onClearFilters"
+    >
+      Clear
+    </button>
   </template>
 </template>

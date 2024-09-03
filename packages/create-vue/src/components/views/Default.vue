@@ -11,7 +11,7 @@ import { refDebounced } from '@vueuse/core';
 import { Map } from 'maplibre-gl';
 import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
-import { vectorQuerySource } from '@carto/api-client';
+import { vectorQuerySource, Filter } from '@carto/api-client';
 import Layers from '../common/Layers.vue';
 import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
@@ -39,12 +39,19 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
  * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
  */
 
+const filters = ref<Record<string, Filter>>({});
+
+const onFiltersChange = (_filters: Record<string, Filter>) => {
+  filters.value = _filters;
+};
+
 const data = computed(() =>
   vectorQuerySource({
     accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
     connectionName: 'carto_dw',
     sqlQuery:
       'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
+    filters: filters.value,
   }),
 );
 
@@ -90,7 +97,10 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  data.value?.then(({ attribution }) => (attributionHTML.value = attribution));
+  data.value?.then(
+    ({ attribution }: { attribution: string }) =>
+      (attributionHTML.value = attribution),
+  );
 });
 
 onMounted(() => {
@@ -146,6 +156,8 @@ onUnmounted(() => {
         :column="'radio'"
         :operation="'count'"
         :viewState="viewStateDebounced as MapViewState"
+        :filters
+        :onFiltersChange
       />
     </Card>
   </aside>
