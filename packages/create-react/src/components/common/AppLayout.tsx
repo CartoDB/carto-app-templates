@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from 'react';
 import { AppContext } from '../../context';
-import { NAV_ROUTES } from '../../routes';
+import { NAV_ROUTES, RoutePath } from '../../routes';
 import { NavLink, Outlet } from 'react-router-dom';
 
 export default function AppLayout() {
@@ -27,6 +27,16 @@ export default function AppLayout() {
         )}
         <span className="app-bar-text body1 strong">{context.title}</span>
         <nav className="app-bar-nav">{navLinks}</nav>
+        <span className="flex-space" />
+        {context.oauth.enabled && (
+          <NavLink
+            to={RoutePath.LOGOUT}
+            className="body2 strong"
+            reloadDocument
+          >
+            Sign out
+          </NavLink>
+        )}
       </header>
       <div className="container">
         <Outlet />

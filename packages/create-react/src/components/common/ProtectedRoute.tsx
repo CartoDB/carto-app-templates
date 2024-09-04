@@ -1,25 +1,26 @@
 import { Navigate } from 'react-router-dom';
-// import { useAuth0 } from '@auth0/auth0-react';
 import { RoutePath } from '../../routes';
+import { useAuth0 } from '@auth0/auth0-react';
+import { AppContext } from '../../context';
+import { useContext } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function ProtectedRoute({
   children,
 }: {
   children: JSX.Element;
 }) {
-  // TODO(impl): Auth
-  // const { isAuthenticated, isLoading } = useAuth0();
+  useAuth();
+  const { isAuthenticated, isLoading } = useAuth0();
+  const { oauth, accessToken } = useContext(AppContext);
 
-  // if (!initialState.oauth) {
-  //   return children;
-  // }
+  if (!oauth.enabled) {
+    return children;
+  }
 
-  const authenticated = true; //notAuthenticated = !isLoading && !isAuthenticated && !accessToken;
-
-  if (!authenticated) {
+  if (!isLoading && !isAuthenticated && !accessToken) {
     return <Navigate to={RoutePath.LOGIN} />;
   }
 
-  return children;
-  // return !!accessToken ? children : null;
+  return accessToken ? children : null;
 }

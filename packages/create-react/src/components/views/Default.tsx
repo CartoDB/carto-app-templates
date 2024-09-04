@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
@@ -11,6 +11,7 @@ import { Layers } from '../common/Layers';
 import { FormulaWidget } from '../widgets/FormulaWidget';
 import { CategoryWidget } from '../widgets/CategoryWidget';
 import { useDebouncedState } from '../../hooks';
+import { AppContext } from '../../context';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -31,6 +32,7 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
 });
 
 export default function Default() {
+  const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [filters, setFilters] = useState({} as Record<string, Filter>);
   const [attributionHTML, setAttributionHTML] = useState('');
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -41,13 +43,14 @@ export default function Default() {
 
   const data = useMemo(() => {
     return vectorQuerySource({
-      accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
+      accessToken,
+      apiBaseUrl,
       connectionName: 'carto_dw',
       sqlQuery:
         'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
       filters,
     });
-  }, [filters]);
+  }, [accessToken, apiBaseUrl, filters]);
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)

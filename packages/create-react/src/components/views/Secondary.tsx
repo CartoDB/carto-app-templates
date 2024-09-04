@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { Map } from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
@@ -8,6 +8,7 @@ import { h3TableSource } from '@carto/api-client';
 import { Legend } from '../common/Legend';
 import { Layers } from '../common/Layers';
 import { Card } from '../common/Card';
+import { AppContext } from '../../context';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -28,6 +29,7 @@ const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
 });
 
 export default function Default() {
+  const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
@@ -37,14 +39,15 @@ export default function Default() {
 
   const data = useMemo(() => {
     return h3TableSource({
-      accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
+      accessToken,
+      apiBaseUrl,
       connectionName: 'carto_dw',
       tableName:
         'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
       spatialDataColumn: 'h3',
       aggregationExp: 'SUM(population) as population_sum',
     });
-  }, []);
+  }, [accessToken, apiBaseUrl]);
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)

@@ -220,7 +220,7 @@ body {
 
 .app-bar img {
   float: left;
-  margin-right: 0.5em;
+  margin: 0 1em 0 0.5em;
   max-height: 32px;
 }
 
@@ -229,7 +229,7 @@ body {
   height: 100%;
 }
 
-.app-bar-nav a {
+.app-bar a {
   opacity: 0.7;
   color: inherit;
   text-decoration: none;
@@ -242,14 +242,18 @@ body {
     0.2s ease background;
 }
 
-.app-bar-nav a:hover {
+.app-bar a:hover {
   background: var(--app-bar-tab-background-hover);
 }
 
-.app-bar-nav:not(:hover) a.active,
-.app-bar-nav a:hover {
+.app-bar:not(:hover) a.active,
+.app-bar a:hover {
   opacity: 1;
   border-bottom: 2px solid var(--card-background);
+}
+
+.app-bar .flex-space {
+  flex-grow: 1;
 }
 
 /******************************************************************************
@@ -270,6 +274,44 @@ body {
 
 .sidebar .flex-space {
   flex-grow: 1;
+}
+
+/******************************************************************************
+ * LOGIN
+ */
+
+.login {
+  background: var(--app-bar-background);
+  color: var(--app-bar-text-primary);
+  width: 100%;
+  height: 100%;
+  padding: 5em;
+}
+
+.login .login-logo {
+  width: 100px;
+}
+
+.login .login-logo,
+.login .subtitle {
+  margin-bottom: 5em;
+}
+
+@media screen and (min-width: 500px) {
+  .login .title {
+    font-size: 48px;
+  }
+}
+
+.login button {
+  background: var(--text-link);
+  color: var(--app-bar-text-primary);
+  padding: 0.5em 2em;
+}
+
+.login button:hover {
+  text-decoration: none;
+  filter: brightness(1.2);
 }
 
 /******************************************************************************

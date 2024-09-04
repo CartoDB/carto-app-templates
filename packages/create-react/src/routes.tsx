@@ -11,8 +11,9 @@ const Secondary = lazy(() => import('./components/views/Secondary'));
 const NotFound = lazy(() => import('./components/views/NotFound'));
 // eslint-disable-next-line react-refresh/only-export-components
 const Login = lazy(() => import('./components/views/Login'));
+// eslint-disable-next-line react-refresh/only-export-components
+const Logout = lazy(() => import('./components/views/Logout'));
 
-// TODO: /logout ?
 export const RoutePath: Record<string, string> = {
   DEFAULT: '/',
   US_POPULATION: '/usa-population',
@@ -41,6 +42,7 @@ export const routes: RouteObject[] = [
     ],
   },
   { path: RoutePath.LOGIN, element: <Login /> },
+  { path: RoutePath.LOGOUT, element: <Logout /> },
   { path: '*', element: <NotFound /> },
 ];
 
