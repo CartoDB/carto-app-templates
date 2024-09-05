@@ -86,21 +86,39 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    * Project configuration.
    */
 
-  // TODO(impl): Prompt about authentication, enable/disable access token prompt.
   const config: ProjectConfig = await prompts(
     [
       {
         name: 'title',
         type: 'text',
-        message: 'Title for the application',
+        message: `Project title ${dim('(required) [.env, index.html]')}`,
         validate: (text) => (text.length === 0 ? 'Title is required' : true),
       },
       {
+        name: 'authEnabled',
+        type: 'toggle',
+        active: 'OAuth Client ID',
+        inactive: 'access token',
+        message: `Authentication? ${dim('(required) [.env]')}`,
+      },
+      {
         name: 'accessToken',
-        type: 'password',
-        message: 'Access token for CARTO API',
+        type: (_, config) => (config.authEnabled ? null : 'password'),
+        message: `Access token for CARTO API ${dim('(required) [.env]')}`,
         validate: (text) =>
           text.length === 0 ? 'Access token is required' : true,
+      },
+      {
+        name: 'authClientID',
+        type: (_, config) => (config.authEnabled ? 'password' : null),
+        message: `OAuth Client ID ${dim('(required) [.env]')}`,
+        validate: (text) =>
+          text.length === 0 ? 'Client ID is required' : true,
+      },
+      {
+        name: 'authDomain',
+        type: (_, config) => (config.authEnabled ? 'text' : null),
+        message: `OAuth domain ${dim('(optional) [.env]')}`,
       },
     ],
     {
