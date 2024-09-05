@@ -14,13 +14,9 @@ export default function ProtectedRoute({
   const { isAuthenticated, isLoading } = useAuth0();
   const { oauth, accessToken } = useContext(AppContext);
 
-  if (!oauth.enabled) {
-    return children;
-  }
-
-  if (!isLoading && !isAuthenticated && !accessToken) {
+  if (oauth.enabled && !isLoading && !isAuthenticated && !accessToken) {
     return <Navigate to={RoutePath.LOGIN} />;
   }
 
-  return accessToken ? children : null;
+  return !oauth.enabled || accessToken ? children : null;
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { context } from '../../context';
-import { routes } from '../../routes';
+import { routes, RoutePath, NAV_ROUTES } from '../../routes';
 </script>
 
 <template>
@@ -14,7 +14,7 @@ import { routes } from '../../routes';
     <span class="app-bar-text body1 strong">{{ context.title }}</span>
     <nav v-if="routes.length > 1" class="app-bar-nav">
       <RouterLink
-        v-for="route in routes"
+        v-for="route in NAV_ROUTES"
         :to="route.path"
         :key="route.path"
         class="body2 strong"
@@ -22,6 +22,10 @@ import { routes } from '../../routes';
         >{{ route.text }}</RouterLink
       >
     </nav>
+    <span className="flex-space" />
+    <RouterLink :to="RoutePath.LOGOUT" class="body2 strong"
+      >Sign out</RouterLink
+    >
   </header>
   <div class="container">
     <RouterView />

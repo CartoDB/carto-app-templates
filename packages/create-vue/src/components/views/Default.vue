@@ -17,6 +17,7 @@ import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
 import CategoryWidget from '../widgets/CategoryWidget.vue';
+import { context } from '../../context';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -47,7 +48,8 @@ const onFiltersChange = (_filters: Record<string, Filter>) => {
 
 const data = computed(() =>
   vectorQuerySource({
-    accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
+    accessToken: context.accessToken,
+    apiBaseUrl: context.apiBaseUrl,
     connectionName: 'carto_dw',
     sqlQuery:
       'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',

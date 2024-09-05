@@ -1,7 +1,5 @@
-<script setup lang="ts">
-import AppLayout from './components/common/AppLayout.vue';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <AppLayout></AppLayout>
+  <RouterView />
 </template>

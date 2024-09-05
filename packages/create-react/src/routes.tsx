@@ -14,7 +14,7 @@ const Login = lazy(() => import('./components/views/Login'));
 // eslint-disable-next-line react-refresh/only-export-components
 const Logout = lazy(() => import('./components/views/Logout'));
 
-export const RoutePath: Record<string, string> = {
+export const RoutePath = {
   DEFAULT: '/',
   US_POPULATION: '/usa-population',
 

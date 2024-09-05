@@ -14,6 +14,7 @@ import { h3TableSource } from '@carto/api-client';
 import Layers from '../common/Layers.vue';
 import Legend from '../common/Legend.vue';
 import Card from '../common/Card.vue';
+import { context } from '../../context';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -38,7 +39,8 @@ const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
 
 const data = computed(() =>
   h3TableSource({
-    accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
+    accessToken: context.accessToken,
+    apiBaseUrl: context.apiBaseUrl,
     connectionName: 'carto_dw',
     tableName:
       'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
