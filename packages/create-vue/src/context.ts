@@ -3,6 +3,7 @@ import cartoLogo from '/carto.svg';
 
 export interface AppContext {
   title: string;
+  subtitle: string;
   logo?: {
     src: string;
     alt: string;
@@ -27,6 +28,7 @@ export interface AppContext {
 
 export const DEFAULT_APP_CONTEXT: AppContext = {
   title: import.meta.env.VITE_APP_TITLE,
+  subtitle: 'Discover the power of developing with Vue',
   logo: {
     src: cartoLogo,
     alt: 'CARTO logo',

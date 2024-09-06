@@ -15,7 +15,7 @@ const { loginWithRedirect } = useAuth0();
       :alt="context.logo.alt"
     />
     <h1 class="title">{{ context.title }}</h1>
-    <p class="subtitle">Discover the power of developing with React</p>
+    <p class="subtitle">{{ context.subtitle }}</p>
     <button class="body1" @click="() => loginWithRedirect()">
       Login with CARTO
     </button>

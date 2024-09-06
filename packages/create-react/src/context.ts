@@ -3,6 +3,7 @@ import cartoLogo from '/carto.svg';
 
 export interface AppContextProps {
   title: string;
+  subtitle: string;
   logo?: {
     src: string;
     alt: string;
@@ -28,6 +29,7 @@ export interface AppContextProps {
 
 export const DEFAULT_APP_CONTEXT = {
   title: import.meta.env.VITE_APP_TITLE,
+  subtitle: 'Discover the power of developing with React',
   logo: {
     src: cartoLogo,
     alt: 'CARTO logo',
