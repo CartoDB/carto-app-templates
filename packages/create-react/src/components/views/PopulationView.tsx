@@ -5,7 +5,6 @@ import DeckGL from '@deck.gl/react';
 import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
-import { Legend } from '../legends/Legend';
 import { Layers } from '../Layers';
 import { Card } from '../Card';
 import { AppContext } from '../../context';
@@ -30,9 +29,14 @@ const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
   colors: 'PinkYl',
 });
 
+/**
+ * Example application page, showing U.S. population.
+ */
 export default function PopulationView() {
+  // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
+  // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
   /****************************************************************************
@@ -55,12 +59,14 @@ export default function PopulationView() {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
+  // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   const [layerVisibility, setLayerVisibility] = useState<
     Record<string, boolean>
   >({
     'U.S. population': true,
   });
 
+  // Update layers when data or visualization parameters change.
   const layers = useMemo(() => {
     return [
       new H3TileLayer({
@@ -71,6 +77,10 @@ export default function PopulationView() {
       }),
     ];
   }, [data, layerVisibility]);
+
+  /****************************************************************************
+   * Attribution
+   */
 
   useEffect(() => {
     data?.then(({ attribution }) => setAttributionHTML(attribution));

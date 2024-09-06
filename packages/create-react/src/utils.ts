@@ -3,6 +3,7 @@ import { Color, MapViewState, WebMercatorViewport } from '@deck.gl/core';
 
 export type WidgetStatus = 'loading' | 'complete' | 'error';
 
+/** Default numeric formatter. */
 export const numberFormatter = new Intl.NumberFormat('US', {
   maximumSignificantDigits: 3,
 });

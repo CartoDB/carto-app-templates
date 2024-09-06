@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { MapViewState } from '@deck.gl/core';
 import {
   AggregationType,
@@ -9,7 +10,6 @@ import {
   getFilter,
   hasFilter,
 } from '@carto/api-client';
-import { useEffect, useMemo, useState } from 'react';
 import {
   createSpatialFilter,
   WidgetStatus,
@@ -20,14 +20,24 @@ import { useToggleFilter } from '../../hooks/useToggleFilter';
 const { IN } = FilterType;
 
 export interface CategoryWidgetProps {
+  /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
   data: Promise<{ widgetSource: WidgetSource }>;
+  /** Column containing category names. */
   column: string;
+  /** Operation used to aggregate features in each category. */
   operation?: AggregationType;
+  /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
+  /** Filter state. If specified, widget will be filtered. */
   filters?: Record<string, Filter>;
+  /** Callback, to be invoked by the widget when its filters are set or cleared. */
   onFiltersChange?: (filters: Record<string, Filter>) => void;
 }
 
+/**
+ * Category widget, displaying one or more categories by name, with a horizontal 'meter'
+ * representing the value (typically count) of each category.
+ */
 export function CategoryWidget({
   data,
   column,
@@ -74,6 +84,7 @@ export function CategoryWidget({
     return () => abortController.abort();
   }, [data, column, operation, viewState, owner]);
 
+  // Compute min/max over category values.
   const [min, max] = useMemo(() => {
     let min = Infinity;
     let max = -Infinity;
@@ -84,6 +95,7 @@ export function CategoryWidget({
     return [min, max];
   }, [response]);
 
+  // Set of selected (filtered) categories, for quick lookups while rendering.
   const selectedCategories = useMemo(() => {
     const filter = filters && getFilter(filters, { column, owner, type: IN });
     return new Set((filter?.values || []) as string[]);
@@ -103,7 +115,8 @@ export function CategoryWidget({
 
   function onClearFilters() {
     if (filters && onFiltersChange) {
-      onFiltersChange({ ...removeFilter(filters, { column, owner }) });
+      // Replace, not mutate, the filters object.
+      onFiltersChange(removeFilter({ ...filters }, { column, owner }));
     }
   }
 

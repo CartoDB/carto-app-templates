@@ -8,6 +8,10 @@ export type LegendEntryContinuousProps = {
   getSwatchColor: (value: number) => Color;
 };
 
+/**
+ * Continuous legend entry, representing a continuous domain [min, max]
+ * as a color gradient, with labeled min and max values.
+ */
 export function LegendEntryContinuous(props: LegendEntryContinuousProps) {
   const colorLo = toHexString(props.getSwatchColor(props.domain[0]));
   const colorHi = toHexString(props.getSwatchColor(props.domain[1]));

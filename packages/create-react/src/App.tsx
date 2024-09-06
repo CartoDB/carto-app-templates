@@ -5,6 +5,8 @@ import { router } from './routes';
 import { useEffect, useState } from 'react';
 
 function App() {
+  // Override 'setAccessToken' in AppContext, so that auth callbacks can
+  // provide an updated access token.
   const [accessToken, setAccessToken] = useState(
     DEFAULT_APP_CONTEXT.accessToken,
   );

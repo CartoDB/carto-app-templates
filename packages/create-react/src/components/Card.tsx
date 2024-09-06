@@ -8,6 +8,11 @@ interface CardProps {
   className?: string;
 }
 
+/**
+ * Card UI. Used as a simple, collapsible container for widgets, legends,
+ * and layer selection. If the title is omitted, no header is shown and
+ * the card is no longer collapsible.
+ */
 export function Card({
   children,
   title,

@@ -3,6 +3,7 @@ import { AppContext } from '../context';
 import { NAV_ROUTES, RoutePath } from '../routes';
 import { NavLink, Outlet } from 'react-router-dom';
 
+/** Primary app layout, including a header with navigation links. */
 export default function AppLayout() {
   const context = useContext(AppContext);
 

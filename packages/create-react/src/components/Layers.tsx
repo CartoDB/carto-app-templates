@@ -2,12 +2,19 @@ import { Layer } from '@deck.gl/core';
 import { Card } from './Card';
 
 interface LayersProps {
+  /** Whether the layer list is open (default) or closed. */
   open?: boolean;
+  /** List of deck.gl layers. */
   layers: Layer[];
+  /** Layer visibility state. Object keys are layer names, values are boolean visibility. */
   layerVisibility: Record<string, boolean>;
+  /** Callback to be invoked by the Layers component if a layer's visibility is toggled. */
   onLayerVisibilityChange: (layerVisibility: Record<string, boolean>) => void;
 }
 
+/**
+ * Layer list and visibility controller.
+ */
 export function Layers({
   open = true,
   layers,

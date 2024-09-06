@@ -7,20 +7,28 @@ import NotFoundView from './components/views/NotFoundView';
 import LoginView from './components/views/LoginView';
 import LogoutView from './components/views/LogoutView';
 
+/**
+ * Available paths (URLs) in the application.
+ */
 export const RoutePath = {
   CELL_TOWERS: '/',
   POPULATION: '/usa-population',
-
   LOGIN: '/login',
   LOGOUT: '/logout',
   NOT_FOUND: '/404',
 };
 
+/**
+ * Routes to be shown in the header navigation list.
+ */
 export const NAV_ROUTES: { text: string; path: string }[] = [
   { text: 'Cell towers', path: RoutePath.CELL_TOWERS },
   { text: 'U.S. population', path: RoutePath.POPULATION },
 ];
 
+/**
+ * Routes (pages) mapped to their corresponding React components.
+ */
 export const routes: RouteObject[] = [
   {
     path: RoutePath.CELL_TOWERS,

@@ -8,6 +8,9 @@ export type LegendEntryCategoricalProps = {
   getSwatchColor: (value: string) => Color;
 };
 
+/**
+ * Categorical legend entry, representing each category with a solid color.
+ */
 export function LegendEntryCategorical(props: LegendEntryCategoricalProps) {
   return (
     <section className="legend-section" key={props.title}>

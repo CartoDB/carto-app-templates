@@ -5,7 +5,6 @@ import DeckGL from '@deck.gl/react';
 import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { Filter, vectorQuerySource } from '@carto/api-client';
-import { Legend } from '../legends/Legend';
 import { Card } from '../Card';
 import { Layers } from '../Layers';
 import { FormulaWidget } from '../widgets/FormulaWidget';
@@ -32,10 +31,15 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
   colors: 'Bold',
 });
 
+/**
+ * Example application page, showing world-wide cell towers and a few widgets.
+ */
 export default function CellTowersView() {
+  // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [filters, setFilters] = useState({} as Record<string, Filter>);
   const [attributionHTML, setAttributionHTML] = useState('');
+  // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
   /****************************************************************************
@@ -57,12 +61,14 @@ export default function CellTowersView() {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
+  // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   const [layerVisibility, setLayerVisibility] = useState<
     Record<string, boolean>
   >({
     'Cell towers': true,
   });
 
+  // Update layers when data or visualization parameters change.
   const layers = useMemo(() => {
     return [
       new VectorTileLayer({
@@ -74,6 +80,10 @@ export default function CellTowersView() {
       }),
     ];
   }, [data, layerVisibility]);
+
+  /****************************************************************************
+   * Attribution
+   */
 
   useEffect(() => {
     data?.then(({ attribution }) => setAttributionHTML(attribution));
