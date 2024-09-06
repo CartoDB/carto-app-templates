@@ -2,7 +2,6 @@
 import type { Color } from '@deck.gl/core';
 
 export type LegendEntryContinuousProps = {
-  type: 'continuous';
   title: string;
   subtitle: string;
   domain: [number, number];

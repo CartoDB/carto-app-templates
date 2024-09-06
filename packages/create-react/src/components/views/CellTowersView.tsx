@@ -12,6 +12,7 @@ import { FormulaWidget } from '../widgets/FormulaWidget';
 import { CategoryWidget } from '../widgets/CategoryWidget';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
 import { AppContext } from '../../context';
+import { LegendEntryCategorical } from '../legends/LegendEntryCategorical';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -131,19 +132,16 @@ export default function CellTowersView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Legend
-          entries={[
-            // TODO: Cleaner way to generate a legend?
-            {
-              type: 'categorical',
-              title: 'Cell towers',
-              subtitle: 'By Radio',
-              values: RADIO_DOMAIN,
-              getSwatchColor: (value: string) =>
-                RADIO_COLORS({ properties: { radio: value } }, null!),
-            },
-          ]}
-        />
+        <Card title="Legend" className="legend">
+          <LegendEntryCategorical
+            title="Cell towers"
+            subtitle="By Radio"
+            values={RADIO_DOMAIN}
+            getSwatchColor={(value: string) =>
+              RADIO_COLORS({ properties: { radio: value } }, null!)
+            }
+          />
+        </Card>
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

@@ -13,7 +13,7 @@ import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
-import Legend from '../legends/Legend.vue';
+import LegendEntryContinuous from '../legends/LegendEntryContinuous.vue';
 import { context } from '../../context';
 
 const MAP_STYLE =
@@ -143,18 +143,17 @@ onUnmounted(() => {
       style="position: absolute; width: 100%; height: 100%"
     ></canvas>
     <Layers :layers :layerVisibility :onLayerVisibilityChange />
-    <Legend
-      :entries="[
-        {
-          type: 'continuous',
-          title: 'U.S. population',
-          subtitle: 'Sum of population by H3 cell',
-          domain: POP_DOMAIN,
-          getSwatchColor: (value) =>
-            POP_COLORS({ properties: { population_sum: value } }, null!),
-        },
-      ]"
-    />
+    <Card title="Legend" class="legend">
+      <LegendEntryContinuous
+        title="U.S. population"
+        subtitle="Sum of population by H3 cell"
+        :domain="POP_DOMAIN"
+        :getSwatchColor="
+          (value) =>
+            POP_COLORS({ properties: { population_sum: value } }, null!)
+        "
+      />
+    </Card>
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
 </template>

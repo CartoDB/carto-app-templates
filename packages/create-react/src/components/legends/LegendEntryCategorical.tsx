@@ -2,7 +2,6 @@ import { Color } from '@deck.gl/core';
 import { toHexString } from '../../utils';
 
 export type LegendEntryCategoricalProps = {
-  type: 'categorical';
   title: string;
   subtitle: string;
   values: string[];

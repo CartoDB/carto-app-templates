@@ -258,6 +258,77 @@ body {
 }
 
 /******************************************************************************
+ * CARDS
+ */
+
+.card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+summary.card-summary {
+  width: 100%;
+  height: var(--card-summary-height);
+  line-height: var(--card-summary-height);
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+summary.card-summary {
+  list-style: none;
+}
+
+summary.card-summary::-webkit-details-marker {
+  display: none;
+}
+
+summary.card-summary::after {
+  content: ' ►';
+  position: absolute;
+  top: 0rem;
+  right: 0.8rem;
+  color: var(--control-color);
+}
+
+details[open].card summary.card-summary:after {
+  content: ' ▼';
+}
+
+details.card summary.card-summary:hover:after {
+  color: var(--control-color-hover);
+}
+
+summary .card-summary-title {
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.card-content {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/******************************************************************************
+ * SKELETONS
+ */
+
+.skeleton {
+  display: block;
+  width: 100%;
+  background: var(--border-color);
+  filter: brightness(110%);
+  border-radius: var(--border-radius);
+}
+
+/******************************************************************************
  * SIDEBAR
  */
 
@@ -462,77 +533,6 @@ ul.category-list + button {
 
 .legend-gradient-label.-max {
   right: 0;
-}
-
-/******************************************************************************
- * CARDS
- */
-
-.card {
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-summary.card-summary {
-  width: 100%;
-  height: var(--card-summary-height);
-  line-height: var(--card-summary-height);
-  flex-shrink: 0;
-  flex-grow: 0;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  user-select: none;
-}
-
-summary.card-summary {
-  list-style: none;
-}
-
-summary.card-summary::-webkit-details-marker {
-  display: none;
-}
-
-summary.card-summary::after {
-  content: ' ►';
-  position: absolute;
-  top: 0rem;
-  right: 0.8rem;
-  color: var(--control-color);
-}
-
-details[open].card summary.card-summary:after {
-  content: ' ▼';
-}
-
-details.card summary.card-summary:hover:after {
-  color: var(--control-color-hover);
-}
-
-summary .card-summary-title {
-  padding: 0 1rem;
-  width: 100%;
-}
-
-.card-content {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow: auto;
-}
-
-/******************************************************************************
- * SKELETONS
- */
-
-.skeleton {
-  display: block;
-  width: 100%;
-  background: var(--border-color);
-  filter: brightness(110%);
-  border-radius: var(--border-radius);
 }
 
 /******************************************************************************

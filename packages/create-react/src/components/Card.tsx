@@ -5,18 +5,24 @@ interface CardProps {
   title?: string;
   open?: boolean;
   collapsible?: boolean;
+  className?: string;
 }
 
-export function Card({ children, title, open = true }: CardProps) {
+export function Card({
+  children,
+  title,
+  className = '',
+  open = true,
+}: CardProps) {
   if (!title) {
     return (
-      <section className="card">
+      <section className={`card ${className}`}>
         <div className="card-content">{children}</div>
       </section>
     );
   }
   return (
-    <details className="card" open={open}>
+    <details className={`card ${className}`} open={open}>
       <summary className="card-summary">
         <span className="body1 card-summary-title">{title}</span>
       </summary>

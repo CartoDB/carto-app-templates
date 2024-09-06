@@ -10,6 +10,7 @@ import { Layers } from '../Layers';
 import { Card } from '../Card';
 import { AppContext } from '../../context';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
+import { LegendEntryContinuous } from '../legends/LegendEntryContinuous';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -109,19 +110,16 @@ export default function PopulationView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Legend
-          entries={[
-            // TODO: Cleaner way to generate a legend?
-            {
-              type: 'continuous',
-              title: 'U.S. population',
-              subtitle: 'Sum of population by H3 cell',
-              domain: POP_DOMAIN,
-              getSwatchColor: (value) =>
-                POP_COLORS({ properties: { population_sum: value } }, null!),
-            },
-          ]}
-        />
+        <Card title="Legend" className="legend">
+          <LegendEntryContinuous
+            title="U.S. population"
+            subtitle="Sum of population by H3 cell"
+            domain={POP_DOMAIN}
+            getSwatchColor={(value) =>
+              POP_COLORS({ properties: { population_sum: value } }, null!)
+            }
+          />
+        </Card>
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

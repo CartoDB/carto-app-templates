@@ -14,7 +14,7 @@ import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { vectorQuerySource, Filter } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
-import Legend from '../legends/Legend.vue';
+import LegendEntryCategorical from '../legends/LegendEntryCategorical.vue';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
 import CategoryWidget from '../widgets/CategoryWidget.vue';
 import { context } from '../../context';
@@ -173,19 +173,17 @@ onUnmounted(() => {
       style="position: absolute; width: 100%; height: 100%"
     ></canvas>
     <Layers :layers :layerVisibility :onLayerVisibilityChange />
-    <Legend
-      :entries="[
-        // TODO: Cleaner way to generate a legend?
-        {
-          type: 'categorical',
-          title: 'Cell towers',
-          subtitle: 'By Radio',
-          values: RADIO_DOMAIN,
-          getSwatchColor: (value: string) =>
-            RADIO_COLORS({ properties: { radio: value } }, null!),
-        },
-      ]"
-    />
+    <Card title="Legend" class="legend">
+      <LegendEntryCategorical
+        title="Cell towers"
+        subtitle="By Radio"
+        :values="RADIO_DOMAIN"
+        :getSwatchColor="
+          (value: string) =>
+            RADIO_COLORS({ properties: { radio: value } }, null!)
+        "
+      />
+    </Card>
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
 </template>
