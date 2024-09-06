@@ -2,9 +2,9 @@
 import { effect } from 'vue';
 import AppLayout from './AppLayout.vue';
 import { useAuth0 } from '@auth0/auth0-vue';
-import { context } from '../../context';
-import { router, RoutePath } from '../../routes';
-import { useAuth } from '../../hooks/useAuth';
+import { context } from '../context';
+import { router, RoutePath } from '../routes';
+import { useAuth } from '../hooks/useAuth';
 
 useAuth();
 const { isAuthenticated, isLoading } = useAuth0();

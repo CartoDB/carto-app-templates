@@ -11,9 +11,9 @@ import { Map } from 'maplibre-gl';
 import { Deck, MapViewState, AccessorFunction, Color } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
-import Layers from '../common/Layers.vue';
-import Legend from '../common/Legend.vue';
-import Card from '../common/Card.vue';
+import Layers from '../Layers.vue';
+import Card from '../Card.vue';
+import Legend from '../legends/Legend.vue';
 import { context } from '../../context';
 
 const MAP_STYLE =

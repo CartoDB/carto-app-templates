@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { context } from '../../context';
-import { routes, RoutePath, NAV_ROUTES } from '../../routes';
+import { context } from '../context';
+import { routes, RoutePath, NAV_ROUTES } from '../routes';
 </script>
 
 <template>

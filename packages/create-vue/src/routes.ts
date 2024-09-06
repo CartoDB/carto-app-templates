@@ -1,15 +1,15 @@
 import { createWebHistory, createRouter } from 'vue-router';
-import ProtectedRoute from './components/common/ProtectedRoute.vue';
 
-const DefaultView = () => import('./components/views/Default.vue');
-const SecondaryView = () => import('./components/views/Secondary.vue');
-const LoginView = () => import('./components/views/Login.vue');
-const LogoutView = () => import('./components/views/Logout.vue');
-const NotFoundView = () => import('./components/views/NotFound.vue');
+import ProtectedRoute from './components/ProtectedRoute.vue';
+import CellTowersView from './components/views/CellTowersView.vue';
+import PopulationView from './components/views/PopulationView.vue';
+import LoginView from './components/views/LoginView.vue';
+import LogoutView from './components/views/LogoutView.vue';
+import NotFoundView from './components/views/NotFoundView.vue';
 
 export const RoutePath = {
-  DEFAULT: '/',
-  US_POPULATION: '/usa-population',
+  CELL_TOWERS: '/',
+  POPULATION: '/usa-population',
 
   LOGIN: '/login',
   LOGOUT: '/logout',
@@ -19,26 +19,26 @@ export const RoutePath = {
 export const NAV_ROUTES: { text: string; path: string }[] = [
   {
     text: 'Cell towers',
-    path: RoutePath.DEFAULT,
+    path: RoutePath.CELL_TOWERS,
   },
   {
     text: 'U.S. population',
-    path: RoutePath.US_POPULATION,
+    path: RoutePath.POPULATION,
   },
 ];
 
 export const routes = [
   {
-    path: RoutePath.DEFAULT,
+    path: RoutePath.CELL_TOWERS,
     component: ProtectedRoute,
     children: [
       {
-        path: RoutePath.DEFAULT,
-        component: DefaultView,
+        path: RoutePath.CELL_TOWERS,
+        component: CellTowersView,
       },
       {
-        path: RoutePath.US_POPULATION,
-        component: SecondaryView,
+        path: RoutePath.POPULATION,
+        component: PopulationView,
       },
     ],
   },
