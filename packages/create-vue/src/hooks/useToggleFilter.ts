@@ -7,12 +7,21 @@ import {
 } from '@carto/api-client';
 
 export type ToggleFilterProps = {
+  /** Column containing category-like strings for filtering. */
   column: string;
+  /** Owner / Widget ID. */
   owner: string;
+  /** Filter state. */
   filters?: Record<string, Filter>;
+  /** Callback to be invoked when changing filter state. */
   onChange?: (filters: Record<string, Filter>) => void;
 };
 
+/**
+ * Returns a function, `toggleFilter(category)`, which can be used to toggle
+ * a specified category on/off in filter state for a specified column. For
+ * use in category- and pie-style widgets.
+ */
 export function useToggleFilter({
   column,
   owner,
@@ -49,6 +58,7 @@ export function useToggleFilter({
       filters = removeFilter(filters, { column, owner });
     }
 
+    // Replace, not mutate, the filters object.
     onChange({ ...filters });
   };
 }

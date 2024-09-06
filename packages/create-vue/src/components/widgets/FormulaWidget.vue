@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * Formula widget, displaying a prominent 'scorecard' number.
+ */
 import { ref } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
@@ -11,9 +14,13 @@ import {
 
 const props = withDefaults(
   defineProps<{
+    /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
     data: Promise<{ widgetSource: WidgetSource }>;
+    /** Column containing a value to be aggregated. */
     column?: string;
+    /** Operation used to aggregate the specified column. */
     operation?: AggregationType;
+    /** Map view state. If specified, widget will be filtered to the view. */
     viewState?: MapViewState;
   }>(),
   {

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * Card UI. Used as a simple, collapsible container for widgets, legends,
+ * and layer selection. If the title is omitted, no header is shown and
+ * the card is no longer collapsible.
+ */
 const props = withDefaults(
   defineProps<{
     title?: string;

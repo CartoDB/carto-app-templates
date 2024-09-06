@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * Category widget, displaying one or more categories by name, with a horizontal 'meter'
+ * representing the value (typically count) of each category.
+ */
+
 import { computed, ref } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
@@ -21,11 +26,17 @@ import { useToggleFilter } from '../../hooks/useToggleFilter';
 
 const props = withDefaults(
   defineProps<{
+    /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
     data: Promise<{ widgetSource: WidgetSource }>;
+    /** Column containing category names. */
     column?: string;
+    /** Operation used to aggregate features in each category. */
     operation?: AggregationType;
+    /** Map view state. If specified, widget will be filtered to the view. */
     viewState?: MapViewState;
+    /** Filter state. If specified, widget will be filtered. */
     filters?: Record<string, Filter>;
+    /** Callback, to be invoked by the widget when its filters are set or cleared. */
     onFiltersChange?: (filters: Record<string, Filter>) => void;
   }>(),
   {
@@ -69,6 +80,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
     });
 }, []);
 
+// Compute min/max over category values.
 const minMax = computed<[number, number]>(() => {
   let min = Infinity;
   let max = -Infinity;
@@ -79,6 +91,7 @@ const minMax = computed<[number, number]>(() => {
   return [min, max];
 });
 
+// Set of selected (filtered) categories, for quick lookups while rendering.
 const selectedCategories = computed(() => {
   const filter =
     props.filters &&
@@ -99,12 +112,16 @@ const toggleFilter = useToggleFilter({
 
 function onClearFilters() {
   if (props.filters && props.onFiltersChange) {
-    props.onFiltersChange({
-      ...removeFilter(props.filters, {
-        column: props.column,
-        owner: owner.value,
-      }),
-    });
+    // Replace, not mutate, the filters object.
+    props.onFiltersChange(
+      removeFilter(
+        { ...props.filters },
+        {
+          column: props.column,
+          owner: owner.value,
+        },
+      ),
+    );
   }
 }
 </script>

@@ -1,4 +1,8 @@
 <script lang="ts">
+/**
+ * Categorical legend entry, representing each category with a solid color.
+ */
+
 import { Color } from '@deck.gl/core';
 import { toHexString } from '../../utils';
 

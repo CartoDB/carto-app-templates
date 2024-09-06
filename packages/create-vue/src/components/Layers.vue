@@ -1,12 +1,19 @@
 <script setup lang="ts">
+/**
+ * Layer list and visibility controller.
+ */
 import Card from './Card.vue';
 import { Layer } from '@deck.gl/core';
 
 const props = withDefaults(
   defineProps<{
+    /** Whether the layer list is open (default) or closed. */
     open?: boolean;
+    /** List of deck.gl layers. */
     layers: Layer[];
+    /** Layer visibility state. Object keys are layer names, values are boolean visibility. */
     layerVisibility: Record<string, boolean>;
+    /** Callback to be invoked by the Layers component if a layer's visibility is toggled. */
     onLayerVisibilityChange: (visibility: Record<string, boolean>) => void;
   }>(),
   { open: true },

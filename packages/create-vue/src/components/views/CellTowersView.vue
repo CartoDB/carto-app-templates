@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Example application page, showing world-wide cell towers and a few widgets.
+ */
+
 import {
   computed,
   onMounted,
@@ -42,10 +46,6 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
 
 const filters = ref<Record<string, Filter>>({});
 
-const onFiltersChange = (_filters: Record<string, Filter>) => {
-  filters.value = _filters;
-};
-
 const data = computed(() =>
   vectorQuerySource({
     accessToken: context.accessToken,
@@ -61,6 +61,7 @@ const data = computed(() =>
  * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
  */
 
+// Layer visibility represented as name/visibility pairs, managed by the Layers component.
 const layerVisibility = ref<Record<string, boolean>>({
   'Cell towers': true,
 });
@@ -69,6 +70,7 @@ const onLayerVisibilityChange = (visibility: Record<string, boolean>) => {
   layerVisibility.value = visibility;
 };
 
+// Update layers when data or visualization parameters change.
 const layers = computed(() => [
   new VectorTileLayer({
     id: 'Cell towers',
@@ -159,7 +161,7 @@ onUnmounted(() => {
         :operation="'count'"
         :viewState="viewStateDebounced as MapViewState"
         :filters
-        :onFiltersChange
+        :onFiltersChange="(nextFilters) => void (filters = nextFilters)"
       />
     </Card>
   </aside>

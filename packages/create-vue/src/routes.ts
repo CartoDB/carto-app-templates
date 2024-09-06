@@ -7,6 +7,7 @@ import LoginView from './components/views/LoginView.vue';
 import LogoutView from './components/views/LogoutView.vue';
 import NotFoundView from './components/views/NotFoundView.vue';
 
+/** Available paths (URLs) in the application. */
 export const RoutePath = {
   CELL_TOWERS: '/',
   POPULATION: '/usa-population',
@@ -16,6 +17,7 @@ export const RoutePath = {
   NOT_FOUND: '/404',
 };
 
+/** Routes to be shown in the header navigation list. */
 export const NAV_ROUTES: { text: string; path: string }[] = [
   {
     text: 'Cell towers',
@@ -27,6 +29,7 @@ export const NAV_ROUTES: { text: string; path: string }[] = [
   },
 ];
 
+/** Routes (pages) mapped to their corresponding Vue components. */
 export const routes = [
   {
     path: RoutePath.CELL_TOWERS,

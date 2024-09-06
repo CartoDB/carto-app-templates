@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/** Primary app layout, including a header with navigation links. */
 import { context } from '../context';
 import { routes, RoutePath, NAV_ROUTES } from '../routes';
 </script>

@@ -1,4 +1,9 @@
 <script lang="ts">
+/**
+ * Continuous legend entry, representing a continuous domain [min, max]
+ * as a color gradient, with labeled min and max values.
+ */
+
 import type { Color } from '@deck.gl/core';
 
 export type LegendEntryContinuousProps = {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+/** Login page, showing a button that redirects to login form. */
+
 import { useAuth0 } from '@auth0/auth0-vue';
 import { context } from '../../context';
 const { loginWithRedirect } = useAuth0();

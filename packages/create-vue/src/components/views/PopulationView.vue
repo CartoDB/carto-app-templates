@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Example application page, showing U.S. population.
+ */
+
 import {
   computed,
   onMounted,
@@ -53,14 +57,12 @@ const data = computed(() =>
  * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
  */
 
+// Layer visibility represented as name/visibility pairs, managed by the Layers component.
 const layerVisibility = ref<Record<string, boolean>>({
   'U.S. population': true,
 });
 
-const onLayerVisibilityChange = (visibility: Record<string, boolean>) => {
-  layerVisibility.value = visibility;
-};
-
+// Update layers when data or visualization parameters change.
 const layers = computed(() => [
   new H3TileLayer({
     id: 'U.S. population',
@@ -142,7 +144,13 @@ onUnmounted(() => {
       id="deck-canvas"
       style="position: absolute; width: 100%; height: 100%"
     ></canvas>
-    <Layers :layers :layerVisibility :onLayerVisibilityChange />
+    <Layers
+      :layers
+      :layerVisibility
+      :onLayerVisibilityChange="
+        (nextLayerVisibility) => (layerVisibility = nextLayerVisibility)
+      "
+    />
     <Card title="Legend" class="legend">
       <LegendEntryContinuous
         title="U.S. population"
