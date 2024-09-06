@@ -1,22 +1,15 @@
-import { lazy } from 'react';
-import ProtectedRoute from './components/common/ProtectedRoute';
-import AppLayout from './components/common/AppLayout';
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
-
-// eslint-disable-next-line react-refresh/only-export-components
-const Default = lazy(() => import('./components/views/Default'));
-// eslint-disable-next-line react-refresh/only-export-components
-const Secondary = lazy(() => import('./components/views/Secondary'));
-// eslint-disable-next-line react-refresh/only-export-components
-const NotFound = lazy(() => import('./components/views/NotFound'));
-// eslint-disable-next-line react-refresh/only-export-components
-const Login = lazy(() => import('./components/views/Login'));
-// eslint-disable-next-line react-refresh/only-export-components
-const Logout = lazy(() => import('./components/views/Logout'));
+import ProtectedRoute from './components/ProtectedRoute';
+import AppLayout from './components/AppLayout';
+import CellTowersView from './components/views/CellTowersView';
+import PopulationView from './components/views/PopulationView';
+import NotFoundView from './components/views/NotFoundView';
+import LoginView from './components/views/LoginView';
+import LogoutView from './components/views/LogoutView';
 
 export const RoutePath = {
-  DEFAULT: '/',
-  US_POPULATION: '/usa-population',
+  CELL_TOWERS: '/',
+  POPULATION: '/usa-population',
 
   LOGIN: '/login',
   LOGOUT: '/logout',
@@ -24,26 +17,26 @@ export const RoutePath = {
 };
 
 export const NAV_ROUTES: { text: string; path: string }[] = [
-  { text: 'Cell towers', path: RoutePath.DEFAULT },
-  { text: 'U.S. population', path: RoutePath.US_POPULATION },
+  { text: 'Cell towers', path: RoutePath.CELL_TOWERS },
+  { text: 'U.S. population', path: RoutePath.POPULATION },
 ];
 
 export const routes: RouteObject[] = [
   {
-    path: RoutePath.DEFAULT,
+    path: RoutePath.CELL_TOWERS,
     element: (
       <ProtectedRoute>
         <AppLayout />
       </ProtectedRoute>
     ),
     children: [
-      { path: RoutePath.DEFAULT, element: <Default /> },
-      { path: RoutePath.US_POPULATION, element: <Secondary /> },
+      { path: RoutePath.CELL_TOWERS, element: <CellTowersView /> },
+      { path: RoutePath.POPULATION, element: <PopulationView /> },
     ],
   },
-  { path: RoutePath.LOGIN, element: <Login /> },
-  { path: RoutePath.LOGOUT, element: <Logout /> },
-  { path: '*', element: <NotFound /> },
+  { path: RoutePath.LOGIN, element: <LoginView /> },
+  { path: RoutePath.LOGOUT, element: <LogoutView /> },
+  { path: '*', element: <NotFoundView /> },
 ];
 
 export const router = createBrowserRouter(routes);

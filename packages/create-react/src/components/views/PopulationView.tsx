@@ -5,9 +5,9 @@ import DeckGL from '@deck.gl/react';
 import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
-import { Legend } from '../common/Legend';
-import { Layers } from '../common/Layers';
-import { Card } from '../common/Card';
+import { Legend } from '../legends/Legend';
+import { Layers } from '../Layers';
+import { Card } from '../Card';
 import { AppContext } from '../../context';
 
 const MAP_VIEW = new MapView({ repeat: true });
@@ -28,7 +28,7 @@ const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
   colors: 'PinkYl',
 });
 
-export default function Default() {
+export default function PopulationView() {
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);

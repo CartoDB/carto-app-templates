@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from 'react';
-import { AppContext } from '../../context';
-import { NAV_ROUTES, RoutePath } from '../../routes';
+import { AppContext } from '../context';
+import { NAV_ROUTES, RoutePath } from '../routes';
 import { NavLink, Outlet } from 'react-router-dom';
 
 export default function AppLayout() {

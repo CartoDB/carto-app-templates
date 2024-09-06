@@ -5,9 +5,9 @@ import DeckGL from '@deck.gl/react';
 import { AccessorFunction, Color, MapView, MapViewState } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { Filter, vectorQuerySource } from '@carto/api-client';
-import { Legend } from '../common/Legend';
-import { Card } from '../common/Card';
-import { Layers } from '../common/Layers';
+import { Legend } from '../legends/Legend';
+import { Card } from '../Card';
+import { Layers } from '../Layers';
 import { FormulaWidget } from '../widgets/FormulaWidget';
 import { CategoryWidget } from '../widgets/CategoryWidget';
 import { useDebouncedState } from '../../hooks';
@@ -31,7 +31,7 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
   colors: 'Bold',
 });
 
-export default function Default() {
+export default function CellTowersView() {
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [filters, setFilters] = useState({} as Record<string, Filter>);
   const [attributionHTML, setAttributionHTML] = useState('');
