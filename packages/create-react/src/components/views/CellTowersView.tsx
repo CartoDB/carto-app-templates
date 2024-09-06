@@ -10,7 +10,7 @@ import { Card } from '../Card';
 import { Layers } from '../Layers';
 import { FormulaWidget } from '../widgets/FormulaWidget';
 import { CategoryWidget } from '../widgets/CategoryWidget';
-import { useDebouncedState } from '../../hooks';
+import { useDebouncedState } from '../../hooks/useDebouncedState';
 import { AppContext } from '../../context';
 
 const MAP_VIEW = new MapView({ repeat: true });

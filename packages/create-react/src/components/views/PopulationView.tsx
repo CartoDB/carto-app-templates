@@ -9,6 +9,7 @@ import { Legend } from '../legends/Legend';
 import { Layers } from '../Layers';
 import { Card } from '../Card';
 import { AppContext } from '../../context';
+import { useDebouncedState } from '../../hooks/useDebouncedState';
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -31,7 +32,7 @@ const POP_COLORS: AccessorFunction<unknown, Color> = colorContinuous({
 export default function PopulationView() {
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
-  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
   /****************************************************************************
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)

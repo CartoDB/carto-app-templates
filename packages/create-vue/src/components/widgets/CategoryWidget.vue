@@ -17,7 +17,7 @@ import {
   WidgetStatus,
   numberFormatter,
 } from '../../utils';
-import { useToggleFilter } from '../../hooks';
+import { useToggleFilter } from '../../hooks/useToggleFilter';
 
 const props = withDefaults(
   defineProps<{
