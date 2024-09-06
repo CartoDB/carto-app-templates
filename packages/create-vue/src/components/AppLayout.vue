@@ -24,7 +24,10 @@ import { routes, RoutePath, NAV_ROUTES } from '../routes';
       >
     </nav>
     <span className="flex-space" />
-    <RouterLink :to="RoutePath.LOGOUT" class="body2 strong"
+    <RouterLink
+      v-if="context.oauth.enabled"
+      :to="RoutePath.LOGOUT"
+      class="body2 strong"
       >Sign out</RouterLink
     >
   </header>

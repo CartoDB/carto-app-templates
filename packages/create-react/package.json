@@ -8,7 +8,7 @@
   "type": "module",
   "bin": "./scripts/create.js",
   "scripts": {
-    "dev": "vite --host --port 4001",
+    "dev": "vite --host 127.0.0.1 --port 4001",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
