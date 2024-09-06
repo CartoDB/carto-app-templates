@@ -2128,7 +2128,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@carto/create-common@npm:^0.0.7, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
+"@carto/create-common@npm:^0.0.8, @carto/create-common@workspace:^, @carto/create-common@workspace:packages/create-common":
   version: 0.0.0-use.local
   resolution: "@carto/create-common@workspace:packages/create-common"
   dependencies:
@@ -2148,7 +2148,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
     "@carto/api-client": "npm:^0.0.44"
-    "@carto/create-common": "npm:^0.0.7"
+    "@carto/create-common": "npm:^0.0.8"
     "@deck.gl/aggregation-layers": "npm:^9.0.24"
     "@deck.gl/carto": "npm:^9.0.24"
     "@deck.gl/core": "npm:^9.0.24"
