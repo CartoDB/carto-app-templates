@@ -20,6 +20,7 @@
   --app-bar-height: 48px;
   --sidebar-width: 350px;
   --card-summary-height: 40px;
+  --legend-max-height: 45vh;
   --padding: 8px;
   --border-radius: 8px;
 }
@@ -36,7 +37,7 @@ html {
 *,
 *:before,
 *:after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 body,
@@ -268,6 +269,8 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  /** Scrollbars, added by .card-content, should be masked by border radius. */
+  overflow: hidden;
 }
 
 summary.card-summary {
@@ -486,10 +489,19 @@ ul.category-list + button {
 .legend {
   width: 33%;
   max-width: var(--sidebar-width);
-  max-height: 45vh;
   position: absolute;
   bottom: var(--padding);
   right: var(--padding);
+}
+
+.legend .card-content {
+  max-height: calc(var(--legend-max-height) - var(--card-summary-height));
+}
+
+.legend-section + .legend-section {
+  border-top: 1px solid var(--border-color);
+  margin-top: 1em;
+  padding-top: 1em;
 }
 
 .legend-section-title,
