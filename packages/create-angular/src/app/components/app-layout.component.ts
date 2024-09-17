@@ -3,9 +3,10 @@ import { RouterOutlet } from '@angular/router';
 import { AppContextService } from '../services/app-context.service';
 
 @Component({
-  selector: 'app-app-layout',
+  selector: 'app-layout',
   standalone: true,
   imports: [RouterOutlet],
+  host: { id: 'root' },
   template: `
     <header class="app-bar">
       <img
@@ -33,9 +34,7 @@ import { AppContextService } from '../services/app-context.service';
     >Sign out</RouterLink
   > -->
     </header>
-    <div class="container">
-      <router-outlet />
-    </div>
+    <router-outlet />
   `,
 })
 export class AppLayoutComponent {

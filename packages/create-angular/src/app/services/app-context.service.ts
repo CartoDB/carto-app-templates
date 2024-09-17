@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export interface AppContextProps {
   title: string;
@@ -25,26 +26,24 @@ export interface AppContextProps {
   };
 }
 
-console.log('title', import.meta.env.VITE_APP_TITLE);
-
 @Injectable({
   providedIn: 'root',
 })
 export class AppContextService implements AppContextProps {
-  readonly title = import.meta.env.VITE_APP_TITLE;
+  readonly title = environment.APP_TITLE;
   readonly subtitle = 'Discover the power of developing with Angular';
   readonly logo = {
     src: 'carto.svg',
     alt: 'CARTO logo',
   };
-  accessToken = import.meta.env.VITE_CARTO_ACCESS_TOKEN;
+  accessToken = environment.ACCESS_TOKEN;
   readonly apiBaseUrl = 'https://gcp-us-east1.api.carto.com';
   readonly accountsUrl = 'http://app.carto.com/';
   readonly oauth = {
-    enabled: import.meta.env.VITE_CARTO_AUTH_ENABLED === 'true',
-    domain: 'auth.carto.com',
-    clientId: import.meta.env.VITE_CARTO_AUTH_CLIENT_ID,
-    organizationId: import.meta.env.VITE_CARTO_AUTH_ORGANIZATION_ID, // Required for SSO.
+    enabled: environment.AUTH_ENABLED,
+    clientId: environment.AUTH_CLIENT_ID,
+    organizationId: environment.AUTH_ORGANIZATION_ID, // Required for SSO.
+    domain: environment.AUTH_DOMAIN,
     namespace: 'http://app.carto.com/',
     scopes: [
       'read:current_user',

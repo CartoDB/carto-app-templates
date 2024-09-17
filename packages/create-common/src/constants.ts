@@ -7,6 +7,7 @@ export const TEMPLATE_EXCLUDE_PATHS = [
   '.vscode',
   '.yarn',
   '.env.local',
+  '.env.development',
 ];
 
 /** List of dependencies in the template to be _removed_ from new projects. */
@@ -35,8 +36,10 @@ export const TEMPLATE_EXCLUDE_PKG_FIELDS = [
  * such as `<!-- replace:title:begin -->`.
  */
 export const TEMPLATE_UPDATE_PATHS = [
-  'index.html',
-  'src/context.ts',
-  'src/main.{ts,tsx}',
-  '.env',
+  'index.html', // react, vue, angular
+  'src/context.ts', // react, vue
+  'src/main.{ts,tsx}', // react
+  'src/environments/environment.ts', // angular
+  'src/environments/environment.*.ts', // angular
+  '.env', // react, vue
 ];

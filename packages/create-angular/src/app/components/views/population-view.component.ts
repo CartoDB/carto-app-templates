@@ -4,12 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-population-view',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      population-view works!
-    </p>
-  `
+  host: { class: 'container' },
+  template: ` <p>population-view works!</p> `,
 })
-export class PopulationViewComponent {
-
-}
+export class PopulationViewComponent {}

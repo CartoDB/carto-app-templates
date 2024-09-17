@@ -34,15 +34,15 @@ export const DEFAULT_APP_CONTEXT = {
     src: cartoLogo,
     alt: 'CARTO logo',
   },
-  accessToken: import.meta.env.VITE_CARTO_ACCESS_TOKEN,
+  accessToken: import.meta.env.VITE_ACCESS_TOKEN,
   setAccessToken: () => {},
   apiBaseUrl: 'https://gcp-us-east1.api.carto.com',
   accountsUrl: 'http://app.carto.com/',
   oauth: {
-    enabled: import.meta.env.VITE_CARTO_AUTH_ENABLED === 'true',
-    domain: 'auth.carto.com',
-    clientId: import.meta.env.VITE_CARTO_AUTH_CLIENT_ID,
-    organizationId: import.meta.env.VITE_CARTO_AUTH_ORGANIZATION_ID, // Required for SSO.
+    enabled: import.meta.env.VITE_AUTH_ENABLED === 'true',
+    clientId: import.meta.env.VITE_AUTH_CLIENT_ID,
+    organizationId: import.meta.env.VITE_AUTH_ORGANIZATION_ID, // Required for SSO.
+    domain: import.meta.env.VITE_AUTH_DOMAIN,
     namespace: 'http://app.carto.com/',
     scopes: [
       'read:current_user',

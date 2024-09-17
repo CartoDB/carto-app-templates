@@ -97,7 +97,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
       {
         name: 'authEnabled',
         type: 'toggle',
-        active: 'OAuth Client ID',
+        active: 'OAuth',
         inactive: 'access token',
         message: `Authentication? ${dim('(required) [.env]')}`,
       },
@@ -111,14 +111,20 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
       {
         name: 'authClientID',
         type: (_, config) => (config.authEnabled ? 'password' : null),
-        message: `OAuth Client ID ${dim('(required) [.env]')}`,
+        message: `OAuth client ID ${dim('(required) [.env]')}`,
         validate: (text) =>
           text.length === 0 ? 'Client ID is required' : true,
+      },
+      {
+        name: 'authOrganizationID',
+        type: (_, config) => (config.authEnabled ? 'text' : null),
+        message: `OAuth organization ID ${dim('(optional) [.env]')}`,
       },
       {
         name: 'authDomain',
         type: (_, config) => (config.authEnabled ? 'text' : null),
         message: `OAuth domain ${dim('(optional) [.env]')}`,
+        initial: 'auth.carto.com',
       },
     ],
     {
