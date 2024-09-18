@@ -6,6 +6,7 @@ import { LoginViewComponent } from './components/views/LoginView.component';
 import { PopulationViewComponent } from './components/views/PopulationView.component';
 import { LogoutViewComponent } from './components/views/LogoutView.component';
 import { NotFoundViewComponent } from './components/views/NotFoundView.component';
+import { environment } from '../environments/environment';
 
 /** Available paths (URLs) in the application. */
 export const RoutePath = {
@@ -31,6 +32,7 @@ export const NAV_ROUTES: { text: string; path: string }[] = [
 
 export const routes: Routes = [
   {
+    title: environment.APP_TITLE,
     path: RoutePath.CELL_TOWERS,
     component: AppLayoutComponent,
     children: [
@@ -45,14 +47,17 @@ export const routes: Routes = [
     ],
   },
   {
+    title: environment.APP_TITLE + ' | Log in',
     path: RoutePath.LOGIN,
     component: LoginViewComponent,
   },
   {
+    title: environment.APP_TITLE + ' | Log out',
     path: RoutePath.LOGOUT,
     component: LogoutViewComponent,
   },
   {
+    title: environment.APP_TITLE + ' | Not found',
     path: RoutePath.NOT_FOUND,
     component: NotFoundViewComponent,
   },
