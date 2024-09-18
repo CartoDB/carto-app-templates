@@ -2438,6 +2438,8 @@ __metadata:
     tslib: "npm:^2.7.0"
     typescript: "npm:~5.6.2"
     zone.js: "npm:~0.15.0"
+  bin:
+    create-angular: ./scripts/create.js
   languageName: unknown
   linkType: soft
 
