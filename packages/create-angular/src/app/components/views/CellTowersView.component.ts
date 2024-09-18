@@ -5,7 +5,7 @@ import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { vectorQuerySource, Filter } from '@carto/api-client';
 import { CardComponent } from '../card.component';
 import { LayersComponent } from '../layers.component';
-import { CardCollapsibleComponent } from '../card-collapsible.component';
+import { CardCollapsibleComponent } from '../CardCollapsible.component';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -28,7 +28,7 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
  * Example application page, showing world-wide cell towers and a few widgets.
  */
 @Component({
-  selector: 'app-cell-towers-view',
+  selector: 'cell-towers-view',
   standalone: true,
   imports: [CardComponent, CardCollapsibleComponent, LayersComponent],
   host: { class: 'container' },

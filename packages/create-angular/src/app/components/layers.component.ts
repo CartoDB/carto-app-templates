@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Layer } from '@deck.gl/core';
-import { CardComponent } from './card.component';
-import { CardCollapsibleComponent } from './card-collapsible.component';
+import { CardCollapsibleComponent } from './CardCollapsible.component';
 
 /**
  * Layer list and visibility controller.
