@@ -19,7 +19,7 @@ const props = defineProps<LegendEntryCategoricalProps>();
 </script>
 
 <template>
-  <section class="legend-section" :key="props.title">
+  <section class="legend-section">
     <p class="legend-section-title body2">{{ props.title }}</p>
     <p class="legend-section-subtitle caption">{{ props.subtitle }}</p>
     <ul class="legend-list">

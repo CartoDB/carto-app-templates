@@ -21,6 +21,7 @@ import { AppContextService } from '../../services/app-context.service';
 import { debouncedSignal } from '../../../utils';
 import { CardComponent } from '../card.component';
 import { LayersComponent } from '../layers.component';
+import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -31,21 +32,18 @@ const INITIAL_VIEW_STATE: MapViewState = {
   zoom: 3.5,
 };
 
-// TODO: Fetch categories from Widgets API?
-const RADIO_DOMAIN = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
-const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
-  attr: 'radio',
-  domain: RADIO_DOMAIN,
-  colors: 'Bold',
-});
-
 /**
  * Example application page, showing world-wide cell towers and a few widgets.
  */
 @Component({
   selector: 'cell-towers-view',
   standalone: true,
-  imports: [CardComponent, CardCollapsibleComponent, LayersComponent],
+  imports: [
+    CardComponent,
+    CardCollapsibleComponent,
+    LayersComponent,
+    LegendEntryCategoricalComponent,
+  ],
   host: { class: 'container' },
   template: `
     <aside class="sidebar">
@@ -84,9 +82,14 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
         [layerVisibility]="layerVisibility()"
         (layerVisibilityChanged)="layerVisibility.set($event)"
       ></app-layers>
-      <app-card-collapsible title="Legend" class="legend"
-        >todo: legend</app-card-collapsible
-      >
+      <app-card-collapsible title="Legend" class="legend">
+        <legend-entry-categorical
+          title="Cell towers"
+          subtitle="By Radio"
+          [values]="radioDomain"
+          [getSwatchColor]="getRadioSwatchColor"
+        ></legend-entry-categorical>
+      </app-card-collapsible>
       @if (attributionHTML()) {
         <aside class="map-footer" [innerHTML]="attributionHTML()"></aside>
       }
@@ -164,9 +167,23 @@ export class CellTowersViewComponent {
       visible: this.layerVisibility()['Cell towers'],
       data: this.data(),
       pointRadiusMinPixels: 4,
-      getFillColor: RADIO_COLORS,
+      getFillColor: this.radioColors,
     }),
   ]);
+
+  /****************************************************************************
+   * Legends
+   */
+
+  // TODO: Fetch categories from Widgets API?
+  public radioDomain = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
+  public radioColors: AccessorFunction<unknown, Color> = colorCategories({
+    attr: 'radio',
+    domain: this.radioDomain,
+    colors: 'Bold',
+  });
+  public getRadioSwatchColor = (value: string) =>
+    this.radioColors({ properties: { radio: value } }, null!);
 
   /****************************************************************************
    * Effects (https://angular.dev/guide/signals#effects)
