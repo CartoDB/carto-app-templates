@@ -139,16 +139,16 @@ export class CellTowersViewComponent {
   private deck: Deck = null!;
 
   private viewState = signal(INITIAL_VIEW_STATE);
-  public viewStateDebounced = debouncedSignal(this.viewState, 200);
-  public attributionHTML = signal('');
+  viewStateDebounced = debouncedSignal(this.viewState, 200);
+  attributionHTML = signal('');
 
   /****************************************************************************
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
    */
 
-  public filters = signal<Record<string, Filter>>({});
+  filters = signal<Record<string, Filter>>({});
 
-  public data = computed(() =>
+  data = computed(() =>
     vectorQuerySource({
       accessToken: this.context.accessToken,
       apiBaseUrl: this.context.apiBaseUrl,
@@ -163,11 +163,11 @@ export class CellTowersViewComponent {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
-  public layerVisibility = signal<Record<string, boolean>>({
+  layerVisibility = signal<Record<string, boolean>>({
     'Cell towers': true,
   });
 
-  public layers = computed(() => [
+  layers = computed(() => [
     new VectorTileLayer({
       id: 'Cell towers',
       visible: this.layerVisibility()['Cell towers'],
@@ -182,13 +182,13 @@ export class CellTowersViewComponent {
    */
 
   // TODO: Fetch categories from Widgets API?
-  public radioDomain = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
-  public radioColors: AccessorFunction<unknown, Color> = colorCategories({
+  radioDomain = ['LTE', 'UMTS', 'CDMA', 'GSM', 'NR'];
+  radioColors: AccessorFunction<unknown, Color> = colorCategories({
     attr: 'radio',
     domain: this.radioDomain,
     colors: 'Bold',
   });
-  public getRadioSwatchColor = (value: string) =>
+  getRadioSwatchColor = (value: string) =>
     this.radioColors({ properties: { radio: value } }, null!);
 
   /****************************************************************************
