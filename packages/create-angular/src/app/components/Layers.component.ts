@@ -12,17 +12,15 @@ import { CardCollapsibleComponent } from './CardCollapsible.component';
   template: `
     <aside class="layers">
       <app-card-collapsible title="Layers" [open]="open">
-        TODO:LayersComponent
-        <!--<label v-for="layer in layers" class="body2" :key="layer.id">
-        <input
-          type="checkbox"
-          :checked="layer.props.visible"
-          @input="
-            ({ target }) =>
-              setVisibility(layer.id, (target as HTMLInputElement).checked)
-          "
-        />{{ layer.id }}
-      </label>-->
+        @for (layer of layers; track layer.id) {
+          <label class="body2" :key="layer.id">
+            <input
+              type="checkbox"
+              :checked="layer.props.visible"
+              (input)="onLayerVisibilityChange(layer.id, $event)"
+            />{{ layer.id }}
+          </label>
+        }
       </app-card-collapsible>
     </aside>
   `,
@@ -38,4 +36,12 @@ export class LayersComponent {
   @Output() layerVisibilityChanged = new EventEmitter<
     Record<string, boolean>
   >();
+
+  onLayerVisibilityChange(id: string, event: Event) {
+    const visible = (event.target as HTMLInputElement).checked;
+    this.layerVisibilityChanged.emit({
+      ...this.layerVisibility,
+      [id]: visible,
+    });
+  }
 }
