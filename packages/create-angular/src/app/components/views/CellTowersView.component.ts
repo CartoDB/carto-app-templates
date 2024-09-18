@@ -21,6 +21,7 @@ import { debouncedSignal } from '../../../utils';
 import { CardComponent } from '../Card.component';
 import { LayersComponent } from '../Layers.component';
 import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
+import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -40,6 +41,7 @@ const INITIAL_VIEW_STATE: MapViewState = {
   imports: [
     CardComponent,
     CardCollapsibleComponent,
+    FormulaWidgetComponent,
     LayersComponent,
     LegendEntryCategoricalComponent,
   ],
@@ -62,7 +64,12 @@ const INITIAL_VIEW_STATE: MapViewState = {
         </p>
       </app-card>
       <span class="flex-space"></span>
-      <app-card-collapsible title="Tower count">widget</app-card-collapsible>
+      <app-card-collapsible title="Tower count">
+        <formula-widget
+          [data]="data()"
+          [viewState]="viewStateDebounced()"
+        ></formula-widget>
+      </app-card-collapsible>
       <app-card-collapsible title="Towers by radio"
         >widget</app-card-collapsible
       >
@@ -132,7 +139,7 @@ export class CellTowersViewComponent {
   private deck: Deck = null!;
 
   private viewState = signal(INITIAL_VIEW_STATE);
-  public debouncedViewState = debouncedSignal(this.viewState, 200);
+  public viewStateDebounced = debouncedSignal(this.viewState, 200);
   public attributionHTML = signal('');
 
   /****************************************************************************
