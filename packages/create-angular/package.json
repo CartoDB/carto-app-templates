@@ -1,8 +1,12 @@
 {
   "name": "@carto/create-angular",
-  "private": true,
+  "description": "Template for creating CARTO applications in Angular",
+  "repository": "github:CartoDB/carto-app-templates",
+  "author": "Don McCurdy <donmccurdy@carto.com>",
+  "license": "MIT",
   "version": "0.0.9",
   "type": "module",
+  "bin": "./scripts/create.js",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --port 4000",
