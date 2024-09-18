@@ -4,6 +4,9 @@ import { AuthService } from '@auth0/auth0-angular';
 import { context } from '../../context';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+/**
+ * Service providing CARTO access tokens to views.
+ */
 @Injectable({ providedIn: 'root' })
 export class AccessTokenService {
   accessToken: Signal<string>;

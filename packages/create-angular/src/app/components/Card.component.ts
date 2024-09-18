@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+/**
+ * Card UI. Simple container.
+ */
 @Component({
   selector: 'app-card',
   standalone: true,

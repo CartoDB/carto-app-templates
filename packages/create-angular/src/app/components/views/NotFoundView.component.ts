@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
+/** Page representing a 'page not found' state. */
 @Component({
   selector: 'not-found-view',
   standalone: true,
   imports: [],
-  template: ` <p>not-found-view works!</p> `,
+  template: `<h1>Not Found</h1>`,
 })
 export class NotFoundViewComponent {}

@@ -1,5 +1,8 @@
 import { booleanAttribute, Component, Input } from '@angular/core';
 
+/**
+ * Card UI. Simple, collapsible container.
+ */
 @Component({
   selector: 'app-card-collapsible',
   standalone: true,

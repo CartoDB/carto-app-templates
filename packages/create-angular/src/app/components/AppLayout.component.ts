@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NAV_ROUTES, RoutePath } from '../app.routes';
 import { context } from '../../context';
 
+/** Primary app layout, including a header with navigation links. */
 @Component({
   selector: 'app-layout',
   standalone: true,

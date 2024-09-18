@@ -2,6 +2,9 @@ import { Component, Input } from '@angular/core';
 import { Color } from '@deck.gl/core';
 import { toHexString } from '../../../utils';
 
+/**
+ * Categorical legend entry, representing each category with a solid color.
+ */
 @Component({
   selector: 'legend-entry-categorical',
   standalone: true,
