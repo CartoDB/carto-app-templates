@@ -1,8 +1,5 @@
 {
   "name": "@carto/create-angular",
-  "publishConfig": {
-    "access": "public"
-  },
   "description": "Template for creating CARTO applications in Angular",
   "repository": "github:CartoDB/carto-app-templates",
   "author": "Don McCurdy <donmccurdy@carto.com>",
