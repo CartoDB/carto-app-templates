@@ -1,28 +1,24 @@
 import {
   Component,
   ContentChild,
+  Signal,
   computed,
   effect,
   signal,
 } from '@angular/core';
 import { Map } from 'maplibre-gl';
-import {
-  AccessorFunction,
-  Deck,
-  MapViewState,
-  Color,
-  Layer,
-} from '@deck.gl/core';
+import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { vectorQuerySource, Filter } from '@carto/api-client';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
-import { AppContextService } from '../../services/app-context.service';
 import { debouncedSignal } from '../../../utils';
 import { CardComponent } from '../Card.component';
 import { LayersComponent } from '../Layers.component';
 import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
 import { CategoryWidgetComponent } from '../widgets/CategoryWidget.component';
+import { context } from '../../../context';
+import { AccessTokenService } from '../../services/AccessToken.service';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -116,11 +112,9 @@ export class CellTowersViewComponent {
   maplibreContainer?: HTMLDivElement;
   @ContentChild('deck-canvas', { static: true }) deckCanvas?: HTMLCanvasElement;
 
-  private context: AppContextService;
+  private context = context;
 
-  constructor(context: AppContextService) {
-    this.context = context;
-  }
+  constructor(private accessTokenService: AccessTokenService) {}
 
   ngOnInit() {
     this.map = new Map({
@@ -159,16 +153,23 @@ export class CellTowersViewComponent {
 
   filters = signal<Record<string, Filter>>({});
 
-  data = computed(() =>
-    vectorQuerySource({
-      accessToken: this.context.accessToken,
+  data = computed(() => {
+    const accessToken = this.accessTokenService.accessToken();
+    if (!accessToken) {
+      // TODO: Prevent accessToken from being 'undefined' initially, after logging in
+      // to an app with OAuth enabled.
+      return new Promise((_) => {}) as ReturnType<typeof vectorQuerySource>;
+    }
+
+    return vectorQuerySource({
+      accessToken,
       apiBaseUrl: this.context.apiBaseUrl,
       connectionName: 'carto_dw',
       sqlQuery:
         'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
       filters: this.filters(),
-    }),
-  );
+    });
+  });
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)

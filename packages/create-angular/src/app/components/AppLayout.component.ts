@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AppContextService } from '../services/app-context.service';
 import { NAV_ROUTES, RoutePath } from '../app.routes';
+import { context } from '../../context';
 
 @Component({
   selector: 'app-layout',
@@ -10,12 +10,13 @@ import { NAV_ROUTES, RoutePath } from '../app.routes';
   host: { id: 'root' },
   template: `
     <header class="app-bar">
-      <img
-        v-if="context.logo"
-        class="app-bar-logo"
-        [src]="context.logo.src"
-        [alt]="context.logo.alt"
-      />
+      @if (context.logo) {
+        <img
+          class="app-bar-logo"
+          [src]="context.logo.src"
+          [alt]="context.logo.alt"
+        />
+      }
       <span class="app-bar-text body1 strong">{{ context.title }}</span>
       <nav v-if="routes.length > 1" class="app-bar-nav">
         @for (route of NAV_ROUTES; track route.path) {
@@ -28,7 +29,7 @@ import { NAV_ROUTES, RoutePath } from '../app.routes';
           >
         }
       </nav>
-      <span className="flex-space"></span>
+      <span class="flex-space"></span>
       @if (context.oauth.enabled) {
         <a [routerLink]="RoutePath.LOGOUT" class="body2 strong">Sign out</a>
       }
@@ -39,5 +40,5 @@ import { NAV_ROUTES, RoutePath } from '../app.routes';
 export class AppLayoutComponent {
   NAV_ROUTES = NAV_ROUTES;
   RoutePath = RoutePath;
-  constructor(public context: AppContextService) {}
+  context = context;
 }

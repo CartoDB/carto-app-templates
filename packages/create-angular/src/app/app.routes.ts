@@ -7,6 +7,8 @@ import { PopulationViewComponent } from './components/views/PopulationView.compo
 import { LogoutViewComponent } from './components/views/LogoutView.component';
 import { NotFoundViewComponent } from './components/views/NotFoundView.component';
 import { environment } from '../environments/environment';
+import { AuthGuard } from './guards/Auth.guard';
+import { context } from '../context';
 
 /** Available paths (URLs) in the application. */
 export const RoutePath = {
@@ -35,6 +37,7 @@ export const routes: Routes = [
     title: environment.APP_TITLE,
     path: RoutePath.CELL_TOWERS,
     component: AppLayoutComponent,
+    canActivate: context.oauth.enabled ? [AuthGuard] : [],
     children: [
       {
         path: RoutePath.CELL_TOWERS,

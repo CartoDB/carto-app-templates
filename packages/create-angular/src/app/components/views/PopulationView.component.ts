@@ -1,6 +1,7 @@
 import {
   Component,
   ContentChild,
+  Signal,
   computed,
   effect,
   signal,
@@ -10,11 +11,12 @@ import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
 import { colorContinuous, H3TileLayer } from '@deck.gl/carto';
 import { h3TableSource } from '@carto/api-client';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
-import { AppContextService } from '../../services/app-context.service';
 import { debouncedSignal } from '../../../utils';
 import { CardComponent } from '../Card.component';
 import { LayersComponent } from '../Layers.component';
 import { LegendEntryContinuousComponent } from '../legends/LegendEntryContinuous.component';
+import { AccessTokenService } from '../../services/AccessToken.service';
+import { context } from '../../../context';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -89,11 +91,9 @@ export class PopulationViewComponent {
   maplibreContainer?: HTMLDivElement;
   @ContentChild('deck-canvas', { static: true }) deckCanvas?: HTMLCanvasElement;
 
-  private context: AppContextService;
+  private context = context;
 
-  constructor(context: AppContextService) {
-    this.context = context;
-  }
+  constructor(private accessTokenService: AccessTokenService) {}
 
   ngOnInit() {
     this.map = new Map({
@@ -130,17 +130,24 @@ export class PopulationViewComponent {
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
    */
 
-  data = computed(() =>
-    h3TableSource({
-      accessToken: this.context.accessToken,
+  data = computed(() => {
+    const accessToken = this.accessTokenService.accessToken();
+    if (!accessToken) {
+      // TODO: Prevent accessToken from being 'undefined' initially, after logging in
+      // to an app with OAuth enabled.
+      return new Promise((_) => {}) as ReturnType<typeof h3TableSource>;
+    }
+
+    return h3TableSource({
+      accessToken,
       apiBaseUrl: this.context.apiBaseUrl,
       connectionName: 'carto_dw',
       tableName:
         'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
       spatialDataColumn: 'h3',
       aggregationExp: 'SUM(population) as population_sum',
-    }),
-  );
+    });
+  });
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
