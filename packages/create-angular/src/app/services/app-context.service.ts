@@ -42,7 +42,7 @@ export class AppContextService implements AppContextProps {
   readonly oauth = {
     enabled: environment.AUTH_ENABLED,
     clientId: environment.AUTH_CLIENT_ID,
-    organizationId: environment.AUTH_ORGANIZATION_ID, // Required for SSO.
+    organizationId: environment.AUTH_ORGANIZATION_ID || undefined, // Required for SSO.
     domain: environment.AUTH_DOMAIN,
     namespace: 'http://app.carto.com/',
     scopes: [

@@ -1,10 +1,9 @@
 import {
   Component,
-  computed,
   ContentChild,
+  computed,
   effect,
   signal,
-  Signal,
 } from '@angular/core';
 import { Map } from 'maplibre-gl';
 import {
@@ -19,8 +18,8 @@ import { vectorQuerySource, Filter } from '@carto/api-client';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
 import { AppContextService } from '../../services/app-context.service';
 import { debouncedSignal } from '../../../utils';
-import { CardComponent } from '../card.component';
-import { LayersComponent } from '../layers.component';
+import { CardComponent } from '../Card.component';
+import { LayersComponent } from '../Layers.component';
 import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
 
 const MAP_STYLE =

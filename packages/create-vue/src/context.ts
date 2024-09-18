@@ -40,7 +40,7 @@ export const DEFAULT_APP_CONTEXT: AppContext = {
     enabled: import.meta.env.VITE_AUTH_ENABLED === 'true',
     domain: import.meta.env.VITE_AUTH_DOMAIN,
     clientId: import.meta.env.VITE_AUTH_CLIENT_ID,
-    organizationId: import.meta.env.VITE_AUTH_ORGANIZATION_ID, // Required for SSO.
+    organizationId: import.meta.env.VITE_AUTH_ORGANIZATION_ID || undefined, // Required for SSO.
     namespace: 'http://app.carto.com/',
     scopes: [
       'read:current_user',
