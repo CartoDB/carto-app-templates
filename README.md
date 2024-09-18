@@ -1,6 +1,6 @@
 # carto-app-templates
 
-TODO
+Templates for creating CARTO applications in React, Vue, and Angular.
 
 ## Quickstart
 
@@ -14,7 +14,7 @@ yarn create @carto/react path/to/my-project
 # Vue
 yarn create @carto/vue path/to/my-project
 
-# Angular (NOT YET PUBLISHED)
+# Angular
 yarn create @carto/angular path/to/my-project
 ```
 
@@ -27,10 +27,6 @@ cd path/to/my-project
 yarn
 yarn dev
 ```
-
-## Customization
-
-TODO
 
 ## Versioning
 
