@@ -1,11 +1,26 @@
-import { Component, ContentChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ContentChild,
+  effect,
+  signal,
+  Signal,
+} from '@angular/core';
 import { Map } from 'maplibre-gl';
-import { AccessorFunction, Deck, MapViewState, Color } from '@deck.gl/core';
+import {
+  AccessorFunction,
+  Deck,
+  MapViewState,
+  Color,
+  Layer,
+} from '@deck.gl/core';
 import { colorCategories, VectorTileLayer } from '@deck.gl/carto';
 import { vectorQuerySource, Filter } from '@carto/api-client';
 import { CardComponent } from '../card.component';
 import { LayersComponent } from '../layers.component';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
+import { AppContextService } from '../../services/app-context.service';
+import { debouncedSignal } from '../../../utils';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -77,8 +92,80 @@ export class CellTowersViewComponent {
   maplibreContainer?: HTMLDivElement;
   @ContentChild('deck-canvas', { static: true }) deckCanvas?: HTMLCanvasElement;
 
+  private context: AppContextService;
+
+  /****************************************************************************
+   * DeckGL
+   */
+
   private map: Map = null!;
   private deck: Deck = null!;
+
+  private viewState = signal(INITIAL_VIEW_STATE);
+  private debouncedViewState = debouncedSignal(this.viewState, 200);
+  private attributionHTML = signal('');
+
+  /****************************************************************************
+   * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
+   */
+
+  private filters = signal<Record<string, Filter>>({});
+
+  private data = computed(() =>
+    vectorQuerySource({
+      accessToken: this.context.accessToken,
+      apiBaseUrl: this.context.apiBaseUrl,
+      connectionName: 'carto_dw',
+      sqlQuery:
+        'SELECT * FROM `carto-demo-data.demo_tables.cell_towers_worldwide`',
+      filters: this.filters(),
+    }),
+  );
+
+  /****************************************************************************
+   * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
+   */
+
+  private layerVisibility = signal<Record<string, boolean>>({
+    'Cell towers': true,
+  });
+
+  private layers = computed(() => [
+    new VectorTileLayer({
+      id: 'Cell towers',
+      visible: this.layerVisibility()['Cell towers'],
+      data: this.data(),
+      pointRadiusMinPixels: 4,
+      getFillColor: RADIO_COLORS,
+    }),
+  ]);
+
+  /****************************************************************************
+   * Effects (https://angular.dev/guide/signals#effects)
+   */
+
+  private viewStateEffect = effect(() => {
+    const { longitude, latitude, ...rest } = this.viewState();
+    this.map.jumpTo({ center: [longitude, latitude], ...rest });
+  });
+
+  private layersEffect = effect(() => {
+    this.deck.setProps({ layers: this.layers() });
+  });
+
+  private attributionEffect = effect(() => {
+    this.data().then(({ attribution }: { attribution: string }) =>
+      this.attributionHTML.set(attribution),
+    );
+  });
+
+  /****************************************************************************
+   * Effects (https://angular.dev/guide/signals#effects)
+   */
+
+  constructor(context: AppContextService) {
+    this.context = context;
+  }
 
   ngOnInit() {
     this.map = new Map({
@@ -92,9 +179,9 @@ export class CellTowersViewComponent {
       initialViewState: INITIAL_VIEW_STATE,
       controller: true,
       layers: [],
-      // onViewStateChange: ({ viewState: _viewState }) => {
-      //   viewState.value = _viewState;
-      // },
+      onViewStateChange: ({ viewState }) => {
+        this.viewState.set(viewState);
+      },
     });
   }
 }
