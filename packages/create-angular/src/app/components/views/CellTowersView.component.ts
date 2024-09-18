@@ -87,7 +87,9 @@ const RADIO_COLORS: AccessorFunction<unknown, Color> = colorCategories({
       <app-card-collapsible title="Legend" class="legend"
         >todo: legend</app-card-collapsible
       >
-      <aside class="map-footer">footer aside TODO</aside>
+      @if (attributionHTML()) {
+        <aside class="map-footer" [innerHTML]="attributionHTML()"></aside>
+      }
     </main>
   `,
 })
