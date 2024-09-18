@@ -1,10 +1,13 @@
 {
   "name": "@carto/create-angular",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Template for creating CARTO applications in Angular",
   "repository": "github:CartoDB/carto-app-templates",
   "author": "Don McCurdy <donmccurdy@carto.com>",
   "license": "MIT",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "bin": "./scripts/create.js",
   "scripts": {
@@ -24,7 +27,7 @@
     "@angular/router": "^18.2.5",
     "@auth0/auth0-angular": "^2.2.3",
     "@carto/api-client": "^0.1.0",
-    "@carto/create-common": "^0.0.10",
+    "@carto/create-common": "^0.0.11",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",
     "@deck.gl/core": "^9.0.24",
@@ -47,5 +50,6 @@
     "@angular/compiler-cli": "^18.2.5",
     "typescript": "<5.6.0"
   },
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@4.2.2",
+  "gitHead": "eee3523a24885fe41609c9739378a10dc90dab77"
 }
