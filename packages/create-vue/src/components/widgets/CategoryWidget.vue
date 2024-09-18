@@ -31,7 +31,7 @@ const props = withDefaults(
     /** Column containing category names. */
     column?: string;
     /** Operation used to aggregate features in each category. */
-    operation?: AggregationType;
+    operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
     viewState?: MapViewState;
     /** Filter state. If specified, widget will be filtered. */

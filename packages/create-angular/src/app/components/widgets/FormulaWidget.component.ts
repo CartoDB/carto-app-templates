@@ -27,7 +27,7 @@ import { AggregationType, WidgetSource } from '@carto/api-client';
 export class FormulaWidgetComponent {
   data = input.required<Promise<{ widgetSource: WidgetSource }>>();
   column = input<string>();
-  operation = input<AggregationType>();
+  operation = input<Exclude<AggregationType, 'custom'>>();
   viewState = input.required<MapViewState>();
 
   status = signal<WidgetStatus>('loading');

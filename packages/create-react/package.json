@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
-    "@carto/api-client": "^0.0.44",
+    "@carto/api-client": "^0.1.0",
     "@carto/create-common": "^0.0.9",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",
@@ -29,24 +29,24 @@
     "@loaders.gl/core": "^4.2.2",
     "@luma.gl/core": "^9.0.16",
     "@luma.gl/engine": "^9.0.16",
-    "maplibre-gl": "^4.5.0",
+    "maplibre-gl": "^4.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-map-gl": "^7.1.7",
-    "react-router-dom": "^6.25.1"
+    "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.15.0",
-    "@typescript-eslint/parser": "^7.15.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
-    "typescript": "^5.2.2",
-    "vite": "^5.3.4"
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.6"
   },
   "packageManager": "yarn@4.2.2"
 }

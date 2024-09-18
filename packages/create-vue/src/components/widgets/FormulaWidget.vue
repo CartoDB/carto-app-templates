@@ -19,7 +19,7 @@ const props = withDefaults(
     /** Column containing a value to be aggregated. */
     column?: string;
     /** Operation used to aggregate the specified column. */
-    operation?: AggregationType;
+    operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
     viewState?: MapViewState;
   }>(),
