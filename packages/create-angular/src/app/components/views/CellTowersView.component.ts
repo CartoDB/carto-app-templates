@@ -22,6 +22,7 @@ import { CardComponent } from '../Card.component';
 import { LayersComponent } from '../Layers.component';
 import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
+import { CategoryWidgetComponent } from '../widgets/CategoryWidget.component';
 
 const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
@@ -41,6 +42,7 @@ const INITIAL_VIEW_STATE: MapViewState = {
   imports: [
     CardComponent,
     CardCollapsibleComponent,
+    CategoryWidgetComponent,
     FormulaWidgetComponent,
     LayersComponent,
     LegendEntryCategoricalComponent,
@@ -70,9 +72,16 @@ const INITIAL_VIEW_STATE: MapViewState = {
           [viewState]="viewStateDebounced()"
         ></formula-widget>
       </app-card-collapsible>
-      <app-card-collapsible title="Towers by radio"
-        >widget</app-card-collapsible
-      >
+      <app-card-collapsible title="Towers by radio">
+        <category-widget
+          [data]="data()"
+          column="radio"
+          operation="count"
+          [viewState]="viewStateDebounced()"
+          [filters]="filters()"
+          (onFiltersChange)="filters.set($event)"
+        ></category-widget>
+      </app-card-collapsible>
     </aside>
     <main class="map">
       <div

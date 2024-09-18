@@ -56,6 +56,8 @@ export function CategoryWidget({
     onChange: onFiltersChange,
   });
 
+  // Fetches data for the widget to display, watching changes to filters,
+  // view state, and widget configuration to refresh.
   useEffect(() => {
     const abortController = new AbortController();
 

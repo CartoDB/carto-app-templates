@@ -31,6 +31,8 @@ const props = withDefaults(
 
 const status = ref<WidgetStatus>('loading');
 
+// Fetches data for the widget to display, watching changes to view state
+// and widget configuration to refresh.
 const value = computedAsync(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;

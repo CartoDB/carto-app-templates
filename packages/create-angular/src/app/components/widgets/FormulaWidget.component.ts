@@ -1,4 +1,4 @@
-import { Component, effect, input, Input, signal } from '@angular/core';
+import { Component, effect, input, signal } from '@angular/core';
 import { MapViewState } from '@deck.gl/core';
 import {
   createSpatialFilter,
@@ -7,6 +7,9 @@ import {
 } from '../../../utils';
 import { AggregationType, WidgetSource } from '@carto/api-client';
 
+/**
+ * Formula widget, displaying a prominent 'scorecard' number.
+ */
 @Component({
   selector: 'formula-widget',
   standalone: true,
@@ -25,16 +28,20 @@ import { AggregationType, WidgetSource } from '@carto/api-client';
   `,
 })
 export class FormulaWidgetComponent {
+  /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
   data = input.required<Promise<{ widgetSource: WidgetSource }>>();
+  /** Column containing a value to be aggregated. */
   column = input<string>();
+  /** Operation used to aggregate the specified column. */
   operation = input<Exclude<AggregationType, 'custom'>>();
-  viewState = input.required<MapViewState>();
+  /** Map view state. If specified, widget will be filtered to the view. */
+  viewState = input<MapViewState>();
 
   status = signal<WidgetStatus>('loading');
   value = signal(-1);
 
-  formatValue = (value: number) => numberFormatter.format(value);
-
+  // Fetches data for the widget to display, watching changes to view state
+  // and widget configuration to refresh.
   private dataEffect = effect(
     (onCleanup) => {
       const column = this.column() || '';
@@ -68,4 +75,8 @@ export class FormulaWidgetComponent {
     },
     { allowSignalWrites: true },
   );
+
+  formatValue(value: number): string {
+    return numberFormatter.format(value);
+  }
 }

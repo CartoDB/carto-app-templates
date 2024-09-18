@@ -30,6 +30,8 @@ export function FormulaWidget({
   const [status, setStatus] = useState<WidgetStatus>('loading');
   const [value, setValue] = useState<number>(-1);
 
+  // Fetches data for the widget to display, watching changes to view state
+  // and widget configuration to refresh.
   useEffect(() => {
     const abortController = new AbortController();
 

@@ -16,9 +16,7 @@ import { toHexString } from '../../../utils';
               class="legend-list-item-swatch"
               [style]="{ backgroundColor: getBackgroundColor(value) }"
             ></span>
-            <span class="legend-list-item-title overline">
-              {{ value }}
-            </span>
+            <span class="legend-list-item-title overline">{{ value }}</span>
           </li>
         }
       </ul>

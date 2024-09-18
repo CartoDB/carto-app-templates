@@ -29,7 +29,7 @@ const props = withDefaults(
     /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
     data: Promise<{ widgetSource: WidgetSource }>;
     /** Column containing category names. */
-    column?: string;
+    column: string;
     /** Operation used to aggregate features in each category. */
     operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
@@ -48,6 +48,8 @@ const props = withDefaults(
 const owner = ref<string>(crypto.randomUUID());
 const status = ref<WidgetStatus>('loading');
 
+// Fetches data for the widget to display, watching changes to filters,
+// view state, and widget configuration to refresh.
 const response = computedAsync<CategoryResponse>(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;
