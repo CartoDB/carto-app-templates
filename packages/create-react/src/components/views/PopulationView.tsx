@@ -43,17 +43,19 @@ export default function PopulationView() {
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
    */
 
-  const data = useMemo(() => {
-    return h3TableSource({
-      accessToken,
-      apiBaseUrl,
-      connectionName: 'carto_dw',
-      tableName:
-        'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
-      spatialDataColumn: 'h3',
-      aggregationExp: 'SUM(population) as population_sum',
-    });
-  }, [accessToken, apiBaseUrl]);
+  const data = useMemo(
+    () =>
+      h3TableSource({
+        accessToken,
+        apiBaseUrl,
+        connectionName: 'carto_dw',
+        tableName:
+          'carto-demo-data.demo_tables.derived_spatialfeatures_usa_h3res8_v1_yearly_v2',
+        spatialDataColumn: 'h3',
+        aggregationExp: 'SUM(population) as population_sum',
+      }),
+    [accessToken, apiBaseUrl],
+  );
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)

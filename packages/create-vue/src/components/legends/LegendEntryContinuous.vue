@@ -20,6 +20,7 @@ import { computed } from 'vue';
 import { toHexString } from '../../utils';
 const props = defineProps<LegendEntryContinuousProps>();
 
+// TODO: Support multi-stop gradient, not just two-tone.
 const colorLo = computed(() =>
   toHexString(props.getSwatchColor(props.domain[0])),
 );

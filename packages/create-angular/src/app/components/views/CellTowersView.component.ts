@@ -148,7 +148,9 @@ export class CellTowersViewComponent {
   private deck: Deck = null!;
 
   private viewState = signal(INITIAL_VIEW_STATE);
+  // Debounce view state to avoid excessive re-renders during pan and zoom.
   viewStateDebounced = debouncedSignal(this.viewState, 200);
+
   attributionHTML = signal('');
 
   /****************************************************************************
@@ -172,10 +174,12 @@ export class CellTowersViewComponent {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
+  // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   layerVisibility = signal<Record<string, boolean>>({
     'Cell towers': true,
   });
 
+  // Update layers when data or visualization parameters change.
   layers = computed(() => [
     new VectorTileLayer({
       id: 'Cell towers',

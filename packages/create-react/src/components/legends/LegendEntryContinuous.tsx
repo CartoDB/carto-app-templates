@@ -13,6 +13,7 @@ export type LegendEntryContinuousProps = {
  * as a color gradient, with labeled min and max values.
  */
 export function LegendEntryContinuous(props: LegendEntryContinuousProps) {
+  // TODO: Support multi-stop gradient, not just two-tone.
   const colorLo = toHexString(props.getSwatchColor(props.domain[0]));
   const colorHi = toHexString(props.getSwatchColor(props.domain[1]));
 
