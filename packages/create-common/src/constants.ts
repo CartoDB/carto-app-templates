@@ -42,4 +42,5 @@ export const TEMPLATE_UPDATE_PATHS = [
   'src/environments/environment.ts', // angular
   'src/environments/environment.*.ts', // angular
   '.env', // react, vue
+  'angular.json', // angular
 ];

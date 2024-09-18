@@ -164,14 +164,30 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
 
   // Replace `@carto/create-common/style.css` dependency with local file, so
   // users can easily modify project CSS.
-  await copyFile(
-    resolve(fileURLToPath(import.meta.url), '..', '..', 'style.css'),
-    resolve(targetDir, 'src', 'style.css'),
+  const srcStylePath = resolve(
+    fileURLToPath(import.meta.url),
+    '../../style.css',
   );
+  const dstStylePath = pkg.dependencies['@angular/core']
+    ? resolve(targetDir, 'style.css')
+    : resolve(targetDir, 'src', 'style.css');
+  await copyFile(srcStylePath, dstStylePath);
+
+  const globConfig = { cwd: targetDir, absolute: true };
+
+  // Replace env files with their templates. For example, .env.template
+  // overwrites .env, and then the template is removed.
+  for (const path of await glob(
+    ['**/.env.template', '**/environment.template.ts'],
+    globConfig,
+  )) {
+    console.log(`overwrite ${path}`);
+    await copyFile(path, path.replace('.template', ''));
+    await rm(path);
+  }
 
   // Replace known tokens ($title, $accessToken, ...) in template files.
   const tokenList = createTokenList(config);
-  const globConfig = { cwd: targetDir, absolute: true };
   for (const path of await glob(TEMPLATE_UPDATE_PATHS, globConfig)) {
     await updateTemplate(path, tokenList);
   }
