@@ -22,6 +22,7 @@ import { NAV_ROUTES, RoutePath } from '../app.routes';
           <a
             [routerLink]="route.path"
             routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
             class="body2 strong"
             >{{ route.text }}</a
           >
