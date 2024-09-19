@@ -4,7 +4,7 @@
   "repository": "github:CartoDB/carto-app-templates",
   "author": "Don McCurdy <donmccurdy@carto.com>",
   "license": "MIT",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "type": "module",
   "bin": "./scripts/create.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "@angular/router": "^18.2.5",
     "@auth0/auth0-angular": "^2.2.3",
     "@carto/api-client": "^0.1.0",
-    "@carto/create-common": "^0.0.11",
+    "@carto/create-common": "^0.0.12",
     "@deck.gl/aggregation-layers": "^9.0.24",
     "@deck.gl/carto": "^9.0.24",
     "@deck.gl/core": "^9.0.24",
