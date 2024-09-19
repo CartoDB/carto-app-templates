@@ -23,9 +23,17 @@ configuration details. A new CARTO application will be created in the
 specified directory. To start development:
 
 ```bash
+# open project directory
 cd path/to/my-project
+
+# install dependencies
 yarn
+
+# build and run local dev server
 yarn dev
+
+# build and run local dev server (OAuth)
+yarn dev:ssl
 ```
 
 ## Versioning

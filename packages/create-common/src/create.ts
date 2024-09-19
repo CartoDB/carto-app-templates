@@ -200,6 +200,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
     ...(inputTargetDir !== '.' ? [`${dim('$')} cd ${inputTargetDir}`] : []),
     `${dim('$')} yarn`,
     `${dim('$')} yarn dev`,
+    `${dim('$')} yarn dev:ssl ${dim('# required for OAuth')}`,
   ];
 
   console.log(`

@@ -9,7 +9,8 @@
   "bin": "./scripts/create.js",
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve --ssl --host 127.0.0.1 --port 4000",
+    "dev": "ng serve --port 4000",
+    "dev:ssl": "ng serve --ssl --host 127.0.0.1 --port 4000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development"
   },

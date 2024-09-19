@@ -8,7 +8,8 @@
   "type": "module",
   "bin": "./scripts/create.js",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 4002",
+    "dev": "vite --port 4002",
+    "dev:ssl": "vite --host 127.0.0.1 --port 4002",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
