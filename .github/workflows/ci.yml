@@ -107,5 +107,5 @@ jobs:
         env:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
-          yarn lerna publish --yes --force-publish "*" --npm-tag ${RELEASE_TYPE}
+          yarn lerna publish --yes --force-publish "*" --dist-tag ${RELEASE_TYPE}
 
