@@ -102,8 +102,10 @@ jobs:
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
-      - name: Publish package
+      - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
-        run: yarn npm publish --tag ${RELEASE_TYPE}
+        run: |
+          yarn lerna publish --yes --force-publish "*" --npm-tag ${RELEASE_TYPE}
+
