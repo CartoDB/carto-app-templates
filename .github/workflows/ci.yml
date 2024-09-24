@@ -108,5 +108,5 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn lerna publish from-git --yes "*" --dist-tag ${RELEASE_TYPE}
+          yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE}
 
