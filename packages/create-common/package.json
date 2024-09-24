@@ -5,7 +5,6 @@
   "version": "0.0.12",
   "license": "MIT",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
     "access": "public",
     "tag": "alpha"
   },
