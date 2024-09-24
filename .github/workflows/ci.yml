@@ -17,11 +17,11 @@ jobs:
       matrix:
         include:
           - node-version: 18.x
-            publish: true
+            publish: false
           - node-version: 20.x
-            publish: true # TODO
+            publish: trues # TODO
           - node-version: 22.x
-            publish: true
+            publish: false
 
     env:
       CI: true
@@ -108,5 +108,5 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn lerna publish --yes --force-publish "*" --dist-tag ${RELEASE_TYPE} --no-git-tag-version
+          yarn lerna publish from-git --yes "*" --dist-tag ${RELEASE_TYPE}
 
