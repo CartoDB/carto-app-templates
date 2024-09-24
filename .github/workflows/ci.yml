@@ -102,9 +102,9 @@ jobs:
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
-      - name: Ignore changes to .yarnrc.yml
+      - name: Reset uncommitted changes
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
-        run: git update-index --assume-unchanged .yarnrc.yml
+        run: git reset --hard
 
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
@@ -112,6 +112,5 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn install
           yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE}
 
