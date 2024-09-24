@@ -113,5 +113,5 @@ jobs:
         run: |
           set -x
           ls -lia
-          yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE}
+          yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE} --registry https://registry.npmjs.org/
 
