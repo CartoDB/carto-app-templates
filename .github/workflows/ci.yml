@@ -106,10 +106,12 @@ jobs:
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
       # TODO:debug
-      - run: cat .yarnrc.yml
-      - run: git config --global user.email "donmccurdy@carto.com"
-      - run: git config --global user.name "Don McCurdy"
-      - run: git add .yarnrc.yml && git commit -m "hacky hack"
+      - if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+        run: |
+          cat .yarnrc.yml
+          git config --global user.email "donmccurdy@carto.com"
+          git config --global user.name "Don McCurdy"
+          git add .yarnrc.yml && git commit -m "hacky hack"
 
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
