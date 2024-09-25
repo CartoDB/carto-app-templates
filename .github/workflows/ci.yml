@@ -112,7 +112,6 @@ jobs:
         run: |
           set -x
           yarn version --new-version ${{ env.RELEASE_VERSION }}
-          #yarn version set ${{ env.RELEASE_VERSION }}
           yarn postversion
 
       # - name: Ignore changes to .yarnrc.yml
