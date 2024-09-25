@@ -11,4 +11,4 @@ RUN curl -o yarn.js https://repo.yarnpkg.com/${YARN_VERSION}/packages/yarnpkg-cl
 	&& yarn --version
 
 WORKDIR "/data"
-ENTRYPOINT [ "yarn", "install" ]
+ENTRYPOINT [ "bash" ]

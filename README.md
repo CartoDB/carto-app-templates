@@ -36,6 +36,13 @@ yarn dev
 yarn dev:ssl
 ```
 
+## Docker
+
+```bash
+docker-compose build
+docker-compose run --rm yarn
+```
+
 ## Versioning
 
 Package versioning follows [Semantic Versioning 2.0.0](https://semver.org/).
