@@ -10,7 +10,7 @@ export interface AppContext {
   };
   accessToken: string;
   apiVersion?: string;
-  apiBaseUrl?: string;
+  apiBaseUrl: string;
   googleApiKey?: string;
   googleMapId?: string;
   accountsUrl?: string;

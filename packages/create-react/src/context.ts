@@ -11,7 +11,7 @@ export interface AppContextProps {
   accessToken: string;
   setAccessToken: (token: string) => void;
   apiVersion?: string;
-  apiBaseUrl?: string;
+  apiBaseUrl: string;
   googleApiKey?: string;
   googleMapId?: string;
   accountsUrl?: string;
