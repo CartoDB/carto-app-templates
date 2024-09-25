@@ -105,6 +105,9 @@ jobs:
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
+      # TODO:debug
+      - run: cat .yarnrc.yml
+
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
