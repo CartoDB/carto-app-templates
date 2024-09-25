@@ -111,7 +111,7 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn version --prerelease
+          yarn version --immediate
           #yarn version set ${{ env.RELEASE_VERSION }}
           yarn postversion
 
