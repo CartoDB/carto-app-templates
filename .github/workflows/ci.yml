@@ -107,6 +107,7 @@ jobs:
 
       # TODO:debug
       - run: cat .yarnrc.yml
+      - run: git add .yarnrc.yml && git commit -m "hacky hack"
 
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
