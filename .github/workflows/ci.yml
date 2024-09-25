@@ -111,7 +111,8 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn version set ${{ env.RELEASE_VERSION }}
+          yarn version --prerelease
+          #yarn version set ${{ env.RELEASE_VERSION }}
           yarn postversion
 
       # - name: Ignore changes to .yarnrc.yml
