@@ -105,13 +105,13 @@ jobs:
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
-      - name: Yarn prerelease/postversion
-        #if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+      - name: Yarn prepare version
+        if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn version --immediate
+          yarn version --new-version ${{ env.RELEASE_VERSION }}
           #yarn version set ${{ env.RELEASE_VERSION }}
           yarn postversion
 
