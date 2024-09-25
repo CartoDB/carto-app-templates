@@ -1,0 +1,7 @@
+version: '3'
+services:
+ yarn:
+  build: .
+  image: yarn:4.2.2
+  volumes:
+  - .:/data
