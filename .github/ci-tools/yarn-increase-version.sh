@@ -40,3 +40,5 @@ do
     yarn version ${VERSION_STRATEGY}
     cd ../../
 done
+
+yarn install
