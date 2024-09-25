@@ -92,13 +92,8 @@ jobs:
       #   if: steps.check-tag-format.outputs.is_stable == 'false' && steps.get-release-type.outputs.result == 'latest'
       #   run: echo "Tag set may be incorrect. Please, review" && exit 1
 
-      - name: Set version environment variable
+      - name: Set version from tag to environment variable
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: Test
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
 
       - name: Configure yarn to publish packages
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
@@ -116,7 +111,7 @@ jobs:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn version prerelease
+          yarn version prerelease --new-version ${{ env.RELEASE_VERSION }}
           yarn postversion
 
       # - name: Ignore changes to .yarnrc.yml
