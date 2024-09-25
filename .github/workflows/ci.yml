@@ -106,12 +106,12 @@ jobs:
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
       - name: Yarn prerelease/postversion
-        if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+        #if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          yarn version prerelease --new-version ${{ env.RELEASE_VERSION }}
+          yarn version set ${{ env.RELEASE_VERSION }}
           yarn postversion
 
       # - name: Ignore changes to .yarnrc.yml
