@@ -36,5 +36,7 @@ fi
 for d in $(ls packages);
 do
     echo "Package: $d"
+    cd packages/$d
     yarn version ${VERSION_STRATEGY}
+    cd ../../
 done
