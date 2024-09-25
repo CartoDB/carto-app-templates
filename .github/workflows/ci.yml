@@ -121,8 +121,8 @@ jobs:
             VERSION_STRATEGY="prerelease"
             echo "Strategy: Pre-release update (0.0.0-X)"
           else
-            echo "Error: No version increase detected"
-            exit 1
+            VERSION_STRATEGY="slkip"
+            echo "Strategy: No version increase detected, skip: Yarn prepare version"
           fi
 
           echo "VERSION_STRATEGY=${VERSION_STRATEGY}" >> $GITHUB_ENV
@@ -144,12 +144,12 @@ jobs:
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
       - name: Yarn prepare version
-        if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+        if: startsWith(github.ref, 'refs/tags/') && matrix.publish && env.VERSION_STRATEGY != 'skip'
         env:
           RELEASE_TYPE: ${{ steps.get-release-type.outputs.result }}
         run: |
           set -x
-          for d in $(ls packages); 
+          for d in $(ls packages);
           do
             echo "Package: $d"
             yarn version ${{ env.VERSION_STRATEGY }}
