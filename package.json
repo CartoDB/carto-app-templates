@@ -13,7 +13,6 @@
     "clean": "rimraf --glob 'packages/*/dist/*' 'sandbox/*'",
     "preversion": "yarn lint",
     "version": "yarn clean && yarn build",
-    "prepublish": "./.github/ci-tools/yarn-increase-version.sh",
     "postpublish": "git push && git push --tags"
   },
   "devDependencies": {
