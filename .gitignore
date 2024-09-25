@@ -21,3 +21,6 @@ sandbox/*
 
 #!.yarn/cache
 .pnp.*
+
+# Used only in CI.
+.npmrc

@@ -94,24 +94,22 @@ jobs:
       # - name: Verify tag format
       #   if: steps.check-tag-format.outputs.is_stable == 'false' && steps.get-release-type.outputs.result == 'latest'
       #   run: echo "Tag set may be incorrect. Please, review" && exit 1
-
       - name: Configure yarn to publish packages
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
           # The following token has been manually issued in the CartoDB
           # organization for npmjs.com
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_CARTODB_AUTH_TOKEN }}
-        run: |
-          yarn config set npmPublishRegistry "https://registry.npmjs.org/"
-          yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
+          NPM_TOKEN: ${{ secrets.NPM_CARTODB_AUTH_TOKEN }}
+        run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+        # run: |
+        #   yarn config set npmPublishRegistry "https://registry.npmjs.org/"
+        #   yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
       # TODO:debug
       - if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         run: |
           cat .yarnrc.yml
-          git config --global user.email "donmccurdy@carto.com"
-          git config --global user.name "Don McCurdy"
-          git add .yarnrc.yml && git commit -m "hacky hack"
+          cat .npmrc
 
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
