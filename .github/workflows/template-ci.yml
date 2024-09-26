@@ -16,7 +16,7 @@ jobs:
           - name: 18.x
             execution: false
           - name: 20.x
-            execution: false
+            execution: true
           - name: 22.x
             execution: false
     env:
