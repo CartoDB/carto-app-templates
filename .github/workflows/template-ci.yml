@@ -12,11 +12,12 @@ jobs:
       matrix:
         # If you want to exec in all node versions, uncomment the next line
         #node-version: [18.x, 20.x, 22.x]
-        # If you want to exec in a specific node version, uncomment the next line
+        # If you want to exec in a specific framework, uncomment the next line
+        #framework: [react, vue, angular]
 
         # Execution
         node-version: [20.x]
-        framework: [react, vue, angular]
+        framework: [react]
 
     env:
       PROJECT_PATH: projects/node-${{ matrix.node-version }}/${{ matrix.framework }}
