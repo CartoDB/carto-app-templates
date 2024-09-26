@@ -10,49 +10,42 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        # If you want to exec in all node versions, uncomment the next line
+        #node-version: [18.x, 20.x, 22.x]
+        # If you want to exec in a specific node version, uncomment the next line
+
+        # Execution
+        node-version: [20.x]
         framework: [react, vue, angular]
-        include:
-          - name: 18.x
-            execution: false
-          - name: 20.x
-            execution: true
-          - name: 22.x
-            execution: false
+
     env:
       PROJECT_PATH: projects/node-${{ matrix.node-version }}/${{ matrix.framework }}
 
     steps:
       - name: Checkout
-        if: matrix.execution
         uses: actions/checkout@v4
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        if: matrix.execution
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Enable Corepack
-        if: matrix.execution
         run: corepack enable
 
       - name: Install
-        if: matrix.execution
         run: yarn install
 
       - name: Build
-        if: matrix.execution
         run: yarn build
 
-      - name: Create project with framework [${{ matrix.framework }}] node-${{ matrix.node-version }}
-        if: matrix.execution
+      - name: Create project with framework ${{ matrix.framework }} node-${{ matrix.node-version }}
         run: |
           mkdir -p ${PROJECT_PATH}
+          export REQUIRED_PROMPTS=false
           yarn create @carto/${{ matrix.framework }} ${PROJECT_PATH}
 
       - name: Start project
-        if: matrix.execution
         run: |
           cd ${PROJECT_PATH}
           yarn

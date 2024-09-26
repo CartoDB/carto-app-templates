@@ -86,39 +86,50 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    * Project configuration.
    */
 
+  var defaultConfig = true;
+  if (process.env.required_prompts == 'false') {
+    defaultConfig = false;
+  };
+
+
   const config: ProjectConfig = await prompts(
     [
       {
         name: 'title',
         type: 'text',
         message: `Project title ${dim('(required) [.env, index.html]')}`,
-        validate: (text) => (text.length === 0 ? 'Title is required' : true),
+        initial: 'Test Project',
+        validate: (text) => (defaultConfig || text.length === 0 ? 'Title is required' : true),
       },
       {
         name: 'authEnabled',
         type: 'toggle',
         active: 'OAuth',
         inactive: 'access token',
+        initial: false,
         message: `Authentication? ${dim('(required) [.env]')}`,
       },
       {
         name: 'accessToken',
         type: (_, config) => (config.authEnabled ? null : 'password'),
         message: `Access token for CARTO API ${dim('(required) [.env]')}`,
+        initial: 'REPLACE_CARTO_API',
         validate: (text) =>
-          text.length === 0 ? 'Access token is required' : true,
+          defaultConfig || text.length === 0 ? 'Access token is required' : true,
       },
       {
         name: 'authClientID',
         type: (_, config) => (config.authEnabled ? 'password' : null),
         message: `OAuth client ID ${dim('(required) [.env]')}`,
+        initial: '$authClientID',
         validate: (text) =>
-          text.length === 0 ? 'Client ID is required' : true,
+          defaultConfig || text.length === 0 ? 'Client ID is required' : true,
       },
       {
         name: 'authOrganizationID',
         type: (_, config) => (config.authEnabled ? 'text' : null),
         message: `OAuth organization ID ${dim('(optional) [.env]')}`,
+        initial: '$authOrganizationID',
       },
       {
         name: 'authDomain',
