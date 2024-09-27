@@ -118,4 +118,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_CARTODB_AUTH_TOKEN }}
         run: |
           set -x
-          yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE}
+          NPM_TOKEN=${NODE_AUTH_TOKEN} yarn lerna publish from-git --yes --dist-tag ${RELEASE_TYPE} --loglevel verbose
