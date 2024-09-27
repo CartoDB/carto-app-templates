@@ -23,8 +23,23 @@ import {
 } from './constants';
 
 interface ProjectConfig {
+  /** Project title. Use "Sentence case" or "Title Case". */
   title: string;
-  accessToken: string;
+
+  /** Project uses OAuth if true, otherwise access tokens. */
+  authEnabled: boolean;
+
+  /** CARTO access token. */
+  accessToken?: string;
+
+  /** OAuth client ID. */
+  authClientID?: string;
+
+  /** OAuth organization ID. */
+  authOrganizationID?: string;
+
+  /** OAuth domain. */
+  authDomain?: string;
 }
 
 // TODO: Unit tests:
@@ -35,20 +50,21 @@ interface ProjectConfig {
 // - files added/removed as expected
 
 /**
- * Creates a new CARTO app in the target directory, given a template.
+ * Launches CLI prompts for project configuration, then creates a new
+ * CARTO app in the target directory, based on the given template.
  *
- * @param templateDir Absolute path to template directory
- * @param targetDir Relative or absolute path to target directory
+ * @param templateDir Absolute path to template (source) directory
+ * @param targetDir Relative or absolute path to project (target) directory
  */
-export async function createProject(
+export async function createProjectFromPrompt(
   templateDir: string,
-  inputTargetDir: string,
+  inputProjectDir: string,
 ) {
-  const targetDir = resolve(process.cwd(), inputTargetDir);
+  const projectDir = resolve(process.cwd(), inputProjectDir);
 
   console.log(`
 ${green('✔')} ${bold('Template directory')} ${dim('…')} ${templateDir}
-${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
+${green('✔')} ${bold('Target directory')} ${dim('…')} ${projectDir}
   `);
 
   console.log(dim('…\n'));
@@ -58,19 +74,19 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
    */
 
   // Prevent overwriting the template directory.
-  if (targetDir === templateDir) {
+  if (projectDir === templateDir) {
     throw new Error(`Target and template directories cannot be the same.`);
   }
 
   // If target directory contains existing files, prompt user before overwriting.
-  const targetDirExists = existsSync(targetDir);
-  const targetDirEmpty = targetDirExists && (await isEmpty(targetDir));
-  if (targetDirExists && !targetDirEmpty) {
+  const projectDirExists = existsSync(projectDir);
+  const projectDirEmpty = projectDirExists && (await isEmpty(projectDir));
+  if (projectDirExists && !projectDirEmpty) {
     const { overwrite } = await prompts([
       {
         type: 'confirm',
         name: 'overwrite',
-        message: `Target directory "${targetDir}" is not empty. Overwrite?`,
+        message: `Project directory "${projectDir}" is not empty. Overwrite?`,
       },
     ]);
 
@@ -78,83 +94,118 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
       console.warn(`Project creation cancelled.`);
       process.exit(2);
     }
-  } else if (!targetDirExists) {
-    await mkdir(targetDir, { recursive: true });
+  } else if (!projectDirExists) {
+    await mkdir(projectDir, { recursive: true });
   }
 
   /****************************************************************************
    * Project configuration.
    */
 
-  const config: ProjectConfig = await prompts(
-    [
+  const config: Omit<ProjectConfig, 'projectDir' | 'templateDir'> =
+    await prompts(
+      [
+        {
+          name: 'title',
+          type: 'text',
+          message: `Project title ${dim('(required) [.env, index.html]')}`,
+          validate: (text) => (text.length === 0 ? 'Title is required' : true),
+        },
+        {
+          name: 'authEnabled',
+          type: 'toggle',
+          active: 'OAuth',
+          inactive: 'access token',
+          message: `Authentication? ${dim('(required) [.env]')}`,
+        },
+        {
+          name: 'accessToken',
+          type: (_, config) => (config.authEnabled ? null : 'password'),
+          message: `Access token for CARTO API ${dim('(required) [.env]')}`,
+          validate: (text) =>
+            text.length === 0 ? 'Access token is required' : true,
+        },
+        {
+          name: 'authClientID',
+          type: (_, config) => (config.authEnabled ? 'password' : null),
+          message: `OAuth client ID ${dim('(required) [.env]')}`,
+          validate: (text) =>
+            text.length === 0 ? 'Client ID is required' : true,
+        },
+        {
+          name: 'authOrganizationID',
+          type: (_, config) => (config.authEnabled ? 'text' : null),
+          message: `OAuth organization ID ${dim('(optional) [.env]')}`,
+        },
+        {
+          name: 'authDomain',
+          type: (_, config) => (config.authEnabled ? 'text' : null),
+          message: `OAuth domain ${dim('(optional) [.env]')}`,
+          initial: 'auth.carto.com',
+        },
+      ],
       {
-        name: 'title',
-        type: 'text',
-        message: `Project title ${dim('(required) [.env, index.html]')}`,
-        validate: (text) => (text.length === 0 ? 'Title is required' : true),
+        onCancel: () => {
+          console.warn(`Project creation cancelled.`);
+          process.exit(2);
+        },
       },
-      {
-        name: 'authEnabled',
-        type: 'toggle',
-        active: 'OAuth',
-        inactive: 'access token',
-        message: `Authentication? ${dim('(required) [.env]')}`,
-      },
-      {
-        name: 'accessToken',
-        type: (_, config) => (config.authEnabled ? null : 'password'),
-        message: `Access token for CARTO API ${dim('(required) [.env]')}`,
-        validate: (text) =>
-          text.length === 0 ? 'Access token is required' : true,
-      },
-      {
-        name: 'authClientID',
-        type: (_, config) => (config.authEnabled ? 'password' : null),
-        message: `OAuth client ID ${dim('(required) [.env]')}`,
-        validate: (text) =>
-          text.length === 0 ? 'Client ID is required' : true,
-      },
-      {
-        name: 'authOrganizationID',
-        type: (_, config) => (config.authEnabled ? 'text' : null),
-        message: `OAuth organization ID ${dim('(optional) [.env]')}`,
-      },
-      {
-        name: 'authDomain',
-        type: (_, config) => (config.authEnabled ? 'text' : null),
-        message: `OAuth domain ${dim('(optional) [.env]')}`,
-        initial: 'auth.carto.com',
-      },
-    ],
-    {
-      onCancel: () => {
-        console.warn(`Project creation cancelled.`);
-        process.exit(2);
-      },
-    },
-  );
+    );
 
   console.log(dim('\n…'));
 
-  /****************************************************************************
-   * Populate project directory.
-   */
-
   // Overwrite was explicitly approved by user above.
-  if (targetDirExists && !targetDirEmpty) {
-    await emptyDir(targetDir);
+  if (projectDirExists && !projectDirEmpty) {
+    await emptyDir(projectDir);
   }
 
-  await copyDir(templateDir, targetDir);
+  await createProjectFromConfig(templateDir, projectDir, config);
+
+  // Suggest next steps
+  const steps = [
+    ...(inputProjectDir !== '.' ? [`${dim('$')} cd ${inputProjectDir}`] : []),
+    `${dim('$')} yarn`,
+    `${dim('$')} yarn dev`,
+    `${dim('$')} yarn dev:ssl ${dim('# required for OAuth')}`,
+  ];
+
+  console.log(`
+  ${green('✔')} ${bold(`Project "${config.title}" was created!`)}
+
+  ${bold(yellow('!'))} ${bold('Next steps')}:
+
+  ${steps.join('\n')}
+    `);
+}
+
+/**
+ * Creates a new CARTO app in the target directory, based on the given
+ * template and configuration.
+ *
+ * @param templateDir Absolute path to template (source) directory
+ * @param targetDir Absolute path to project (target) directory
+ *
+ * @privateRemarks This function must be able to run in CI without user
+ *  interaction, and cannot prompt for input.
+ */
+async function createProjectFromConfig(
+  templateDir: string,
+  projectDir: string,
+  config: ProjectConfig,
+) {
+  // Populate project directory from template.
+  await copyDir(templateDir, projectDir);
 
   // Remove template files not needed in project.
   for (const excludePath of TEMPLATE_EXCLUDE_PATHS) {
-    await rm(resolve(targetDir, excludePath), { recursive: true, force: true });
+    await rm(resolve(projectDir, excludePath), {
+      recursive: true,
+      force: true,
+    });
   }
 
   // Set up package.json.
-  const pkgPath = resolve(targetDir, 'package.json');
+  const pkgPath = resolve(projectDir, 'package.json');
   const pkg = JSON.parse(await readFile(pkgPath, 'utf8'));
   removePkgDependencies(pkg, TEMPLATE_EXCLUDE_DEPS);
   removePkgFields(pkg, TEMPLATE_EXCLUDE_PKG_FIELDS);
@@ -169,11 +220,11 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
     '../../style.css',
   );
   const dstStylePath = pkg.dependencies['@angular/core']
-    ? resolve(targetDir, 'style.css')
-    : resolve(targetDir, 'src', 'style.css');
+    ? resolve(projectDir, 'style.css')
+    : resolve(projectDir, 'src', 'style.css');
   await copyFile(srcStylePath, dstStylePath);
 
-  const globConfig = { cwd: targetDir, absolute: true };
+  const globConfig = { cwd: projectDir, absolute: true };
 
   // Replace env files with their templates. For example, .env.template
   // overwrites .env, and then the template is removed.
@@ -181,7 +232,6 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
     ['**/.env.template', '**/environment.template.ts'],
     globConfig,
   )) {
-    console.log(`overwrite ${path}`);
     await copyFile(path, path.replace('.template', ''));
     await rm(path);
   }
@@ -193,23 +243,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${targetDir}
   }
 
   // Create empty yarn.lock. Required when working in sandbox/.
-  await writeFile(resolve(targetDir, 'yarn.lock'), '');
-
-  // Suggest next steps
-  const steps = [
-    ...(inputTargetDir !== '.' ? [`${dim('$')} cd ${inputTargetDir}`] : []),
-    `${dim('$')} yarn`,
-    `${dim('$')} yarn dev`,
-    `${dim('$')} yarn dev:ssl ${dim('# required for OAuth')}`,
-  ];
-
-  console.log(`
-${green('✔')} ${bold(`Project "${config.title}" was created!`)}
-
-${bold(yellow('!'))} ${bold('Next steps')}:
-
-${steps.join('\n')}
-  `);
+  await writeFile(resolve(projectDir, 'yarn.lock'), '');
 }
 
 /**
@@ -220,7 +254,7 @@ ${steps.join('\n')}
 function createTokenList(config: ProjectConfig): Token[] {
   const configTokens: Token[] = Object.keys(config).map((key) => [
     `$${key}`,
-    config[key as keyof ProjectConfig],
+    String(config[key as keyof ProjectConfig]),
   ]);
   return [...configTokens, ['@carto/create-common/style.css', './style.css']];
 }
