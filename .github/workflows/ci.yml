@@ -95,6 +95,14 @@ jobs:
       #   if: steps.check-tag-format.outputs.is_stable == 'false' && steps.get-release-type.outputs.result == 'latest'
       #   run: echo "Tag set may be incorrect. Please, review" && exit 1
 
+      # - name: Reset changes
+      #   if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+      #   run: git reset --hard HEAD
+
+      - name: Ignore changes to .yarnrc.yml
+        if: startsWith(github.ref, 'refs/tags/') && matrix.publish
+        run: git update-index --assume-unchanged .yarnrc.yml
+
       - name: Configure yarn to publish packages
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
         env:
@@ -102,14 +110,6 @@ jobs:
         run: |
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
-
-      - name: Reset changes
-        if: startsWith(github.ref, 'refs/tags/') && matrix.publish
-        run: git reset --hard HEAD
-
-      # - name: Ignore changes to .yarnrc.yml
-      #   if: startsWith(github.ref, 'refs/tags/') && matrix.publish
-      #   run: git update-index --assume-unchanged .yarnrc.yml
 
       - name: Publish package with Lerna
         if: startsWith(github.ref, 'refs/tags/') && matrix.publish
