@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { createProject } from "@carto/create-common";
-import meow from "meow";
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createProjectFromPrompt } from '@carto/create-common';
+import meow from 'meow';
 
 const cli = meow(
   `
@@ -16,6 +16,6 @@ const cli = meow(
   },
 );
 
-const templateDir = resolve(fileURLToPath(import.meta.url), "../..");
-const targetDir = cli.input.at(0) || ".";
-await createProject(templateDir, targetDir);
+const templateDir = resolve(fileURLToPath(import.meta.url), '../..');
+const targetDir = cli.input.at(0) || '.';
+await createProjectFromPrompt(templateDir, targetDir);
