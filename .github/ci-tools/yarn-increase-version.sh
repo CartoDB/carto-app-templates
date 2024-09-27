@@ -4,9 +4,9 @@ VERSION_STRATEGY=$1
 
 # Version Strategy:
 # The version strategy can be one of the following:
-# - major (X.0.0).
-# - minor (0.X.0).
-# - patch (0.0.X).
+# - major (X.0.0)
+# - minor (0.X.0)
+# - patch (0.0.X)
 # - prerelease (0.0.0-X)
 list_strategy="major minor patch prerelease"
 
