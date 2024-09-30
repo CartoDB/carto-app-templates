@@ -36,35 +36,6 @@ yarn dev
 yarn dev:ssl
 ```
 
-## Docker
-
-```bash
-docker-compose build
-docker-compose run --rm yarn
-```
-
-## Publish a new version
-
-Before publishing a new modification you can increase the version as follows:
-
-Remember, the version strategy can be one of the following:
-
-- major (X.0.0)
-- minor (0.X.0)
-- patch (0.0.X)
-- prerelease (0.0.0-X)
-
-```bash
-bash ./.github/ci-tools/yarn-increase-version.sh minor
-```
-
-Make a new tag with your new version:
-
-```bash
-git tag -d v0.0.13-0
-git push origin :refs/tags/v0.0.13-0
-```
-
 ## Versioning
 
 Package versioning follows [Semantic Versioning 2.0.0](https://semver.org/).
