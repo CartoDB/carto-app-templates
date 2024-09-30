@@ -13,7 +13,7 @@
     "clean": "rimraf --glob 'packages/*/dist/*' 'sandbox/*'",
     "preversion": "yarn lint",
     "version": "yarn clean && yarn build",
-    "postpublish": "git push && git push --tags"
+    "postversion": "git push && git push --tags"
   },
   "devDependencies": {
     "@types/meow": "^6.0.0",
