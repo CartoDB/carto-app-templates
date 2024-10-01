@@ -4,6 +4,7 @@
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "dev": "lerna run dev --parallel --stream",
     "dev:ssl": "lerna run dev:ssl --parallel --stream",

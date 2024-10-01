@@ -188,7 +188,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${projectDir}
  * @privateRemarks This function must be able to run in CI without user
  *  interaction, and cannot prompt for input.
  */
-async function createProjectFromConfig(
+export async function createProjectFromConfig(
   templateDir: string,
   projectDir: string,
   config: ProjectConfig,
