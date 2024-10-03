@@ -51,5 +51,5 @@ jobs:
         run: |
           set -x
           cd ${PROJECT_PATH}
-          yarn
+          yarn --immutable=false
           yarn dev
