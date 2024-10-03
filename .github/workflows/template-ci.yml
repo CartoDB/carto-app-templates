@@ -41,10 +41,11 @@ jobs:
         run: yarn build
 
       - name: Create project with framework ${{ matrix.framework }} node-${{ matrix.node-version }}
+        env:
+          CARTO_AUTH_TOKEN: ${{ secrets.CARTO_AUTH_TOKEN }}
         run: |
           mkdir -p ${PROJECT_PATH}
-          export REQUIRED_PROMPTS=false
-          yarn create @carto/${{ matrix.framework }} ${PROJECT_PATH}
+          node scripts/generate-ci-project.js ${{ matrix.framework }} ${PROJECT_PATH} ${CARTO_AUTH_TOKEN}
 
       - name: Start project
         run: |
