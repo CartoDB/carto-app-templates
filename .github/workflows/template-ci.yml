@@ -49,6 +49,7 @@ jobs:
 
       - name: Start project
         run: |
+          set -x
           cd ${PROJECT_PATH}
           yarn
           yarn dev
