@@ -51,6 +51,4 @@ jobs:
         run: |
           set -x
           cd ${PROJECT_PATH}
-          rm yarn.lock
-          yarn
           yarn dev
