@@ -2,7 +2,7 @@
   "name": "@carto/create-common",
   "packageManager": "yarn@4.2.2",
   "author": "Don McCurdy <donmccurdy@carto.com>",
-  "version": "0.0.12",
+  "version": "0.0.13-0",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -49,5 +49,6 @@
     "@types/prompts": "^2.4.9",
     "microbundle": "^0.15.1"
   },
-  "gitHead": "eee3523a24885fe41609c9739378a10dc90dab77"
+  "gitHead": "eee3523a24885fe41609c9739378a10dc90dab77",
+  "stableVersion": "0.0.12"
 }
