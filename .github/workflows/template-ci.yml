@@ -54,4 +54,6 @@ jobs:
           set -x
           cd ${PROJECT_PATH}
           yarn
-          yarn dev
+          yarn dev &
+          sleep 10
+          curl http://localhost:4001/
