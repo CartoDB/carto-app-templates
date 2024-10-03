@@ -48,8 +48,10 @@ jobs:
           node scripts/generate-ci-project.js ${{ matrix.framework }} ${PROJECT_PATH} ${CARTO_AUTH_TOKEN}
 
       - name: Start project
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
         run: |
           set -x
           cd ${PROJECT_PATH}
-          yarn install --refresh-lockfile
+          yarn
           yarn dev
