@@ -51,4 +51,5 @@ jobs:
         run: |
           set -x
           cd ${PROJECT_PATH}
+          yarn install
           yarn dev
