@@ -17,8 +17,12 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      # Lerna needs Git tags. https://stackoverflow.com/a/76181083
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+          fetch-tags: true
 
       # Read version from 'package.json'; git tags are lost on a merged PR.
       - name: Read package version
