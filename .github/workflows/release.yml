@@ -62,6 +62,7 @@ jobs:
       - name: Build
         run: yarn build
 
+      # TODO: Why do both .npmrc and .yarnrc.yml need updates?
       - name: Configure yarn to publish packages
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_CARTODB_AUTH_TOKEN }}
@@ -74,7 +75,6 @@ jobs:
           yarn config set npmAuthToken "${NPM_AUTH_TOKEN}"
 
           # Create .npmrc
-          # TODO: Why do both .npmrc and .yarnrc.yml need updates?
           echo "@carto:registry=https://registry.npmjs.org/" > .npmrc
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
 
