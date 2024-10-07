@@ -6,7 +6,8 @@
   "command": {
     "version": {
       "message": "chore(release): %s",
-      "push": false
+      "push": false,
+      "gitTagVersion": false
     }
   }
 }
