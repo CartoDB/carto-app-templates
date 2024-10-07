@@ -17,8 +17,12 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      # Lerna needs Git tags. https://stackoverflow.com/a/76181083
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+          fetch-tags: true
 
       # Read version from 'package.json'; git tags are lost on a merged PR.
       - name: Read package version
@@ -58,14 +62,25 @@ jobs:
       - name: Build
         run: yarn build
 
+      # TODO: Why do both .npmrc and .yarnrc.yml need updates?
       - name: Configure yarn to publish packages
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_CARTODB_AUTH_TOKEN }}
-        # Ignore changes to .yarnrc.yml, see https://github.com/lerna/lerna/issues/2329
         run: |
+          # Ignore changes to .yarnrc.yml, see https://github.com/lerna/lerna/issues/2329
           git update-index --assume-unchanged .yarnrc.yml
+
+          # Update .yarnrc.yml
           yarn config set npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmAuthToken "${NPM_AUTH_TOKEN}"
+
+          # Create .npmrc
+          echo "@carto:registry=https://registry.npmjs.org/" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+
+          # Check configuration
+          npm config get registry
+          npm view @carto/create-common versions
 
       - name: Publish
         env:
