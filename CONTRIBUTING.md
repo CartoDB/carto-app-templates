@@ -33,9 +33,12 @@ During local development, CSS styles are loaded from a shared `style.css` in the
 
 All packages are published together. To create a standard release:
 
-1. Update changelog
+1. Update changelog and commit changes
 
-2. Create a new version:
+2. Create a new version: `yarn lerna version [ major | minor | patch | prerelease ]`
 
-- Release: `yarn lerna publish [ patch | minor | major ] --force-publish "*"`
-- Prerelease: `yarn lerna publish prerelease --dist-tag alpha --force-publish "*"`
+3. Push to GitHub: `yarn postversion`
+
+4. Publish
+   - If working on `main`, the previous step will automatically create and push a branch. Open a pull request, get any required approvals, and merge. Merged pull requests with commit messages beginning `chore(release)` will trigger a release automatically.
+   - If working on a branch, a commit for the release will be pushed to the branch. You'll then need to [manually run a workflow](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow), “Release”, selecting the target branch in the menu.
