@@ -2,7 +2,7 @@
   "name": "@carto/create-common",
   "packageManager": "yarn@4.2.2",
   "author": "Don McCurdy <donmccurdy@carto.com>",
-  "version": "0.1.2-alpha.2",
+  "version": "0.1.2-alpha.3",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
