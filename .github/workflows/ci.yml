@@ -2,8 +2,15 @@ name: CI
 
 on:
   push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
+  ##########################################################################
+  # Build
+  ##########################################################################
+
   build:
     name: Build [${{ matrix.framework }} - Node ${{ matrix.node-version }}]
     runs-on: ubuntu-22.04
@@ -53,3 +60,16 @@ jobs:
           yarn dev --port 4000 &
           sleep 30
           curl http://localhost:4000/
+
+  ##########################################################################
+  # Release precheck
+  ##########################################################################
+
+  release_precheck:
+    name: 'Release (precheck)'
+    needs: build
+    if: |
+      github.ref_name == 'main' &&
+      startsWith(github.event.head_commit.message, 'chore(release)')
+    uses: ./.github/workflows/release.yml
+    secrets: inherit
