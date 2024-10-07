@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "packageManager": "yarn@4.2.2",
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "lerna run dev --parallel --stream",
+    "dev:ssl": "lerna run dev:ssl --parallel --stream",
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "test": "lerna run test",
+    "clean": "rimraf --glob 'packages/*/dist/*' 'sandbox/*'",
+    "preversion": "yarn lint",
+    "version": "yarn clean && yarn build",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "@types/meow": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "lerna": "^8.1.8",
+    "meow": "^13.2.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "typescript": "5.5.4",
+    "vite": "^5.4.6"
+  },
+  "resolutions": {
+    "eslint": "^8.57.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4"
+  }
+}

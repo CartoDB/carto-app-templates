@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Build [${{ matrix.framework }} - Node ${{ matrix.node-version }}]
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        framework: [react, vue, angular]
+
+    env:
+      CI: true
+      PROJECT_PATH: projects/node-${{ matrix.node-version }}/${{ matrix.framework }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install
+        run: |
+          corepack enable
+          yarn install
+
+      - name: Build
+        run: |
+          yarn lint
+          yarn build
+
+      - name: Create project with framework ${{ matrix.framework }} Node-${{ matrix.node-version }}
+        env:
+          CARTO_AUTH_TOKEN: ${{ secrets.CARTO_AUTH_TOKEN }}
+        run: |
+          mkdir -p ${PROJECT_PATH}
+          node scripts/generate-ci-project.js ${{ matrix.framework }} ${PROJECT_PATH} ${CARTO_AUTH_TOKEN}
+
+      - name: Start project
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+        run: |
+          set -x
+          cd ${PROJECT_PATH}
+          yarn
+          yarn dev --port 4000 &
+          sleep 30
+          curl http://localhost:4000/
