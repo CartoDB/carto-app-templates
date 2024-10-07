@@ -12,9 +12,8 @@
     "lint": "lerna run lint",
     "test": "lerna run test",
     "clean": "rimraf --glob 'packages/*/dist/*' 'sandbox/*'",
-    "postversion": "yarn postversion:check && yarn postversion:commit && yarn postversion:push",
+    "postversion": "yarn postversion:check && yarn postversion:push",
     "postversion:check": "yarn lint && yarn test",
-    "postversion:commit": "node scripts/postversion-commit.js",
     "postversion:push": "git push && git push --tags",
     "prepublish": "yarn lint && yarn test",
     "prepack": "yarn clean && yarn build"
