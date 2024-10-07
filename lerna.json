@@ -5,7 +5,8 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "message": "chore(release): %s"
+      "message": "chore(release): %s",
+      "push": false
     }
   }
 }
