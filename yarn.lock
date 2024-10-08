@@ -2443,7 +2443,7 @@ __metadata:
     "@angular/router": "npm:^18.2.7"
     "@auth0/auth0-angular": "npm:^2.2.3"
     "@carto/api-client": "npm:^0.3.1"
-    "@carto/create-common": "npm:^0.1.2-alpha.7"
+    "@carto/create-common": "npm:^0.1.2"
     "@deck.gl/aggregation-layers": "npm:^9.0.32"
     "@deck.gl/carto": "npm:^9.0.32"
     "@deck.gl/core": "npm:^9.0.32"
@@ -2465,7 +2465,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@carto/create-common@npm:^0.1.2-alpha.7, @carto/create-common@workspace:packages/create-common":
+"@carto/create-common@npm:^0.1.2, @carto/create-common@workspace:packages/create-common":
   version: 0.0.0-use.local
   resolution: "@carto/create-common@workspace:packages/create-common"
   dependencies:
@@ -2485,7 +2485,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
     "@carto/api-client": "npm:^0.3.1"
-    "@carto/create-common": "npm:^0.1.2-alpha.7"
+    "@carto/create-common": "npm:^0.1.2"
     "@deck.gl/aggregation-layers": "npm:^9.0.32"
     "@deck.gl/carto": "npm:^9.0.32"
     "@deck.gl/core": "npm:^9.0.32"
@@ -2525,7 +2525,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-vue": "npm:^2.3.3"
     "@carto/api-client": "npm:^0.3.1"
-    "@carto/create-common": "npm:^0.1.2-alpha.7"
+    "@carto/create-common": "npm:^0.1.2"
     "@deck.gl/aggregation-layers": "npm:^9.0.32"
     "@deck.gl/carto": "npm:^9.0.32"
     "@deck.gl/core": "npm:^9.0.32"
