@@ -86,4 +86,4 @@ jobs:
         env:
           DIST_TAG: ${{ steps.dist-tag.outputs.result }}
         run: |
-          yarn lerna publish from-git --yes --dist-tag ${DIST_TAG}
+          yarn lerna publish from-package --yes --dist-tag ${DIST_TAG}
