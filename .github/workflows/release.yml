@@ -29,9 +29,9 @@ jobs:
         id: version
         run: echo "PKG_VERSION=v$(npm pkg get version -w @carto/create-react | jq '.[]' | xargs)" >> $GITHUB_OUTPUT
 
-      - name: Read git tag
-        id: git-tag
-        run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+      # - name: Read git tag
+      #   id: git-tag
+      #   run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -89,17 +89,17 @@ jobs:
       # Git tags are required for 'lerna publish from-git', so if the tag is
       # missing (as after a pull request merge), we need to re-create it.
       # TODO: Consider `git push --tags`?
-      - name: Update git tag
-        if: '!${{ steps.git-tag.outputs.GIT_TAG }}'
-        env:
-          PKG_VERSION: ${{ steps.version.outputs.PKG_VERSION }}
-        run: |
-          git config user.name "CARTO"
-          git config user.email "<>"
-          git tag -a ${PKG_VERSION} -m ${PKG_VERSION}
+      # - name: Update git tag
+      #   if: '!${{ steps.git-tag.outputs.GIT_TAG }}'
+      #   env:
+      #     PKG_VERSION: ${{ steps.version.outputs.PKG_VERSION }}
+      #   run: |
+      #     git config user.name "CARTO"
+      #     git config user.email "<>"
+      #     git tag -a ${PKG_VERSION} -m ${PKG_VERSION}
 
       - name: Publish
         env:
           DIST_TAG: ${{ steps.dist-tag.outputs.result }}
         run: |
-          yarn lerna publish from-git --yes --dist-tag ${DIST_TAG}
+          yarn lerna publish from-package --yes --dist-tag ${DIST_TAG}
