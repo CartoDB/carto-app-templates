@@ -94,6 +94,8 @@ jobs:
         env:
           PKG_VERSION: ${{ steps.version.outputs.PKG_VERSION }}
         run: |
+          git config user.name "CARTO"
+          git config user.email "<>"
           git tag -a ${PKG_VERSION} -m ${PKG_VERSION}
 
       - name: Publish
