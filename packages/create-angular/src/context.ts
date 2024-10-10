@@ -33,7 +33,7 @@ export const context: AppContext = {
     alt: 'CARTO logo',
   },
   // accessToken moved to AccessTokenService
-  apiBaseUrl: 'https://gcp-us-east1.api.carto.com',
+  apiBaseUrl: environment.API_BASE_URL,
   accountsUrl: 'http://app.carto.com/',
   oauth: {
     enabled: environment.AUTH_ENABLED,

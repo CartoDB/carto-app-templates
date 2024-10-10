@@ -2,6 +2,7 @@ export const environment = {
   APP_TITLE: 'Angular template',
   ACCESS_TOKEN:
     'eyJhbGciOiJIUzI1NiJ9.eyJhIjoiYWNfNDd1dW5tZWciLCJqdGkiOiJhZjRlM2QxMSJ9.e1GDIOtg3Jy2zcwbFpAxsvK38RqycRrWII1NVTH7KtQ',
+  API_BASE_URL: 'https://gcp-us-east1.api.carto.com',
 
   AUTH_ENABLED: false,
   AUTH_CLIENT_ID: 'TlJfUvjOpuyt3mDTJ62I1pE5Bi04hBgz',

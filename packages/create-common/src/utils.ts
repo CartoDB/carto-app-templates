@@ -112,3 +112,16 @@ export function removePkgFields<T extends Record<string, unknown>>(
   }
   return pkg;
 }
+
+/******************************************************************************
+ * Validation utilities.
+ */
+
+export function isSecureURL(text: string): boolean {
+  try {
+    const url = new URL(text);
+    return url.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}

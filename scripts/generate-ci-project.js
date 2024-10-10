@@ -27,5 +27,6 @@ await createProjectFromConfig(
     title: `CI Test (${template})`,
     authEnabled: false,
     accessToken,
+    apiBaseURL: 'https://gcp-us-east1.api.carto.com',
   },
 );
