@@ -34,7 +34,7 @@ export const DEFAULT_APP_CONTEXT: AppContext = {
     alt: 'CARTO logo',
   },
   accessToken: import.meta.env.VITE_ACCESS_TOKEN,
-  apiBaseUrl: 'https://gcp-us-east1.api.carto.com',
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
   accountsUrl: 'http://app.carto.com/',
   oauth: {
     enabled: import.meta.env.VITE_AUTH_ENABLED === 'true',

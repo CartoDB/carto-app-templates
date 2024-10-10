@@ -14,6 +14,7 @@ import {
   toValidPkgName,
   updateTemplate,
   Token,
+  isSecureURL,
 } from './utils';
 import {
   TEMPLATE_EXCLUDE_DEPS,
@@ -31,6 +32,9 @@ interface ProjectConfig {
 
   /** CARTO access token. */
   accessToken?: string;
+
+  /** Base URL for CARTO API requests. */
+  apiBaseURL: string;
 
   /** OAuth client ID. */
   authClientID?: string;
@@ -108,7 +112,7 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${projectDir}
         {
           name: 'title',
           type: 'text',
-          message: `Project title ${dim('(required) [.env, index.html]')}`,
+          message: `Project title? ${dim('(required) [.env, index.html]')}`,
           validate: (text) => (text.length === 0 ? 'Title is required' : true),
         },
         {
@@ -121,14 +125,14 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${projectDir}
         {
           name: 'accessToken',
           type: (_, config) => (config.authEnabled ? null : 'password'),
-          message: `Access token for CARTO API ${dim('(required) [.env]')}`,
+          message: `Access token for CARTO API? ${dim('(required) [.env]')}`,
           validate: (text) =>
             text.length === 0 ? 'Access token is required' : true,
         },
         {
           name: 'authClientID',
           type: (_, config) => (config.authEnabled ? 'password' : null),
-          message: `OAuth client ID ${dim('(required) [.env]')}`,
+          message: `OAuth client ID? ${dim('(required) [.env]')}`,
           validate: (text) =>
             text.length === 0 ? 'Client ID is required' : true,
         },
@@ -142,6 +146,14 @@ ${green('✔')} ${bold('Target directory')} ${dim('…')} ${projectDir}
           type: (_, config) => (config.authEnabled ? 'text' : null),
           message: `OAuth domain ${dim('(optional) [.env]')}`,
           initial: 'auth.carto.com',
+        },
+        {
+          name: 'apiBaseURL',
+          type: 'text',
+          message: `Base URL for CARTO API? ${dim('(required) [.env]')}`,
+          validate: (text) =>
+            isSecureURL(text) ? true : 'Requires a URL, starting with https://',
+          initial: 'https://gcp-us-east1.api.carto.com',
         },
       ],
       {
