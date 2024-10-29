@@ -2633,7 +2633,7 @@ __metadata:
     maplibre-gl: "npm:^4.7.1"
     rxjs: "npm:~7.8.1"
     tslib: "npm:^2.8.0"
-    typescript: "npm:<5.6.0"
+    typescript: "npm:^5.6.3"
     zone.js: "npm:~0.14.10"
   bin:
     create-angular: ./scripts/create.js
@@ -2687,7 +2687,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-map-gl: "npm:^7.1.7"
     react-router-dom: "npm:^6.27.0"
-    typescript: "npm:^5.6.2"
+    typescript: "npm:^5.6.3"
     vite: "npm:^5.4.10"
   bin:
     create-react: ./scripts/create.js
@@ -2716,7 +2716,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^5.1.4"
     "@vueuse/core": "npm:^11.1.0"
     maplibre-gl: "npm:^4.7.1"
-    typescript: "npm:^5.6.2"
+    typescript: "npm:^5.6.3"
     vite: "npm:^5.4.10"
     vue: "npm:^3.5.12"
     vue-router: "npm:4.4.5"
@@ -15727,7 +15727,7 @@ __metadata:
     meow: "npm:^13.2.0"
     prettier: "npm:^3.3.3"
     rimraf: "npm:^6.0.1"
-    typescript: "npm:5.5.4"
+    typescript: "npm:5.6.3"
     vite: "npm:^5.4.10"
   languageName: unknown
   linkType: soft
