@@ -204,14 +204,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:^18.2.9":
-  version: 18.2.9
-  resolution: "@angular/animations@npm:18.2.9"
+"@angular/animations@npm:^19.0.5":
+  version: 19.0.5
+  resolution: "@angular/animations@npm:19.0.5"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/core": 18.2.9
-  checksum: 10c0/1fca1ab346b4c1eb0d304e2a9e3bbe1a34b0fd20f0e63628f0ca907f097c5bd8aa1191040a920bd7397e5370755603c24e399f651800105105b0d04308afe7a1
+    "@angular/core": 19.0.5
+  checksum: 10c0/0a898b68b54f30352b4cde658b700fd31180cdf6268a6cc78bbd15a8d1f97b2ccf48b69f6df29ba6d3f1cdaf4ed4bef068b2d7c75b814abd5eb229c4e682fb88
   languageName: node
   linkType: hard
 
@@ -2606,7 +2606,7 @@ __metadata:
   resolution: "@carto/create-angular@workspace:packages/create-angular"
   dependencies:
     "@angular-devkit/build-angular": "npm:^18.2.10"
-    "@angular/animations": "npm:^18.2.9"
+    "@angular/animations": "npm:^19.0.5"
     "@angular/cli": "npm:^18.2.10"
     "@angular/common": "npm:^18.2.9"
     "@angular/compiler": "npm:^18.2.9"
