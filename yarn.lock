@@ -2688,7 +2688,7 @@ __metadata:
     react-map-gl: "npm:^7.1.7"
     react-router-dom: "npm:^6.27.0"
     typescript: "npm:<5.6.0"
-    vite: "npm:^5.4.10"
+    vite: "npm:^6.0.7"
   bin:
     create-react: ./scripts/create.js
   languageName: unknown
@@ -2717,7 +2717,7 @@ __metadata:
     "@vueuse/core": "npm:^11.1.0"
     maplibre-gl: "npm:^4.7.1"
     typescript: "npm:<5.6.0"
-    vite: "npm:^5.4.10"
+    vite: "npm:^6.0.7"
     vue: "npm:^3.5.12"
     vue-router: "npm:4.4.5"
     vue-tsc: "npm:^2.1.8"
@@ -15553,7 +15553,7 @@ __metadata:
     prettier: "npm:^3.3.3"
     rimraf: "npm:^6.0.1"
     typescript: "npm:<5.6.0"
-    vite: "npm:^5.4.10"
+    vite: "npm:^6.0.7"
   languageName: unknown
   linkType: soft
 
