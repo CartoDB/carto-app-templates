@@ -2933,13 +2933,13 @@ __metadata:
   linkType: hard
 
 "@deck.gl/react@npm:^9.0.34":
-  version: 9.0.34
-  resolution: "@deck.gl/react@npm:9.0.34"
+  version: 9.0.40
+  resolution: "@deck.gl/react@npm:9.0.40"
   peerDependencies:
     "@deck.gl/core": ^9.0.0
     react: ">=16.3.0"
     react-dom: ">=16.3.0"
-  checksum: 10c0/0d92f23195d2199825c808c87c0c41a1a14d69d68f4ce16ca1a712bb8b6264ab9a79fde4b0f118cf7350a42d481489b2bddaa62ed332d402ac59d0e983142d2e
+  checksum: 10c0/6974c3f416ba771f3d78bbc3fe84b51566754beec8765920f8d175e6ff2df8a66ce0f1fadd3781082e8aa4683e5d9c853992dd4a0840bcba193d7eb44e1133a7
   languageName: node
   linkType: hard
 
