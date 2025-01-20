@@ -2816,8 +2816,8 @@ __metadata:
   linkType: hard
 
 "@deck.gl/core@npm:^9.0.34":
-  version: 9.0.34
-  resolution: "@deck.gl/core@npm:9.0.34"
+  version: 9.0.40
+  resolution: "@deck.gl/core@npm:9.0.40"
   dependencies:
     "@loaders.gl/core": "npm:^4.2.0"
     "@loaders.gl/images": "npm:^4.2.0"
@@ -2835,7 +2835,7 @@ __metadata:
     "@types/offscreencanvas": "npm:^2019.6.4"
     gl-matrix: "npm:^3.0.0"
     mjolnir.js: "npm:^2.7.0"
-  checksum: 10c0/13983e5e742ac2e38969ec941b179f193d384d93f0b51ab724e292653af36c3f3953b027554276aae86a4048d36ad8aaaa33cf5cb9d1b0cf384e0a3b6b95f4b7
+  checksum: 10c0/5b354e765b8dee9712485f72ba3417634d17276250e39289285280b90998e84eb549746d4b19e02e259b182a1668aa9798d20cff4794d6753e134d4834307b0b
   languageName: node
   linkType: hard
 
