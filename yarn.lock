@@ -2618,17 +2618,17 @@ __metadata:
     "@auth0/auth0-angular": "npm:^2.2.3"
     "@carto/api-client": "npm:^0.4.5"
     "@carto/create-common": "npm:^0.1.3"
-    "@deck.gl/aggregation-layers": "npm:^9.0.40"
-    "@deck.gl/carto": "npm:^9.0.40"
-    "@deck.gl/core": "npm:^9.0.40"
-    "@deck.gl/extensions": "npm:^9.0.40"
-    "@deck.gl/geo-layers": "npm:^9.0.40"
-    "@deck.gl/json": "npm:^9.0.40"
-    "@deck.gl/layers": "npm:^9.0.40"
-    "@deck.gl/mesh-layers": "npm:^9.0.40"
+    "@deck.gl/aggregation-layers": "npm:~9.0.40"
+    "@deck.gl/carto": "npm:~9.0.40"
+    "@deck.gl/core": "npm:~9.0.40"
+    "@deck.gl/extensions": "npm:~9.0.40"
+    "@deck.gl/geo-layers": "npm:~9.0.40"
+    "@deck.gl/json": "npm:~9.0.40"
+    "@deck.gl/layers": "npm:~9.0.40"
+    "@deck.gl/mesh-layers": "npm:~9.0.40"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:^9.0.27"
-    "@luma.gl/engine": "npm:^9.0.27"
+    "@luma.gl/core": "npm:~9.0.27"
+    "@luma.gl/engine": "npm:~9.0.27"
     maplibre-gl: "npm:^4.7.1"
     rxjs: "npm:~7.8.1"
     tslib: "npm:^2.8.1"
@@ -2660,18 +2660,18 @@ __metadata:
     "@auth0/auth0-react": "npm:^2.2.4"
     "@carto/api-client": "npm:^0.4.5"
     "@carto/create-common": "npm:^0.1.3"
-    "@deck.gl/aggregation-layers": "npm:^9.0.40"
-    "@deck.gl/carto": "npm:^9.0.40"
-    "@deck.gl/core": "npm:^9.0.40"
-    "@deck.gl/extensions": "npm:^9.0.40"
-    "@deck.gl/geo-layers": "npm:^9.0.40"
-    "@deck.gl/json": "npm:^9.0.40"
-    "@deck.gl/layers": "npm:^9.0.40"
-    "@deck.gl/mesh-layers": "npm:^9.0.40"
-    "@deck.gl/react": "npm:^9.0.40"
+    "@deck.gl/aggregation-layers": "npm:~9.0.40"
+    "@deck.gl/carto": "npm:~9.0.40"
+    "@deck.gl/core": "npm:~9.0.40"
+    "@deck.gl/extensions": "npm:~9.0.40"
+    "@deck.gl/geo-layers": "npm:~9.0.40"
+    "@deck.gl/json": "npm:~9.0.40"
+    "@deck.gl/layers": "npm:~9.0.40"
+    "@deck.gl/mesh-layers": "npm:~9.0.40"
+    "@deck.gl/react": "npm:~9.0.40"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:^9.0.27"
-    "@luma.gl/engine": "npm:^9.0.27"
+    "@luma.gl/core": "npm:~9.0.27"
+    "@luma.gl/engine": "npm:~9.0.27"
     "@types/react": "npm:^18.3.18"
     "@types/react-dom": "npm:^18.3.5"
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
@@ -2700,17 +2700,17 @@ __metadata:
     "@auth0/auth0-vue": "npm:^2.3.3"
     "@carto/api-client": "npm:^0.4.5"
     "@carto/create-common": "npm:^0.1.3"
-    "@deck.gl/aggregation-layers": "npm:^9.0.40"
-    "@deck.gl/carto": "npm:^9.0.40"
-    "@deck.gl/core": "npm:^9.0.40"
-    "@deck.gl/extensions": "npm:^9.0.40"
-    "@deck.gl/geo-layers": "npm:^9.0.40"
-    "@deck.gl/json": "npm:^9.0.40"
-    "@deck.gl/layers": "npm:^9.0.40"
-    "@deck.gl/mesh-layers": "npm:^9.0.40"
+    "@deck.gl/aggregation-layers": "npm:~9.0.40"
+    "@deck.gl/carto": "npm:~9.0.40"
+    "@deck.gl/core": "npm:~9.0.40"
+    "@deck.gl/extensions": "npm:~9.0.40"
+    "@deck.gl/geo-layers": "npm:~9.0.40"
+    "@deck.gl/json": "npm:~9.0.40"
+    "@deck.gl/layers": "npm:~9.0.40"
+    "@deck.gl/mesh-layers": "npm:~9.0.40"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:^9.0.27"
-    "@luma.gl/engine": "npm:^9.0.27"
+    "@luma.gl/core": "npm:~9.0.27"
+    "@luma.gl/engine": "npm:~9.0.27"
     "@vitejs/plugin-basic-ssl": "npm:^1.2.0"
     "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vueuse/core": "npm:^11.3.0"
@@ -2725,7 +2725,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@deck.gl/aggregation-layers@npm:^9.0.40":
+"@deck.gl/aggregation-layers@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/aggregation-layers@npm:9.0.40"
   dependencies:
@@ -2742,7 +2742,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/carto@npm:^9.0.40":
+"@deck.gl/carto@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/carto@npm:9.0.40"
   dependencies:
@@ -2778,7 +2778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/core@npm:^9.0.40":
+"@deck.gl/core@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/core@npm:9.0.40"
   dependencies:
@@ -2802,7 +2802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/extensions@npm:^9.0.40":
+"@deck.gl/extensions@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/extensions@npm:9.0.40"
   dependencies:
@@ -2817,7 +2817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/geo-layers@npm:^9.0.40":
+"@deck.gl/geo-layers@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/geo-layers@npm:9.0.40"
   dependencies:
@@ -2849,7 +2849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/json@npm:^9.0.40":
+"@deck.gl/json@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/json@npm:9.0.40"
   dependencies:
@@ -2860,7 +2860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/layers@npm:^9.0.40":
+"@deck.gl/layers@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/layers@npm:9.0.40"
   dependencies:
@@ -2880,7 +2880,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/mesh-layers@npm:^9.0.40":
+"@deck.gl/mesh-layers@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/mesh-layers@npm:9.0.40"
   dependencies:
@@ -2895,7 +2895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/react@npm:^9.0.40":
+"@deck.gl/react@npm:~9.0.40":
   version: 9.0.40
   resolution: "@deck.gl/react@npm:9.0.40"
   peerDependencies:
@@ -4145,7 +4145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/core@npm:^9.0.27, @luma.gl/core@npm:~9.0.27":
+"@luma.gl/core@npm:~9.0.27":
   version: 9.0.27
   resolution: "@luma.gl/core@npm:9.0.27"
   dependencies:
@@ -4158,7 +4158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/engine@npm:^9.0.27, @luma.gl/engine@npm:~9.0.27":
+"@luma.gl/engine@npm:~9.0.27":
   version: 9.0.27
   resolution: "@luma.gl/engine@npm:9.0.27"
   dependencies:
