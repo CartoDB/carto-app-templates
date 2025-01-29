@@ -2632,7 +2632,7 @@ __metadata:
     maplibre-gl: "npm:^4.7.1"
     rxjs: "npm:~7.8.1"
     tslib: "npm:^2.8.1"
-    typescript: "npm:<5.6.0"
+    typescript: "npm:<5.8.0"
     zone.js: "npm:~0.14.10"
   bin:
     create-angular: ./scripts/create.js
@@ -2686,7 +2686,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-map-gl: "npm:^7.1.8"
     react-router-dom: "npm:^6.28.2"
-    typescript: "npm:<5.6.0"
+    typescript: "npm:<5.8.0"
     vite: "npm:^6.0.11"
   bin:
     create-react: ./scripts/create.js
@@ -2715,7 +2715,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vueuse/core": "npm:^11.3.0"
     maplibre-gl: "npm:^4.7.1"
-    typescript: "npm:<5.6.0"
+    typescript: "npm:<5.8.0"
     vite: "npm:^6.0.11"
     vue: "npm:^3.5.13"
     vue-router: "npm:4.5.0"
@@ -15552,7 +15552,7 @@ __metadata:
     meow: "npm:^13.2.0"
     prettier: "npm:^3.4.2"
     rimraf: "npm:^6.0.1"
-    typescript: "npm:<5.6.0"
+    typescript: "npm:<5.8.0"
     vite: "npm:^6.0.11"
   languageName: unknown
   linkType: soft
@@ -17036,13 +17036,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:<5.6.0":
-  version: 5.5.4
-  resolution: "typescript@npm:5.5.4"
+"typescript@npm:<5.8.0":
+  version: 5.7.3
+  resolution: "typescript@npm:5.7.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/422be60f89e661eab29ac488c974b6cc0a660fb2228003b297c3d10c32c90f3bcffc1009b43876a082515a3c376b1eefcce823d6e78982e6878408b9a923199c
+  checksum: 10c0/b7580d716cf1824736cc6e628ab4cd8b51877408ba2be0869d2866da35ef8366dd6ae9eb9d0851470a39be17cbd61df1126f9e211d8799d764ea7431d5435afa
   languageName: node
   linkType: hard
 
@@ -17066,13 +17066,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A<5.6.0#optional!builtin<compat/typescript>":
-  version: 5.5.4
-  resolution: "typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=b45daf"
+"typescript@patch:typescript@npm%3A<5.8.0#optional!builtin<compat/typescript>":
+  version: 5.7.3
+  resolution: "typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=b45daf"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/10dd9881baba22763de859e8050d6cb6e2db854197495c6f1929b08d1eb2b2b00d0b5d9b0bcee8472f1c3f4a7ef6a5d7ebe0cfd703f853aa5ae465b8404bc1ba
+  checksum: 10c0/3b56d6afa03d9f6172d0b9cdb10e6b1efc9abc1608efd7a3d2f38773d5d8cfb9bbc68dfb72f0a7de5e8db04fc847f4e4baeddcd5ad9c9feda072234f0d788896
   languageName: node
   linkType: hard
 
