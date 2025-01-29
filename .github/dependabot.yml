@@ -16,6 +16,7 @@ updates:
       angular:
         patterns:
           - '@angular/*'
+          - '@angular-devkit/*'
       react:
         patterns:
           - 'react'
