@@ -48,6 +48,12 @@ export default function IncomeView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
+  
+  // data to calculate feature dropping for each zoom level
+  const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
+  const [minZoom, setMinZoom] = useState<number>(0);
+  const [maxZoom, setMaxZoom] = useState<number>(20);
+  
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
@@ -114,7 +120,13 @@ export default function IncomeView() {
    */
 
   useEffect(() => {
-    data?.then(({ attribution }) => setAttributionHTML(attribution));
+    data?.then((res) => {
+      const { fraction_dropped_per_zoom, minzoom, maxzoom, attribution } = res
+      setFractionsDropped(fraction_dropped_per_zoom ?? [])
+      setMinZoom(minzoom ?? 0)
+      setMaxZoom(maxzoom ?? 20)
+      setAttributionHTML(attribution)
+    })
   }, [data]);
   
   useEffect(() => {
@@ -128,7 +140,21 @@ export default function IncomeView() {
       })
     }
   }, [data, viewState])
-  
+
+  function clamp(n: number, min: number, max: number) {
+    return Math.min(Math.max(n, min), max);
+  }
+
+  const droppingPercent = useMemo(() => {
+    if (!fractionsDropped.length) {
+      return 0
+    }
+    const roundedZoom = Math.round(viewState.zoom)
+    const clampedZoom = clamp(roundedZoom, minZoom, maxZoom)
+    const percent = fractionsDropped[clampedZoom]
+    return percent
+  }, [minZoom, maxZoom, fractionsDropped, viewState.zoom])
+
   return (
     <>
       <aside className="sidebar">
