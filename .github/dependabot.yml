@@ -6,4 +6,28 @@ updates:
       interval: 'weekly'
     reviewers:
       - 'CartoDB/frontend-team'
-
+    groups:
+      deck-gl:
+        patterns:
+          - '@deck.gl/*'
+      luma-gl:
+        patterns:
+          - '@luma.gl/*'
+      angular:
+        patterns:
+          - '@angular/*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-*'
+          - '@types/react'
+          - '@types/react-*'
+      vue:
+        patterns:
+          - 'vue'
+          - 'vue-*'
+      dev-dependencies:
+        dependency-type: 'development'
+    ignore:
+      # Angular template requires TypeScript <5.6.
+      - dependency-name: "typescript"
