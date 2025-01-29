@@ -17,6 +17,8 @@ updates:
         patterns:
           - '@angular/*'
           - '@angular-devkit/*'
+          - 'zone.js'
+          - 'rxjs'
       react:
         patterns:
           - 'react'
