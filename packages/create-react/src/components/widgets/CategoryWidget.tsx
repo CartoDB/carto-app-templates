@@ -26,6 +26,8 @@ export interface CategoryWidgetProps {
   column: string;
   /** Operation used to aggregate features in each category. */
   operation?: Exclude<AggregationType, 'custom'>;
+  /** Column containing a value to be aggregated. */
+  operationColumn: string;
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
   /** Filter state. If specified, widget will be filtered. */
@@ -42,6 +44,7 @@ export function CategoryWidget({
   data,
   column,
   operation,
+  operationColumn,
   viewState,
   filters,
   onFiltersChange,
@@ -66,6 +69,7 @@ export function CategoryWidget({
         widgetSource.getCategories({
           column,
           operation,
+          operationColumn,
           spatialFilter: viewState && createSpatialFilter(viewState),
           abortController,
           filterOwner: owner,

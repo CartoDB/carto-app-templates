@@ -6,6 +6,7 @@ import PopulationView from './components/views/PopulationView';
 import NotFoundView from './components/views/NotFoundView';
 import LoginView from './components/views/LoginView';
 import LogoutView from './components/views/LogoutView';
+import IncomeView from './components/views/IncomeView';
 
 /**
  * Available paths (URLs) in the application.
@@ -13,6 +14,7 @@ import LogoutView from './components/views/LogoutView';
 export const RoutePath = {
   CELL_TOWERS: '/',
   POPULATION: '/usa-population',
+  INCOME: '/income',
   LOGIN: '/login',
   LOGOUT: '/logout',
   NOT_FOUND: '/404',
@@ -24,6 +26,7 @@ export const RoutePath = {
 export const NAV_ROUTES: { text: string; path: string }[] = [
   { text: 'Cell towers', path: RoutePath.CELL_TOWERS },
   { text: 'U.S. population', path: RoutePath.POPULATION },
+  { text: 'Income', path: RoutePath.INCOME },
 ];
 
 /**
@@ -40,6 +43,7 @@ export const routes: RouteObject[] = [
     children: [
       { path: RoutePath.CELL_TOWERS, element: <CellTowersView /> },
       { path: RoutePath.POPULATION, element: <PopulationView /> },
+      { path: RoutePath.INCOME, element: <IncomeView /> },
     ],
   },
   { path: RoutePath.LOGIN, element: <LoginView /> },
