@@ -10,6 +10,7 @@ import DeckGL from "@deck.gl/react";
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from "../Layers";
 import { LegendEntryCategorical } from "../legends/LegendEntryCategorical";
+import { CategoryWidget } from "../widgets/CategoryWidget";
 
 const MAP_VIEW = new MapView({ repeat: true });
 const MAP_STYLE =
@@ -51,8 +52,9 @@ export default function IncomeView() {
   
   // data to calculate feature dropping for each zoom level
   const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
-  const [minZoom, setMinZoom] = useState<number>(0);
-  const [maxZoom, setMaxZoom] = useState<number>(20);
+  const [minZoom, setMinZoom] = useState(0);
+  const [maxZoom, setMaxZoom] = useState(20);
+  const [tilesLoaded, setTilesLoaded] = useState(false);
   
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -103,6 +105,7 @@ export default function IncomeView() {
         },
         onViewportLoad(tiles) {
           data?.then((res) => {
+            setTilesLoaded(true)
             res.widgetSource.loadTiles(tiles)
             const bbox = new WebMercatorViewport(viewState).getBounds()
             const spatialFilter = createViewportSpatialFilter(bbox)
@@ -130,7 +133,7 @@ export default function IncomeView() {
   }, [data]);
   
   useEffect(() => {
-    if (data && viewState) {
+    if (data && viewState && tilesLoaded) {
       data?.then((res) => {
         const bbox = new WebMercatorViewport(viewState).getBounds()
         const spatialFilter = createViewportSpatialFilter(bbox)
@@ -139,7 +142,7 @@ export default function IncomeView() {
         }
       })
     }
-  }, [data, viewState])
+  }, [data, viewState, tilesLoaded])
 
   function clamp(n: number, min: number, max: number) {
     return Math.min(Math.max(n, min), max);
@@ -174,16 +177,37 @@ export default function IncomeView() {
           </p>
         </Card>
         <span className="flex-space" />
-        <Card title="Block group count">
-          <FormulaWidget
-            data={data}
-            column={''}
-            operation={'count'}
-            viewState={viewState}
-          />
-        </Card>
-        <Card title="Block groups by income">
-        </Card>
+        {tilesLoaded && (
+          <>
+            {droppingPercent > 0 && droppingPercent <= 0.05 && (
+              <section className="caption">
+                <strong>Warning:</strong> There may be some data missing at this zoom level because of the tileset dropping features.
+              </section>
+            )}
+            {droppingPercent > 0.05 && (
+              <section className="caption">
+                <strong>Warning:</strong> There is an important amount of data missing at this zoom level because of the tileset dropping features. Widget calculations will not be accurate.
+              </section>
+            )}
+            <Card title="Block group count">
+              <FormulaWidget
+                data={data}
+                column={''}
+                operation={'count'}
+                viewState={viewState}
+              />
+            </Card>
+            {/* <Card title="Block groups by income">
+              <CategoryWidget
+                data={data}
+                viewState={viewState}
+                column='total_pop'
+                operation='sum'
+                operationColumn='income_per_capita'
+              />
+            </Card> */}
+          </>
+        )}
       </aside>
       <main className="map">
         <DeckGL
