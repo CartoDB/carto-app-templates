@@ -1,4 +1,4 @@
-import { Color, MapView, MapViewState, WebMercatorViewport } from "@deck.gl/core";
+import { MapView, MapViewState, WebMercatorViewport } from "@deck.gl/core";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../context";
 import { useDebouncedState } from "../../hooks/useDebouncedState";
@@ -9,8 +9,7 @@ import { FormulaWidget } from "../widgets/FormulaWidget";
 import DeckGL from "@deck.gl/react";
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from "../Layers";
-import { LegendEntryCategorical } from "../legends/LegendEntryCategorical";
-// import { CategoryWidget } from "../widgets/CategoryWidget";
+import { HistogramWidget } from "../widgets/HistogramWidget";
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME = 'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
@@ -19,21 +18,10 @@ const MAP_VIEW = new MapView({ repeat: true });
 const INITIAL_VIEW_STATE: MapViewState = {
   latitude: 31.8028,
   longitude: -103.0078,
-  zoom: 2,
+  zoom: 4,
 };
 
-const histogramTicks = [15000, 20000, 23000, 26000, 30000, 34000, 40000, 50000];
-
-const colors = [
-  '#f7fcf0',
-  '#e0f3db',
-  '#ccebc5',
-  '#a8ddb5',
-  '#7bccc4',
-  '#4eb3d3',
-  '#2b8cbe',
-  '#08589e',
-].map((hex) => hexToRgb(hex));
+const histogramTicks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 function hexToRgb(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -194,12 +182,21 @@ export default function IncomeView() {
                 <strong>Warning:</strong> There is an important amount of data ({(droppingPercent * 100).toFixed(2)}%) missing at this zoom level ({Math.round(viewState.zoom)}) because of the tileset dropping features. Widget calculations will not be accurate.
               </section>
             )}
-            <Card title="Block group count">
+            <Card title="Stream count">
               <FormulaWidget
                 data={data}
-                column={''}
+                column={'*'}
                 operation={'count'}
                 viewState={viewState}
+              />
+            </Card>
+            <Card title="Stream count by stream order">
+              <HistogramWidget
+                data={data}
+                column='streamOrder'
+                ticks={histogramTicks}
+                viewState={viewState}
+                operation="count"
               />
             </Card>
             {/* <Card title="Block groups by income">
@@ -229,7 +226,7 @@ export default function IncomeView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Card title="Legend" className="legend">
+        {/* <Card title="Legend" className="legend">
           <LegendEntryCategorical
             title="Block group"
             subtitle="By income per capita"
@@ -238,7 +235,7 @@ export default function IncomeView() {
               colors[histogramTicks.indexOf(Number(value))] as Color
             }
           />
-        </Card>
+        </Card> */}
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

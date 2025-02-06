@@ -45,7 +45,9 @@ export function FormulaWidget({
         }),
       )
       .then((response) => {
-        setValue(response.value ?? 0);
+        if (response.value) {
+          setValue(response.value);
+        }
         setStatus('complete');
       })
       .catch(() => {
