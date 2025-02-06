@@ -2586,9 +2586,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carto/api-client@npm:0.5.0-alpha.1":
-  version: 0.5.0-alpha.1
-  resolution: "@carto/api-client@npm:0.5.0-alpha.1"
+"@carto/api-client@npm:0.5.0-alpha.2":
+  version: 0.5.0-alpha.2
+  resolution: "@carto/api-client@npm:0.5.0-alpha.2"
   dependencies:
     "@loaders.gl/schema": "npm:^4.3.3"
     "@turf/bbox-clip": "npm:^7.1.0"
@@ -2601,7 +2601,7 @@ __metadata:
     "@turf/union": "npm:^7.1.0"
     "@types/geojson": "npm:^7946.0.15"
     h3-js: "npm:4.1.0"
-  checksum: 10c0/8b8cfbfe5d3a73bdfb2491a792d5e007e1605473dd4f824c3a7d56f0ec811ca1e9fbeeb35c799b72136ad5b76643004ac2c2c683ece5d22d285948d93de2e6df
+  checksum: 10c0/fc67454045f90311bdbba361f28a650b096bae3c5fdb4befcde595a8b1b492e551c95935b9c10a10aeb83166240649d59533c07d7d7d725db06be764fd768ca7
   languageName: node
   linkType: hard
 
@@ -2677,7 +2677,7 @@ __metadata:
   resolution: "@carto/create-react@workspace:packages/create-react"
   dependencies:
     "@auth0/auth0-react": "npm:^2.2.4"
-    "@carto/api-client": "npm:0.5.0-alpha.1"
+    "@carto/api-client": "npm:0.5.0-alpha.2"
     "@carto/create-common": "npm:^0.1.3"
     "@deck.gl/aggregation-layers": "npm:^9.0.40"
     "@deck.gl/carto": "npm:^9.0.40"
