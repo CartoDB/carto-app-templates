@@ -3,18 +3,18 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../context";
 import { useDebouncedState } from "../../hooks/useDebouncedState";
 import { createViewportSpatialFilter, vectorTilesetSource } from "@carto/api-client";
-import { VectorTileLayer } from "@deck.gl/carto";
+import { BASEMAP, VectorTileLayer } from "@deck.gl/carto";
 import { Card } from "../Card";
 import { FormulaWidget } from "../widgets/FormulaWidget";
 import DeckGL from "@deck.gl/react";
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from "../Layers";
 import { LegendEntryCategorical } from "../legends/LegendEntryCategorical";
-import { CategoryWidget } from "../widgets/CategoryWidget";
+// import { CategoryWidget } from "../widgets/CategoryWidget";
 
+const CONNECTION_NAME = 'amanzanares-pm-bq';
+const TILESET_NAME = 'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
 const MAP_VIEW = new MapView({ repeat: true });
-const MAP_STYLE =
-  'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
 const INITIAL_VIEW_STATE: MapViewState = {
   latitude: 31.8028,
@@ -43,7 +43,7 @@ function hexToRgb(hex: string) {
 }
 
 /**
- * Example application page, showing U.S. income by block group.
+ * Example application page, showing U.S. streams network.
  */
 export default function IncomeView() {
   // With authentication enabled, access token may change.
@@ -68,8 +68,8 @@ export default function IncomeView() {
       vectorTilesetSource({
         accessToken,
         apiBaseUrl,
-        connectionName: 'carto_dw',
-        tableName: 'carto-demo-data.demo_tilesets.sociodemographics_usa_blockgroup',
+        connectionName: CONNECTION_NAME,
+        tableName: TILESET_NAME,
       }),
     [accessToken, apiBaseUrl],
   );
@@ -95,14 +95,19 @@ export default function IncomeView() {
         pickable: true,
         visible: layerVisibility[LAYER_ID],
         data,
-        getLineColor: [0, 0 ,0],
-        lineWidthMinPixels: 0.3,
-        getFillColor: d => {
-          const n = d.properties.income_per_capita;
-          const index = histogramTicks.slice().reverse().findIndex((tick) => n >= tick);
-          const color = colors[index] || colors[colors.length - 1];
-          return color as Color;
+        getLineColor: d => {
+          const [r, g, b] = hexToRgb('#d5d5d7');
+          const n = d.properties.streamOrder;
+          const alphaPart = Math.min(n / 10, 1);
+          const alpha = 120 + 128 * alphaPart;
+          return [r, g, b, alpha];
         },
+        getLineWidth: d => {
+          const n = d.properties.streamOrder;
+          return n * 0.5;
+        },
+        lineWidthUnits: 'pixels',
+        lineWidthMinPixels: 1,
         onViewportLoad(tiles) {
           data?.then((res) => {
             setTilesLoaded(true)
@@ -163,7 +168,7 @@ export default function IncomeView() {
       <aside className="sidebar">
         <Card>
           <p className="overline">✨👀 You're viewing</p>
-          <h1 className="title">Income by block group</h1>
+          <h1 className="title">U.S. Streams Network</h1>
           <p className="body1">
             Cheesecake caramels sesame snaps gummi bears oat cake chupa chups.
             Chupa chups sugar plum tootsie roll powder candy canes. Biscuit cake
@@ -180,13 +185,13 @@ export default function IncomeView() {
         {tilesLoaded && (
           <>
             {droppingPercent > 0 && droppingPercent <= 0.05 && (
-              <section className="caption">
-                <strong>Warning:</strong> There may be some data missing at this zoom level because of the tileset dropping features.
+              <section className='caption' style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There may be some data ({(droppingPercent * 100).toFixed(2)}%) missing at this zoom level ({Math.round(viewState.zoom)}) because of the tileset dropping features.
               </section>
             )}
             {droppingPercent > 0.05 && (
-              <section className="caption">
-                <strong>Warning:</strong> There is an important amount of data missing at this zoom level because of the tileset dropping features. Widget calculations will not be accurate.
+              <section className='caption' style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There is an important amount of data ({(droppingPercent * 100).toFixed(2)}%) missing at this zoom level ({Math.round(viewState.zoom)}) because of the tileset dropping features. Widget calculations will not be accurate.
               </section>
             )}
             <Card title="Block group count">
@@ -217,7 +222,7 @@ export default function IncomeView() {
           controller={{ dragRotate: false }}
           onViewStateChange={({ viewState }) => setViewState(viewState)}
         >
-          <Map mapStyle={MAP_STYLE} />
+          <Map mapStyle={BASEMAP.DARK_MATTER} />
         </DeckGL>
         <Layers
           layers={layers}

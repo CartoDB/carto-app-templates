@@ -6,7 +6,7 @@ import PopulationView from './components/views/PopulationView';
 import NotFoundView from './components/views/NotFoundView';
 import LoginView from './components/views/LoginView';
 import LogoutView from './components/views/LogoutView';
-import IncomeView from './components/views/IncomeView';
+import RiversView from './components/views/RiversView';
 
 /**
  * Available paths (URLs) in the application.
@@ -14,7 +14,7 @@ import IncomeView from './components/views/IncomeView';
 export const RoutePath = {
   CELL_TOWERS: '/',
   POPULATION: '/usa-population',
-  INCOME: '/income',
+  RIVERS: '/rivers',
   LOGIN: '/login',
   LOGOUT: '/logout',
   NOT_FOUND: '/404',
@@ -26,7 +26,7 @@ export const RoutePath = {
 export const NAV_ROUTES: { text: string; path: string }[] = [
   { text: 'Cell towers', path: RoutePath.CELL_TOWERS },
   { text: 'U.S. population', path: RoutePath.POPULATION },
-  { text: 'Income', path: RoutePath.INCOME },
+  { text: 'U.S. rivers', path: RoutePath.RIVERS },
 ];
 
 /**
@@ -43,7 +43,7 @@ export const routes: RouteObject[] = [
     children: [
       { path: RoutePath.CELL_TOWERS, element: <CellTowersView /> },
       { path: RoutePath.POPULATION, element: <PopulationView /> },
-      { path: RoutePath.INCOME, element: <IncomeView /> },
+      { path: RoutePath.RIVERS, element: <RiversView /> },
     ],
   },
   { path: RoutePath.LOGIN, element: <LoginView /> },
