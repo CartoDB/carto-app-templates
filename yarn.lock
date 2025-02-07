@@ -2740,7 +2740,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.23.0"
     "@vitejs/plugin-basic-ssl": "npm:^1.2.0"
     "@vitejs/plugin-react": "npm:^4.3.4"
-    eslint: "npm:^8.57.1"
+    eslint: "npm:^9.19.0"
     eslint-plugin-react-hooks: "npm:^5.1.0"
     eslint-plugin-react-refresh: "npm:^0.4.18"
     maplibre-gl: "npm:^4.7.1"
@@ -15692,7 +15692,7 @@ __metadata:
     "@types/meow": "npm:^6.0.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.23.0"
     "@typescript-eslint/parser": "npm:^8.23.0"
-    eslint: "npm:^8.57.1"
+    eslint: "npm:^9.19.0"
     lerna: "npm:^8.1.9"
     meow: "npm:^13.2.0"
     prettier: "npm:^3.4.2"
@@ -17482,8 +17482,8 @@ __metadata:
   linkType: hard
 
 "vite@npm:^5.3.4":
-  version: 5.4.6
-  resolution: "vite@npm:5.4.6"
+  version: 5.4.14
+  resolution: "vite@npm:5.4.14"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -17520,7 +17520,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/5f87be3a10e970eaf9ac52dfab39cf9fff583036685252fb64570b6d7bfa749f6d221fb78058f5ef4b5664c180d45a8e7a7ff68d7f3770e69e24c7c68b958bde
+  checksum: 10c0/8842933bd70ca6a98489a0bb9c8464bec373de00f9a97c8c7a4e64b24d15c88bfaa8c1acb38a68c3e5eb49072ffbccb146842c2d4edcdd036a9802964cffe3d1
   languageName: node
   linkType: hard
 
