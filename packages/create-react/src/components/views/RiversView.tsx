@@ -199,15 +199,6 @@ export default function IncomeView() {
                 operation="count"
               />
             </Card>
-            {/* <Card title="Block groups by income">
-              <CategoryWidget
-                data={data}
-                viewState={viewState}
-                column='total_pop'
-                operation='sum'
-                operationColumn='income_per_capita'
-              />
-            </Card> */}
           </>
         )}
       </aside>

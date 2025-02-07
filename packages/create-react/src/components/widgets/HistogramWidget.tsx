@@ -30,14 +30,13 @@ export function HistogramWidget({
   viewState
 }: HistogramWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
-  const [status, setStatus] = useState<WidgetStatus>('loading');
-  const [response, setResponse] = useState<HistogramResponse>([]);
+  const [status, setStatus] = useState<WidgetStatus>('complete');
   const chartRef = useRef<echarts.ECharts | null>(null);
 
   const createChart = useCallback((ref: HTMLDivElement | null) => {
     const onClick = (params: echarts.ECElementEvent) => {
       if (params.componentType === 'series') {
-        filterViaHistogram(params.dataIndex);
+        // filterViaHistogram(params.dataIndex);
       }
     }
 
@@ -66,33 +65,19 @@ export function HistogramWidget({
         }),
       )
       .then((response) => {
-        setResponse(response);
         setStatus('complete');
-        chartRef.current?.setOption(getOption(response));
         chartRef.current?.hideLoading();
+        chartRef.current?.setOption(getOption(response));
       })
       .catch(() => {
+        chartRef.current?.hideLoading();
         if (!abortController.signal.aborted) {
           setStatus('error');
         }
       });
 
-    setStatus('loading');
-
     return () => abortController.abort();
   }, [data, column, operation, ticks, viewState, owner]);
-
-  if (status === 'loading') {
-    return <span className="title">...</span>;
-  }
-
-  if (status === 'error') {
-    return <span className="title">⚠ Error</span>;
-  }
-
-  if (!response || !response.length) {
-    return <span className="title">No data</span>;
-  }
 
   function getOption(data: HistogramResponse) {
     const option = {
@@ -148,34 +133,46 @@ export function HistogramWidget({
   //   }
   // }
 
-  function filterViaHistogram(dataIndex: number) {
-    // clearFiltersButton.style.display = 'inherit';
+  // function filterViaHistogram(dataIndex: number) {
+  //   // clearFiltersButton.style.display = 'inherit';
   
-    // removeFilter(filters, {
-    //   column: 'streamOrder'
-    // });
+  //   // removeFilter(filters, {
+  //   //   column: 'streamOrder'
+  //   // });
   
-    // const minValue = histogramTicks[dataIndex];
-    // const maxValue = histogramTicks[dataIndex + 1] - 0.0001;
+  //   // const minValue = histogramTicks[dataIndex];
+  //   // const maxValue = histogramTicks[dataIndex + 1] - 0.0001;
   
-    // if (dataIndex === histogramTicks.length - 1) {
-    //   // For the last category (> 600), use CLOSED_OPEN
-    //   addFilter(filters, {
-    //     column: 'streamOrder',
-    //     type: FilterType.CLOSED_OPEN,
-    //     values: [[minValue, Infinity]]
-    //   });
-    // } else {
-    //   // For first and middle categories, use BETWEEN
-    //   addFilter(filters, {
-    //     column: 'streamOrder',
-    //     type: FilterType.BETWEEN,
-    //     values: [[minValue, maxValue]]
-    //   });
-    // }
+  //   // if (dataIndex === histogramTicks.length - 1) {
+  //   //   // For the last category (> 600), use CLOSED_OPEN
+  //   //   addFilter(filters, {
+  //   //     column: 'streamOrder',
+  //   //     type: FilterType.CLOSED_OPEN,
+  //   //     values: [[minValue, Infinity]]
+  //   //   });
+  //   // } else {
+  //   //   // For first and middle categories, use BETWEEN
+  //   //   addFilter(filters, {
+  //   //     column: 'streamOrder',
+  //   //     type: FilterType.BETWEEN,
+  //   //     values: [[minValue, maxValue]]
+  //   //   });
+  //   // }
   
-    // initialize();
+  //   // initialize();
+  // }
+
+  // if (status === 'loading') {
+  //   return <span className="title">...</span>;
+  // }
+
+  if (status === 'error') {
+    return <span className="title">⚠ Error</span>;
   }
+
+  // if (!response || !response.length) {
+  //   return <span className="title">No data</span>;
+  // }
 
   return (
     <div ref={createChart} style={{ minHeight: '260px' }}>
