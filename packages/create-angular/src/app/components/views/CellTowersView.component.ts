@@ -1,7 +1,6 @@
 import {
   Component,
   ContentChild,
-  Signal,
   computed,
   effect,
   signal,
@@ -158,7 +157,7 @@ export class CellTowersViewComponent {
     if (!accessToken) {
       // TODO: Prevent accessToken from being 'undefined' initially, after logging in
       // to an app with OAuth enabled.
-      return new Promise((_) => {}) as ReturnType<typeof vectorQuerySource>;
+      return new Promise(() => {}) as ReturnType<typeof vectorQuerySource>;
     }
 
     return vectorQuerySource({

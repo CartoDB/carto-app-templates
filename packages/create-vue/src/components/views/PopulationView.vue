@@ -146,8 +146,8 @@ onUnmounted(() => {
     ></canvas>
     <Layers
       :layers
-      :layerVisibility
-      :onLayerVisibilityChange="
+      :layer-visibility="layerVisibility"
+      :on-layer-visibility-change="
         (nextLayerVisibility) => (layerVisibility = nextLayerVisibility)
       "
     />
@@ -156,12 +156,13 @@ onUnmounted(() => {
         title="U.S. population"
         subtitle="Sum of population by H3 cell"
         :domain="POP_DOMAIN"
-        :getSwatchColor="
+        :get-swatch-color="
           (value) =>
             POP_COLORS({ properties: { population_sum: value } }, null!)
         "
       />
     </Card>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
 </template>

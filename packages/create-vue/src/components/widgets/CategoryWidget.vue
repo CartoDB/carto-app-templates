@@ -42,6 +42,9 @@ const props = withDefaults(
   {
     column: '',
     operation: 'count',
+    viewState: undefined,
+    filters: undefined,
+    onFiltersChange: undefined,
   },
 );
 
