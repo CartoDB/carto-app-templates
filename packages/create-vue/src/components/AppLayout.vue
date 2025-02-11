@@ -16,10 +16,10 @@ import { routes, RoutePath, NAV_ROUTES } from '../routes';
     <nav v-if="routes.length > 1" class="app-bar-nav">
       <RouterLink
         v-for="route in NAV_ROUTES"
-        :to="route.path"
         :key="route.path"
+        :to="route.path"
         class="body2 strong"
-        :activeClass="'active'"
+        :active-class="'active'"
         >{{ route.text }}</RouterLink
       >
     </nav>

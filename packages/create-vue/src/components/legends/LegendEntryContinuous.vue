@@ -30,7 +30,7 @@ const colorHi = computed(() =>
 </script>
 
 <template>
-  <section class="legend-section" :key="props.title">
+  <section :key="props.title" class="legend-section">
     <p class="legend-section-title body2">{{ props.title }}</p>
     <p class="legend-section-subtitle caption">{{ props.subtitle }}</p>
     <div

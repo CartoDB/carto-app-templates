@@ -151,7 +151,7 @@ onUnmounted(() => {
     <Card title="Tower count">
       <FormulaWidget
         :data="data"
-        :viewState="viewStateDebounced as MapViewState"
+        :view-state="viewStateDebounced as MapViewState"
       />
     </Card>
     <Card title="Towers by radio">
@@ -159,9 +159,9 @@ onUnmounted(() => {
         :data="data"
         :column="'radio'"
         :operation="'count'"
-        :viewState="viewStateDebounced as MapViewState"
+        :view-state="viewStateDebounced as MapViewState"
         :filters
-        :onFiltersChange="(nextFilters) => void (filters = nextFilters)"
+        :on-filters-change="(nextFilters) => void (filters = nextFilters)"
       />
     </Card>
   </aside>
@@ -174,18 +174,19 @@ onUnmounted(() => {
       id="deck-canvas"
       style="position: absolute; width: 100%; height: 100%"
     ></canvas>
-    <Layers :layers :layerVisibility :onLayerVisibilityChange />
+    <Layers :layers :layer-visibility :on-layer-visibility-change />
     <Card title="Legend" class="legend">
       <LegendEntryCategorical
         title="Cell towers"
         subtitle="By Radio"
         :values="RADIO_DOMAIN"
-        :getSwatchColor="
+        :get-swatch-color="
           (value: string) =>
             RADIO_COLORS({ properties: { radio: value } }, null!)
         "
       />
     </Card>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
 </template>

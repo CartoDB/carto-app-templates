@@ -27,7 +27,7 @@ function setVisibility(id: string, visible: boolean) {
 <template>
   <aside class="layers">
     <Card title="Layers" :open="props.open">
-      <label v-for="layer in layers" class="body2" :key="layer.id">
+      <label v-for="layer in layers" :key="layer.id" class="body2">
         <input
           type="checkbox"
           :checked="layer.props.visible"

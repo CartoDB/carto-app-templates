@@ -41,6 +41,7 @@ jobs:
       - name: Build
         run: |
           yarn lint
+          yarn format --check
           yarn build
 
       - name: Create project with framework ${{ matrix.framework }} Node-${{ matrix.node-version }}

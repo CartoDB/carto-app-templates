@@ -29,6 +29,19 @@ To test template instantiation locally, first run `yarn build`, and then run `no
 
 During local development, CSS styles are loaded from a shared `style.css` in the create-common module. When a template is instantiated, the dependency on create-common is removed and `style.css` is copied into the project for easier customization. All templates share a single global stylesheet.
 
+## Linting
+
+```bash
+# run ESLint for all templates
+yarn lint
+
+# check Prettier formatting
+yarn format --check
+
+# apply Prettier formatting
+yarn format --write
+```
+
 ## Releases
 
 All packages are published together. To create a standard release:
