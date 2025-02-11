@@ -100,16 +100,12 @@ export default function IncomeView() {
           data?.then((res) => {
             setTilesLoaded(true)
             res.widgetSource.loadTiles(tiles)
-            const bbox = new WebMercatorViewport(viewState).getBounds()
-            const spatialFilter = createViewportSpatialFilter(bbox)
-            if (spatialFilter) {
-              res.widgetSource.extractTileFeatures({ spatialFilter })
-            }
+            setViewState({ ...viewState })
           })
         },
       }),
     ];
-  }, [data, layerVisibility]);
+  }, [data, viewState, setViewState, layerVisibility]);
 
   /****************************************************************************
    * Attribution
