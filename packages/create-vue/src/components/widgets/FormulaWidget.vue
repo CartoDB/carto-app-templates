@@ -21,7 +21,7 @@ const props = withDefaults(
     /** Operation used to aggregate the specified column. */
     operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
-    viewState?: MapViewState;
+    viewState: MapViewState;
   }>(),
   {
     column: '',

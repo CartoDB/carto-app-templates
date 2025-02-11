@@ -1,7 +1,6 @@
 import {
   Component,
   ContentChild,
-  Signal,
   computed,
   effect,
   signal,
@@ -135,7 +134,7 @@ export class PopulationViewComponent {
     if (!accessToken) {
       // TODO: Prevent accessToken from being 'undefined' initially, after logging in
       // to an app with OAuth enabled.
-      return new Promise((_) => {}) as ReturnType<typeof h3TableSource>;
+      return new Promise(() => {}) as ReturnType<typeof h3TableSource>;
     }
 
     return h3TableSource({

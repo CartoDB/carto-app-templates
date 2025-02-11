@@ -33,11 +33,11 @@ const props = withDefaults(
     /** Operation used to aggregate features in each category. */
     operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
-    viewState?: MapViewState;
+    viewState: MapViewState | undefined;
     /** Filter state. If specified, widget will be filtered. */
-    filters?: Record<string, Filter>;
+    filters: Record<string, Filter> | undefined;
     /** Callback, to be invoked by the widget when its filters are set or cleared. */
-    onFiltersChange?: (filters: Record<string, Filter>) => void;
+    onFiltersChange: ((filters: Record<string, Filter>) => void) | undefined;
   }>(),
   {
     column: '',

@@ -121,7 +121,7 @@ export function isSecureURL(text: string): boolean {
   try {
     const url = new URL(text);
     return url.protocol === 'https:';
-  } catch (_) {
+  } catch {
     return false;
   }
 }

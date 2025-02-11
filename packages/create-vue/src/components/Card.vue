@@ -10,6 +10,7 @@ const props = withDefaults(
     open?: boolean;
   }>(),
   {
+    title: undefined,
     open: true,
   },
 );

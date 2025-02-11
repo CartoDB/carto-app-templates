@@ -3,7 +3,34 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
     reviewers:
-      - 'CartoDB/frontend-team'
-
+      - 'CartoDB/app-dev-builder-team'
+    groups:
+      deck-gl:
+        patterns:
+          - '@deck.gl/*'
+      luma-gl:
+        patterns:
+          - '@luma.gl/*'
+      angular:
+        patterns:
+          - '@angular/*'
+          - '@angular-devkit/*'
+          - 'zone.js'
+          - 'rxjs'
+      react:
+        patterns:
+          - 'react'
+          - 'react-*'
+          - '@types/react'
+          - '@types/react-*'
+      vue:
+        patterns:
+          - 'vue'
+          - 'vue-*'
+      dev-dependencies:
+        dependency-type: 'development'
+    ignore:
+      # Angular template requires TypeScript <5.6.
+      - dependency-name: "typescript"

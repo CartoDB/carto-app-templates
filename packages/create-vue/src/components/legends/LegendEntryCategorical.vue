@@ -23,7 +23,7 @@ const props = defineProps<LegendEntryCategoricalProps>();
     <p class="legend-section-title body2">{{ props.title }}</p>
     <p class="legend-section-subtitle caption">{{ props.subtitle }}</p>
     <ul class="legend-list">
-      <li v-for="value in props.values" class="legend-list-item" key="value">
+      <li v-for="value in props.values" :key="value" class="legend-list-item">
         <span
           class="legend-list-item-swatch"
           :style="{
