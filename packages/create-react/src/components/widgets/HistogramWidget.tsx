@@ -53,6 +53,53 @@ export function HistogramWidget({
     const abortController = new AbortController();
     chartRef.current?.showLoading();
 
+    function getOption(data: HistogramResponse) {
+      const option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        grid: {
+          left: 60,
+          right: 30,
+          top: 20,
+          bottom: 20,
+          width: 'auto',
+          height: 'auto'
+        },
+        xAxis: {
+          type: 'category',
+          data: ticks,
+          // axisLabel: {
+          //   interval: 4 // Show every 5th label
+          // },
+          axisTick: {
+            alignWithLabel: true
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            formatter: (value: number) =>
+              Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
+          }
+        },
+        series: [
+          {
+            name: 'Count',
+            type: 'bar',
+            data,
+            itemStyle: {
+              color: '#3398DB'
+            }
+          }
+        ]
+      };
+      return option;
+    }
+
     data
       .then(({ widgetSource }) =>
         widgetSource.getHistogram({
@@ -78,53 +125,6 @@ export function HistogramWidget({
 
     return () => abortController.abort();
   }, [data, column, operation, ticks, viewState, owner]);
-
-  function getOption(data: HistogramResponse) {
-    const option = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: 60,
-        right: 30,
-        top: 20,
-        bottom: 20,
-        width: 'auto',
-        height: 'auto'
-      },
-      xAxis: {
-        type: 'category',
-        data: ticks,
-        // axisLabel: {
-        //   interval: 4 // Show every 5th label
-        // },
-        axisTick: {
-          alignWithLabel: true
-        }
-      },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          formatter: (value: number) =>
-            Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
-        }
-      },
-      series: [
-        {
-          name: 'Count',
-          type: 'bar',
-          data,
-          itemStyle: {
-            color: '#3398DB'
-          }
-        }
-      ]
-    };
-    return option;
-  }
 
   // function onClearFilters() {
   //   if (filters && onFiltersChange) {
