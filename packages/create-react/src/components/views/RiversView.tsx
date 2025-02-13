@@ -1,4 +1,4 @@
-import { MapView, MapViewState, WebMercatorViewport } from "@deck.gl/core";
+import { Color, MapView, MapViewState, WebMercatorViewport } from "@deck.gl/core";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../context";
 import { useDebouncedState } from "../../hooks/useDebouncedState";
@@ -10,6 +10,7 @@ import DeckGL from "@deck.gl/react";
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from "../Layers";
 import { HistogramWidget } from "../widgets/HistogramWidget";
+import { LegendEntryCategorical } from "../legends/LegendEntryCategorical";
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME = 'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
@@ -28,6 +29,13 @@ function hexToRgb(hex: string) {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return [r, g, b];
+}
+
+function streamOrderToColor(n: number) {
+  const [r, g, b] = hexToRgb('#d5d5d7');
+  const alphaPart = Math.min(n / 10, 1);
+  const alpha = 120 + 128 * alphaPart;
+  return [r, g, b, alpha];
 }
 
 /**
@@ -84,11 +92,7 @@ export default function IncomeView() {
         visible: layerVisibility[LAYER_ID],
         data,
         getLineColor: d => {
-          const [r, g, b] = hexToRgb('#d5d5d7');
-          const n = d.properties.streamOrder;
-          const alphaPart = Math.min(n / 10, 1);
-          const alpha = 120 + 128 * alphaPart;
-          return [r, g, b, alpha];
+          return streamOrderToColor(d.properties.streamOrder) as Color
         },
         getLineWidth: d => {
           const n = d.properties.streamOrder;
@@ -213,16 +217,14 @@ export default function IncomeView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        {/* <Card title="Legend" className="legend">
+        <Card title="Legend" className="legend">
           <LegendEntryCategorical
-            title="Block group"
-            subtitle="By income per capita"
-            values={histogramTicks.map(String)}
-            getSwatchColor={(value: string) =>
-              colors[histogramTicks.indexOf(Number(value))] as Color
-            }
+            title="U.S. Rivers"
+            subtitle="By stream order"
+            values={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
+            getSwatchColor={(value) => streamOrderToColor(Number(value)) as Color}
           />
-        </Card> */}
+        </Card>
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

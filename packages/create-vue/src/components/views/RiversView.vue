@@ -21,6 +21,7 @@ import LegendEntryContinuous from '../legends/LegendEntryContinuous.vue';
 import { context } from '../../context';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
 import { refDebounced } from '@vueuse/core';
+import LegendEntryCategorical from '../legends/LegendEntryCategorical.vue';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -37,6 +38,13 @@ function hexToRgb(hex: string) {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return [r, g, b];
+}
+
+function streamOrderToColor(n: number) {
+  const [r, g, b] = hexToRgb('#d5d5d7');
+  const alphaPart = Math.min(n / 10, 1);
+  const alpha = 120 + 128 * alphaPart;
+  return [r, g, b, alpha];
 }
 
 /****************************************************************************
@@ -70,11 +78,7 @@ const layers = computed(() => [
     visible: layerVisibility.value[LAYER_ID],
     data: data.value,
     getLineColor: d => {
-      const [r, g, b] = hexToRgb('#d5d5d7');
-      const n = d.properties.streamOrder;
-      const alphaPart = Math.min(n / 10, 1);
-      const alpha = 120 + 128 * alphaPart;
-      return [r, g, b, alpha];
+      return streamOrderToColor(d.properties.streamOrder) as Color
     },
     getLineWidth: d => {
       const n = d.properties.streamOrder;
@@ -240,17 +244,16 @@ onUnmounted(() => {
         (nextLayerVisibility) => (layerVisibility = nextLayerVisibility)
       "
     />
-    <!-- <Card title="Legend" class="legend">
-      <LegendEntryContinuous
-        title="U.S. population"
-        subtitle="Sum of population by H3 cell"
-        :domain="POP_DOMAIN"
+    <Card title="Legend" class="legend">
+      <LegendEntryCategorical
+        title="U.S. Rivers"
+        subtitle="By stream order"
+        :values="Array.from({ length: 10 }, (_, i) => (i + 1).toString())"
         :get-swatch-color="
-          (value) =>
-            POP_COLORS({ properties: { population_sum: value } }, null!)
+          (value) => streamOrderToColor(Number(value)) as Color
         "
       />
-    </Card> -->
+    </Card>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>
