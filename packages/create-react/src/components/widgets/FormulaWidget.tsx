@@ -1,5 +1,5 @@
 import { MapViewState } from '@deck.gl/core';
-import { AggregationType, WidgetSource } from '@carto/api-client';
+import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
 import { useEffect, useState } from 'react';
 import {
   createSpatialFilter,
@@ -9,7 +9,7 @@ import {
 
 export interface FormulaWidgetProps {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data: Promise<{ widgetSource: WidgetSource }>;
+  data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
   /** Column containing a value to be aggregated. */
   column: string;
   /** Operation used to aggregate the specified column. */
@@ -45,7 +45,9 @@ export function FormulaWidget({
         }),
       )
       .then((response) => {
-        setValue(response.value);
+        if (response.value) {
+          setValue(response.value);
+        }
         setStatus('complete');
       })
       .catch(() => {

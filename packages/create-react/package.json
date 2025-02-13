@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
-    "@carto/api-client": "^0.4.6",
+    "@carto/api-client": "0.5.0-alpha.2",
     "@carto/create-common": "^0.1.4",
     "@deck.gl/aggregation-layers": "~9.1.0",
     "@deck.gl/carto": "~9.1.0",
@@ -31,6 +31,7 @@
     "@luma.gl/core": "~9.1.1",
     "@luma.gl/engine": "~9.1.1",
     "@luma.gl/shadertools": "~9.1.1",
+    "echarts": "^5.6.0",
     "maplibre-gl": "^4.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -9,6 +9,7 @@ import {
   removeFilter,
   getFilter,
   hasFilter,
+  WidgetSourceProps,
 } from '@carto/api-client';
 import {
   createSpatialFilter,
@@ -21,11 +22,13 @@ const { IN } = FilterType;
 
 export interface CategoryWidgetProps {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data: Promise<{ widgetSource: WidgetSource }>;
+  data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
   /** Column containing category names. */
   column: string;
   /** Operation used to aggregate features in each category. */
   operation?: Exclude<AggregationType, 'custom'>;
+  /** Column containing a value to be aggregated. */
+  operationColumn: string;
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
   /** Filter state. If specified, widget will be filtered. */
@@ -42,6 +45,7 @@ export function CategoryWidget({
   data,
   column,
   operation,
+  operationColumn,
   viewState,
   filters,
   onFiltersChange,
@@ -66,6 +70,7 @@ export function CategoryWidget({
         widgetSource.getCategories({
           column,
           operation,
+          operationColumn,
           spatialFilter: viewState && createSpatialFilter(viewState),
           abortController,
           filterOwner: owner,
@@ -84,7 +89,7 @@ export function CategoryWidget({
     setStatus('loading');
 
     return () => abortController.abort();
-  }, [data, column, operation, viewState, owner]);
+  }, [data, column, operation, operationColumn, viewState, owner]);
 
   // Compute min/max over category values.
   const [min, max] = useMemo(() => {
