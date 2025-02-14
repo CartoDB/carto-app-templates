@@ -12,14 +12,14 @@ import {
   watchEffect,
 } from 'vue';
 import { Map } from 'maplibre-gl';
-import { Deck, MapViewState, AccessorFunction, Color, WebMercatorViewport } from '@deck.gl/core';
-import { BASEMAP, colorContinuous, VectorTileLayer } from '@deck.gl/carto';
+import { Deck, MapViewState, Color, WebMercatorViewport } from '@deck.gl/core';
+import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
 import { createViewportSpatialFilter, vectorTilesetSource } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
-import LegendEntryContinuous from '../legends/LegendEntryContinuous.vue';
 import { context } from '../../context';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
+import HistogramWidget from '../widgets/HistogramWidget.vue';
 import { refDebounced } from '@vueuse/core';
 import LegendEntryCategorical from '../legends/LegendEntryCategorical.vue';
 
@@ -185,6 +185,8 @@ onUnmounted(() => {
   map.value?.remove();
 });
 
+const TICKS = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
+
 </script>
 <template>
   <aside class="sidebar">
@@ -224,6 +226,14 @@ onUnmounted(() => {
           operation="count"
           :data="data"
           :view-state="viewStateDebounced as MapViewState"
+        />
+      </Card>
+      <Card title="Stream by stream order">
+        <HistogramWidget
+          column="streamOrder"
+          :data="data"
+          :view-state="viewStateDebounced as MapViewState"
+          :ticks="TICKS"
         />
       </Card>
     </div>
