@@ -3,7 +3,7 @@
  * Histogram widget, displaying a histogram of a numeric column.
  */
 
-import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { computedAsync, templateRef } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
 
