@@ -28,7 +28,7 @@ export interface CategoryWidgetProps {
   /** Operation used to aggregate features in each category. */
   operation?: Exclude<AggregationType, 'custom'>;
   /** Column containing a value to be aggregated. */
-  operationColumn: string;
+  operationColumn?: string;
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
   /** Filter state. If specified, widget will be filtered. */
