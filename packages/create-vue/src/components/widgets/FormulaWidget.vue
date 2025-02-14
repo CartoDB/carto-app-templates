@@ -5,7 +5,11 @@
 import { ref } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
-import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
+import {
+  AggregationType,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
 import {
   createSpatialFilter,
   WidgetStatus,

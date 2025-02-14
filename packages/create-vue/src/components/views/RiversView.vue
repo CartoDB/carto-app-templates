@@ -190,8 +190,7 @@ onUnmounted(() => {
   map.value?.remove();
 });
 
-const TICKS = Array.from({ length: 10 }, (_, i) => (i + 1));
-
+const TICKS = Array.from({ length: 10 }, (_, i) => i + 1);
 </script>
 <template>
   <aside class="sidebar">
