@@ -14,7 +14,10 @@ import {
 import { Map } from 'maplibre-gl';
 import { Deck, MapViewState, Color, WebMercatorViewport } from '@deck.gl/core';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
-import { createViewportSpatialFilter, vectorTilesetSource } from '@carto/api-client';
+import {
+  createViewportSpatialFilter,
+  vectorTilesetSource,
+} from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
 import { context } from '../../context';
@@ -57,7 +60,7 @@ const data = computed(() =>
     apiBaseUrl: context.apiBaseUrl,
     connectionName: CONNECTION_NAME,
     tableName: TILESET_NAME,
-  })
+  }),
 );
 
 /****************************************************************************
@@ -77,10 +80,10 @@ const layers = computed(() => [
     id: LAYER_ID,
     visible: layerVisibility.value[LAYER_ID],
     data: data.value,
-    getLineColor: d => {
-      return streamOrderToColor(d.properties.streamOrder) as Color
+    getLineColor: (d) => {
+      return streamOrderToColor(d.properties.streamOrder) as Color;
     },
-    getLineWidth: d => {
+    getLineWidth: (d) => {
       const n = d.properties.streamOrder;
       return n * 0.5;
     },
@@ -88,10 +91,10 @@ const layers = computed(() => [
     lineWidthMinPixels: 1,
     onViewportLoad(tiles) {
       data.value?.then((res) => {
-        tilesLoaded.value = true
-        res.widgetSource.loadTiles(tiles)
-        viewState.value = { ...viewState.value }
-      })
+        tilesLoaded.value = true;
+        res.widgetSource.loadTiles(tiles);
+        viewState.value = { ...viewState.value };
+      });
     },
   }),
 ]);
@@ -117,13 +120,13 @@ function clamp(n: number, min: number, max: number) {
 
 const droppingPercent = computed(() => {
   if (!fractionsDropped.value.length) {
-    return 0
+    return 0;
   }
-  const roundedZoom = Math.round(viewState.value.zoom)
-  const clampedZoom = clamp(roundedZoom, minzoom.value, maxzoom.value)
-  const percent = fractionsDropped.value[clampedZoom]
-  return percent
-})
+  const roundedZoom = Math.round(viewState.value.zoom);
+  const clampedZoom = clamp(roundedZoom, minzoom.value, maxzoom.value);
+  const percent = fractionsDropped.value[clampedZoom];
+  return percent;
+});
 
 // Update the map view when the viewstate ref changes.
 watchEffect(() => {
@@ -139,11 +142,11 @@ watchEffect(() => {
 // Update the attribution HTML and zoom data when the data ref changes.
 watchEffect(() => {
   data.value?.then((res) => {
-    attributionHTML.value = res.attribution
-    minzoom.value = res.minzoom
-    maxzoom.value = res.maxzoom
+    attributionHTML.value = res.attribution;
+    minzoom.value = res.minzoom;
+    maxzoom.value = res.maxzoom;
     if (res.fraction_dropped_per_zoom) {
-      fractionsDropped.value = res.fraction_dropped_per_zoom
+      fractionsDropped.value = res.fraction_dropped_per_zoom;
     }
   });
 });
@@ -151,14 +154,16 @@ watchEffect(() => {
 watchEffect(() => {
   if (tilesLoaded.value && viewStateDebounced.value) {
     data.value?.then((res) => {
-      const bbox = new WebMercatorViewport(viewStateDebounced.value).getBounds()
-      const spatialFilter = createViewportSpatialFilter(bbox)
+      const bbox = new WebMercatorViewport(
+        viewStateDebounced.value,
+      ).getBounds();
+      const spatialFilter = createViewportSpatialFilter(bbox);
       if (spatialFilter) {
-        res.widgetSource.extractTileFeatures({ spatialFilter })
+        res.widgetSource.extractTileFeatures({ spatialFilter });
       }
-    })
+    });
   }
-})
+});
 
 // Initialize the map and deck.
 onMounted(() => {
@@ -186,7 +191,6 @@ onUnmounted(() => {
 });
 
 const TICKS = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
-
 </script>
 <template>
   <aside class="sidebar">
@@ -208,17 +212,23 @@ const TICKS = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
     <div v-if="tilesLoaded">
       <section
         v-if="droppingPercent > 0 && droppingPercent <= 0.05"
-        style="padding: 4px 8px;"
-        class='caption'
+        style="padding: 4px 8px"
+        class="caption"
       >
-        <strong>Warning:</strong> There may be some data ({{(droppingPercent * 100).toFixed(2)}}%) missing at this zoom level ({{Math.round(viewState.zoom)}}) because of the tileset dropping features.
+        <strong>Warning:</strong> There may be some data ({{
+          (droppingPercent * 100).toFixed(2)
+        }}%) missing at this zoom level ({{ Math.round(viewState.zoom) }})
+        because of the tileset dropping features.
       </section>
       <section
         v-if="droppingPercent > 0.05"
-        style="padding: 4px 8px;"
-        class='caption'
+        style="padding: 4px 8px"
+        class="caption"
       >
-        <strong>Warning:</strong> There is an important amount of data ({{(droppingPercent * 100).toFixed(2)}}%) missing at this zoom level ({{Math.round(viewState.zoom)}}) because of the tileset dropping features.
+        <strong>Warning:</strong> There is an important amount of data ({{
+          (droppingPercent * 100).toFixed(2)
+        }}%) missing at this zoom level ({{ Math.round(viewState.zoom) }})
+        because of the tileset dropping features.
       </section>
       <Card title="Stream count">
         <FormulaWidget

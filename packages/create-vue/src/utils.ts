@@ -17,9 +17,9 @@ export function toHexString(color: Color): string {
     Math.round(color[1]) * 256 +
     Math.round(color[2]);
 
-  let a = Math.round(color[3] || 255)
+  let a = Math.round(color[3] || 255);
   if (a > 0 && a <= 1) {
-    a = Math.round(a * 255)
+    a = Math.round(a * 255);
   }
 
   const alpha = a.toString(16).padStart(2, '0');

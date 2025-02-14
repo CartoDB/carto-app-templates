@@ -7,14 +7,16 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { computedAsync, templateRef } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
 
-import {
-  createSpatialFilter,
-  WidgetStatus,
-} from '../../utils';
+import { createSpatialFilter, WidgetStatus } from '../../utils';
 // import { useToggleFilter } from '../../hooks/useToggleFilter';
-import { AggregationType, Filter, HistogramResponse, WidgetSource, WidgetSourceProps } from '@carto/api-client';
+import {
+  AggregationType,
+  Filter,
+  HistogramResponse,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
 import * as echarts from 'echarts';
-
 
 const props = withDefaults(
   defineProps<{
@@ -56,7 +58,7 @@ function getOption(data: HistogramResponse) {
       top: 20,
       bottom: 20,
       width: 'auto',
-      height: 'auto'
+      height: 'auto',
     },
     xAxis: {
       type: 'category',
@@ -65,8 +67,8 @@ function getOption(data: HistogramResponse) {
       //   interval: 4 // Show every 5th label
       // },
       axisTick: {
-        alignWithLabel: true
-      }
+        alignWithLabel: true,
+      },
     },
     yAxis: {
       type: 'value',
@@ -81,10 +83,10 @@ function getOption(data: HistogramResponse) {
         type: 'bar',
         data,
         itemStyle: {
-          color: '#3398DB'
-        }
-      }
-    ]
+          color: '#3398DB',
+        },
+      },
+    ],
   };
   return option;
 }
@@ -98,23 +100,26 @@ const onClick = (params: echarts.ECElementEvent) => {
   if (params.componentType === 'series') {
     // filterViaHistogram(params.dataIndex);
   }
-}
+};
 
 onMounted(() => {
   if (containerRef.value) {
-    const chart = echarts.init(containerRef.value, null, { height: 200, width: 300 });
+    const chart = echarts.init(containerRef.value, null, {
+      height: 200,
+      width: 300,
+    });
     chartRef.value = chart;
     chartRef.value?.on('click', onClick);
   } else {
     console.warn('Container element not found');
   }
-})
+});
 
 onUnmounted(() => {
   if (chartRef.value) {
     chartRef.value?.dispose();
   }
-})
+});
 
 const response = computedAsync<HistogramResponse>(async (onCancel) => {
   const column = props.column;
@@ -126,7 +131,7 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
   onCancel(() => abortController.abort());
 
   status.value = 'loading';
-  
+
   return props.data
     .then(({ widgetSource }) =>
       widgetSource.getHistogram({
@@ -154,8 +159,7 @@ watch(response, (value) => {
   if (value) {
     chartRef.value?.setOption(getOption(value));
   }
-})
-
+});
 </script>
 <template>
   <template v-if="status === 'loading'">
@@ -164,8 +168,8 @@ watch(response, (value) => {
   <template v-else-if="status === 'error'">
     <span class="title">⚠ Error</span>
   </template>
-  
-  <div style="min-height: 260px; position: relative;">
+
+  <div style="min-height: 260px; position: relative">
     <div ref="container"></div>
   </div>
 </template>
