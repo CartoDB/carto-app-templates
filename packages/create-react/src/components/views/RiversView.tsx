@@ -1,19 +1,28 @@
-import { Color, MapView, MapViewState, WebMercatorViewport } from "@deck.gl/core";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { AppContext } from "../../context";
-import { useDebouncedState } from "../../hooks/useDebouncedState";
-import { createViewportSpatialFilter, vectorTilesetSource } from "@carto/api-client";
-import { BASEMAP, VectorTileLayer } from "@deck.gl/carto";
-import { Card } from "../Card";
-import { FormulaWidget } from "../widgets/FormulaWidget";
-import DeckGL from "@deck.gl/react";
+import {
+  Color,
+  MapView,
+  MapViewState,
+  WebMercatorViewport,
+} from '@deck.gl/core';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { AppContext } from '../../context';
+import { useDebouncedState } from '../../hooks/useDebouncedState';
+import {
+  createViewportSpatialFilter,
+  vectorTilesetSource,
+} from '@carto/api-client';
+import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
+import { Card } from '../Card';
+import { FormulaWidget } from '../widgets/FormulaWidget';
+import DeckGL from '@deck.gl/react';
 import { Map } from 'react-map-gl/maplibre';
-import { Layers } from "../Layers";
-import { HistogramWidget } from "../widgets/HistogramWidget";
-import { LegendEntryCategorical } from "../legends/LegendEntryCategorical";
+import { Layers } from '../Layers';
+import { HistogramWidget } from '../widgets/HistogramWidget';
+import { LegendEntryCategorical } from '../legends/LegendEntryCategorical';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
-const TILESET_NAME = 'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
+const TILESET_NAME =
+  'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
 const MAP_VIEW = new MapView({ repeat: true });
 
 const INITIAL_VIEW_STATE: MapViewState = {
@@ -45,13 +54,13 @@ export default function IncomeView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
-  
+
   // data to calculate feature dropping for each zoom level
   const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
   const [minZoom, setMinZoom] = useState(0);
   const [maxZoom, setMaxZoom] = useState(20);
   const [tilesLoaded, setTilesLoaded] = useState(false);
-  
+
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
 
@@ -74,7 +83,7 @@ export default function IncomeView() {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
-  const LAYER_ID = 'Income by block group'
+  const LAYER_ID = 'Income by block group';
 
   // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   const [layerVisibility, setLayerVisibility] = useState<
@@ -91,10 +100,10 @@ export default function IncomeView() {
         pickable: true,
         visible: layerVisibility[LAYER_ID],
         data,
-        getLineColor: d => {
-          return streamOrderToColor(d.properties.streamOrder) as Color
+        getLineColor: (d) => {
+          return streamOrderToColor(d.properties.streamOrder) as Color;
         },
-        getLineWidth: d => {
+        getLineWidth: (d) => {
           const n = d.properties.streamOrder;
           return n * 0.5;
         },
@@ -102,10 +111,10 @@ export default function IncomeView() {
         lineWidthMinPixels: 1,
         onViewportLoad(tiles) {
           data?.then((res) => {
-            setTilesLoaded(true)
-            res.widgetSource.loadTiles(tiles)
-            setViewState({ ...viewState })
-          })
+            setTilesLoaded(true);
+            res.widgetSource.loadTiles(tiles);
+            setViewState({ ...viewState });
+          });
         },
       }),
     ];
@@ -117,25 +126,25 @@ export default function IncomeView() {
 
   useEffect(() => {
     data?.then((res) => {
-      const { fraction_dropped_per_zoom, minzoom, maxzoom, attribution } = res
-      setFractionsDropped(fraction_dropped_per_zoom ?? [])
-      setMinZoom(minzoom ?? 0)
-      setMaxZoom(maxzoom ?? 20)
-      setAttributionHTML(attribution)
-    })
+      const { fraction_dropped_per_zoom, minzoom, maxzoom, attribution } = res;
+      setFractionsDropped(fraction_dropped_per_zoom ?? []);
+      setMinZoom(minzoom ?? 0);
+      setMaxZoom(maxzoom ?? 20);
+      setAttributionHTML(attribution);
+    });
   }, [data]);
-  
+
   useEffect(() => {
     if (data && viewState && tilesLoaded) {
       data?.then((res) => {
-        const bbox = new WebMercatorViewport(viewState).getBounds()
-        const spatialFilter = createViewportSpatialFilter(bbox)
+        const bbox = new WebMercatorViewport(viewState).getBounds();
+        const spatialFilter = createViewportSpatialFilter(bbox);
         if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter })
+          res.widgetSource.extractTileFeatures({ spatialFilter });
         }
-      })
+      });
     }
-  }, [data, viewState, tilesLoaded])
+  }, [data, viewState, tilesLoaded]);
 
   function clamp(n: number, min: number, max: number) {
     return Math.min(Math.max(n, min), max);
@@ -143,13 +152,13 @@ export default function IncomeView() {
 
   const droppingPercent = useMemo(() => {
     if (!fractionsDropped.length) {
-      return 0
+      return 0;
     }
-    const roundedZoom = Math.round(viewState.zoom)
-    const clampedZoom = clamp(roundedZoom, minZoom, maxZoom)
-    const percent = fractionsDropped[clampedZoom]
-    return percent
-  }, [minZoom, maxZoom, fractionsDropped, viewState.zoom])
+    const roundedZoom = Math.round(viewState.zoom);
+    const clampedZoom = clamp(roundedZoom, minZoom, maxZoom);
+    const percent = fractionsDropped[clampedZoom];
+    return percent;
+  }, [minZoom, maxZoom, fractionsDropped, viewState.zoom]);
 
   return (
     <>
@@ -173,13 +182,19 @@ export default function IncomeView() {
         {tilesLoaded && (
           <>
             {droppingPercent > 0 && droppingPercent <= 0.05 && (
-              <section className='caption' style={{ padding: '4px 8px' }}>
-                <strong>Warning:</strong> There may be some data ({(droppingPercent * 100).toFixed(2)}%) missing at this zoom level ({Math.round(viewState.zoom)}) because of the tileset dropping features.
+              <section className="caption" style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There may be some data (
+                {(droppingPercent * 100).toFixed(2)}%) missing at this zoom
+                level ({Math.round(viewState.zoom)}) because of the tileset
+                dropping features.
               </section>
             )}
             {droppingPercent > 0.05 && (
-              <section className='caption' style={{ padding: '4px 8px' }}>
-                <strong>Warning:</strong> There is an important amount of data ({(droppingPercent * 100).toFixed(2)}%) missing at this zoom level ({Math.round(viewState.zoom)}) because of the tileset dropping features. Widget calculations will not be accurate.
+              <section className="caption" style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There is an important amount of data (
+                {(droppingPercent * 100).toFixed(2)}%) missing at this zoom
+                level ({Math.round(viewState.zoom)}) because of the tileset
+                dropping features. Widget calculations will not be accurate.
               </section>
             )}
             <Card title="Stream count">
@@ -193,7 +208,7 @@ export default function IncomeView() {
             <Card title="Stream count by stream order">
               <HistogramWidget
                 data={data}
-                column='streamOrder'
+                column="streamOrder"
                 ticks={histogramTicks}
                 viewState={viewState}
                 operation="count"
@@ -222,7 +237,9 @@ export default function IncomeView() {
             title="U.S. Rivers"
             subtitle="By stream order"
             values={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
-            getSwatchColor={(value) => streamOrderToColor(Number(value)) as Color}
+            getSwatchColor={(value) =>
+              streamOrderToColor(Number(value)) as Color
+            }
           />
         </Card>
         <aside
@@ -231,5 +248,5 @@ export default function IncomeView() {
         ></aside>
       </main>
     </>
-  )
+  );
 }

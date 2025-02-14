@@ -1,5 +1,9 @@
 import { MapViewState } from '@deck.gl/core';
-import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
+import {
+  AggregationType,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
 import { useEffect, useState } from 'react';
 import {
   createSpatialFilter,

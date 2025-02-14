@@ -1,8 +1,13 @@
-import { AggregationType, Filter, HistogramResponse, WidgetSourceProps } from "@carto/api-client";
+import {
+  AggregationType,
+  Filter,
+  HistogramResponse,
+  WidgetSourceProps,
+} from '@carto/api-client';
 import { WidgetSource } from '@carto/api-client';
-import { MapViewState } from "@deck.gl/core";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createSpatialFilter, WidgetStatus } from "../../utils";
+import { MapViewState } from '@deck.gl/core';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
 
 export interface HistogramWidgetProps {
@@ -27,7 +32,7 @@ export function HistogramWidget({
   column,
   operation,
   ticks,
-  viewState
+  viewState,
 }: HistogramWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
   const [status, setStatus] = useState<WidgetStatus>('complete');
@@ -38,15 +43,15 @@ export function HistogramWidget({
       if (params.componentType === 'series') {
         // filterViaHistogram(params.dataIndex);
       }
-    }
+    };
 
     if (ref && !chartRef.current) {
       const chart = echarts.init(ref, null, { height: 200, width: 300 });
       chartRef.current = chart;
       chartRef.current?.on('click', onClick);
     }
-  }, [])
-  
+  }, []);
+
   // Fetches data for the widget to display, watching changes to filters,
   // view state, and widget configuration to refresh.
   useEffect(() => {
@@ -58,8 +63,8 @@ export function HistogramWidget({
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'shadow'
-          }
+            type: 'shadow',
+          },
         },
         grid: {
           left: 60,
@@ -67,7 +72,7 @@ export function HistogramWidget({
           top: 20,
           bottom: 20,
           width: 'auto',
-          height: 'auto'
+          height: 'auto',
         },
         xAxis: {
           type: 'category',
@@ -76,15 +81,18 @@ export function HistogramWidget({
           //   interval: 4 // Show every 5th label
           // },
           axisTick: {
-            alignWithLabel: true
-          }
+            alignWithLabel: true,
+          },
         },
         yAxis: {
           type: 'value',
           axisLabel: {
             formatter: (value: number) =>
-              Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
-          }
+              Intl.NumberFormat('en-US', {
+                compactDisplay: 'short',
+                notation: 'compact',
+              }).format(value),
+          },
         },
         series: [
           {
@@ -92,10 +100,10 @@ export function HistogramWidget({
             type: 'bar',
             data,
             itemStyle: {
-              color: '#3398DB'
-            }
-          }
-        ]
+              color: '#3398DB',
+            },
+          },
+        ],
       };
       return option;
     }
@@ -135,14 +143,14 @@ export function HistogramWidget({
 
   // function filterViaHistogram(dataIndex: number) {
   //   // clearFiltersButton.style.display = 'inherit';
-  
+
   //   // removeFilter(filters, {
   //   //   column: 'streamOrder'
   //   // });
-  
+
   //   // const minValue = histogramTicks[dataIndex];
   //   // const maxValue = histogramTicks[dataIndex + 1] - 0.0001;
-  
+
   //   // if (dataIndex === histogramTicks.length - 1) {
   //   //   // For the last category (> 600), use CLOSED_OPEN
   //   //   addFilter(filters, {
@@ -158,7 +166,7 @@ export function HistogramWidget({
   //   //     values: [[minValue, maxValue]]
   //   //   });
   //   // }
-  
+
   //   // initialize();
   // }
 
@@ -174,8 +182,5 @@ export function HistogramWidget({
   //   return <span className="title">No data</span>;
   // }
 
-  return (
-    <div ref={createChart} style={{ minHeight: '260px' }}>
-    </div>
-  )
+  return <div ref={createChart} style={{ minHeight: '260px' }}></div>;
 }
