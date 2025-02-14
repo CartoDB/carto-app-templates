@@ -5,7 +5,7 @@
 import { ref } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
-import { AggregationType, WidgetSource } from '@carto/api-client';
+import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
 import {
   createSpatialFilter,
   WidgetStatus,
@@ -15,7 +15,7 @@ import {
 const props = withDefaults(
   defineProps<{
     /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-    data: Promise<{ widgetSource: WidgetSource }>;
+    data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
     /** Column containing a value to be aggregated. */
     column?: string;
     /** Operation used to aggregate the specified column. */
@@ -75,8 +75,8 @@ const value = computedAsync(async (onCancel) => {
   </template>
 
   <template v-else>
-    <data class="title" :value="value"
-      >{{ numberFormatter.format(value) }}
+    <data class="title" :value="value ?? 0"
+      >{{ numberFormatter.format(value ?? 0) }}
     </data>
   </template>
 </template>
