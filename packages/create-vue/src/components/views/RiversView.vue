@@ -51,8 +51,8 @@ const colors = [
   '#a8ddb5',
   '#ccebc5',
   '#e0f3db',
-  '#f7fcf0'
-].map(hex => hexToRgb(hex));
+  '#f7fcf0',
+].map((hex) => hexToRgb(hex));
 
 function streamOrderToColor(n: number, colors: number[][]) {
   // const [r, g, b] = hexToRgb('#d5d5d7');
@@ -232,7 +232,6 @@ onUnmounted(() => {
   deck.value?.finalize();
   map.value?.remove();
 });
-
 </script>
 <template>
   <aside class="sidebar">
@@ -252,10 +251,7 @@ onUnmounted(() => {
     </Card>
     <span class="flex-space" />
     <div v-if="tilesLoaded">
-      <section
-        class="small"
-        style="padding: 4px 8px"
-      >
+      <section class="small" style="padding: 4px 8px">
         At this zoom level, this tileset only shows streams of order >
         <code id="min-stream-order">{{ minStreamOrder }}</code> and above.
       </section>

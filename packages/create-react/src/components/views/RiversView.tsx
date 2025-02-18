@@ -46,8 +46,8 @@ const colors = [
   '#a8ddb5',
   '#ccebc5',
   '#e0f3db',
-  '#f7fcf0'
-].map(hex => hexToRgb(hex));
+  '#f7fcf0',
+].map((hex) => hexToRgb(hex));
 
 function streamOrderToColor(n: number, colors: number[][]) {
   // const [r, g, b] = hexToRgb('#d5d5d7');
@@ -110,7 +110,10 @@ export default function IncomeView() {
     [accessToken, apiBaseUrl],
   );
 
-  const minStreamOrder = useMemo(() => getMinStreamOrder(viewState.zoom), [viewState.zoom]);
+  const minStreamOrder = useMemo(
+    () => getMinStreamOrder(viewState.zoom),
+    [viewState.zoom],
+  );
 
   const histogramTicks = useMemo(() => {
     const ticks = [];
@@ -222,8 +225,9 @@ export default function IncomeView() {
         <span className="flex-space" />
         {tilesLoaded && (
           <>
-            <section className='small' style={{ padding: '4px 8px' }}>
-              At this zoom level, this tileset only shows streams of order {'> '}
+            <section className="small" style={{ padding: '4px 8px' }}>
+              At this zoom level, this tileset only shows streams of order{' '}
+              {'> '}
               <code id="min-stream-order">{minStreamOrder}</code> and above.
             </section>
             {droppingPercent > 0 && droppingPercent <= 0.05 && (
