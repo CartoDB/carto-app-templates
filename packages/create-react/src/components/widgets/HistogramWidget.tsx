@@ -135,7 +135,7 @@ export function HistogramWidget({
       });
 
     return () => abortController.abort();
-  }, [data, column, operation, ticks, viewState, owner]);
+  }, [data, column, operation, ticks, viewState, min, owner]);
 
   // function onClearFilters() {
   //   if (filters && onFiltersChange) {
