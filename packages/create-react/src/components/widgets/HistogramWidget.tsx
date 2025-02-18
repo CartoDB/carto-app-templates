@@ -19,6 +19,8 @@ export interface HistogramWidgetProps {
   operation?: Exclude<AggregationType, 'custom'>;
   /** Ticks to use for the histogram calculation. */
   ticks: number[];
+  /** Minimum value to use for the histogram calculation. */
+  min?: number;
   /** Filter state. If specified, widget will be filtered. */
   filters?: Record<string, Filter>;
   /** Callback, to be invoked by the widget when its filters are set or cleared. */
@@ -32,6 +34,7 @@ export function HistogramWidget({
   column,
   operation,
   ticks,
+  min,
   viewState,
 }: HistogramWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
@@ -76,7 +79,7 @@ export function HistogramWidget({
         },
         xAxis: {
           type: 'category',
-          data: ticks,
+          data: [min, ...ticks],
           // axisLabel: {
           //   interval: 4 // Show every 5th label
           // },

@@ -26,12 +26,10 @@ const TILESET_NAME =
 const MAP_VIEW = new MapView({ repeat: true });
 
 const INITIAL_VIEW_STATE: MapViewState = {
-  latitude: 31.8028,
-  longitude: -103.0078,
-  zoom: 4,
+  latitude: 30.5,
+  longitude: -90.1,
+  zoom: 6,
 };
-
-const histogramTicks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 function hexToRgb(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -40,12 +38,45 @@ function hexToRgb(hex: string) {
   return [r, g, b];
 }
 
-function streamOrderToColor(n: number) {
-  const [r, g, b] = hexToRgb('#d5d5d7');
-  const alphaPart = Math.min(n / 10, 1);
-  const alpha = 120 + 128 * alphaPart;
-  return [r, g, b, alpha];
+const colors = [
+  '#08589e',
+  '#2b8cbe',
+  '#4eb3d3',
+  '#7bccc4',
+  '#a8ddb5',
+  '#ccebc5',
+  '#e0f3db',
+  '#f7fcf0'
+].map(hex => hexToRgb(hex));
+
+function streamOrderToColor(n: number, colors: number[][]) {
+  // const [r, g, b] = hexToRgb('#d5d5d7');
+  // const alphaPart = Math.min(n / 10, 1);
+  // const alpha = 120 + 128 * alphaPart;
+  // return [r, g, b, alpha];
+  const rgb = colors[Math.min(n - 1, 7)];
+  const alpha = Math.min(50 + n * 20, 255); // Gradually increases opacity with stream order
+  return new Uint8Array([...rgb, alpha]);
 }
+
+/**
+ * MINIMUM STREAM ORDER
+ * Our tileset was generated in a way that it drops water streams of low orders at low zoom levels.
+ * Let's add logic in our app to handle this.
+ */
+function getMinStreamOrder(zoomLevel: number) {
+  if (zoomLevel < 5.5) {
+    return 4; // at zoom 5.5, this tileset only uses streams of order 4 and above
+  } else if (zoomLevel < 6.5) {
+    return 3; // at zoom 6.5, this tileset only uses streams of order 3 and above
+  } else if (zoomLevel < 7.5) {
+    return 2; // at zoom 7.5, this tileset only uses streams of order 2 and above
+  } else {
+    return 1; // at zoom 10, we show all streams
+  }
+}
+
+const MAX_STREAM_ORDER = 10;
 
 /**
  * Example application page, showing U.S. streams network.
@@ -79,6 +110,16 @@ export default function IncomeView() {
     [accessToken, apiBaseUrl],
   );
 
+  const minStreamOrder = useMemo(() => getMinStreamOrder(viewState.zoom), [viewState.zoom]);
+
+  const histogramTicks = useMemo(() => {
+    const ticks = [];
+    for (let i = minStreamOrder; i <= MAX_STREAM_ORDER; i++) {
+      ticks.push(i);
+    }
+    return ticks;
+  }, [minStreamOrder]);
+
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
@@ -101,13 +142,13 @@ export default function IncomeView() {
         visible: layerVisibility[LAYER_ID],
         data,
         getLineColor: (d) => {
-          return streamOrderToColor(d.properties.streamOrder) as Color;
+          return streamOrderToColor(d.properties.streamOrder, colors) as Color;
         },
         getLineWidth: (d) => {
-          const n = d.properties.streamOrder;
-          return n * 0.5;
+          return Math.pow(d.properties.streamOrder, 2);
         },
-        lineWidthUnits: 'pixels',
+        lineWidthScale: 20,
+        lineWidthUnits: 'meters',
         lineWidthMinPixels: 1,
         onViewportLoad(tiles) {
           data?.then((res) => {
@@ -181,6 +222,10 @@ export default function IncomeView() {
         <span className="flex-space" />
         {tilesLoaded && (
           <>
+            <section className='small' style={{ padding: '4px 8px' }}>
+              At this zoom level, this tileset only shows streams of order {'> '}
+              <code id="min-stream-order">{minStreamOrder}</code> and above.
+            </section>
             {droppingPercent > 0 && droppingPercent <= 0.05 && (
               <section className="caption" style={{ padding: '4px 8px' }}>
                 <strong>Warning:</strong> There may be some data (
@@ -210,6 +255,7 @@ export default function IncomeView() {
                 data={data}
                 column="streamOrder"
                 ticks={histogramTicks}
+                min={minStreamOrder}
                 viewState={viewState}
                 operation="count"
               />
@@ -238,7 +284,7 @@ export default function IncomeView() {
             subtitle="By stream order"
             values={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
             getSwatchColor={(value) =>
-              streamOrderToColor(Number(value)) as Color
+              streamOrderToColor(Number(value), colors) as Color
             }
           />
         </Card>
