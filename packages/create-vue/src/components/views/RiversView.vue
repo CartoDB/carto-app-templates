@@ -43,12 +43,45 @@ function hexToRgb(hex: string) {
   return [r, g, b];
 }
 
-function streamOrderToColor(n: number) {
-  const [r, g, b] = hexToRgb('#d5d5d7');
-  const alphaPart = Math.min(n / 10, 1);
-  const alpha = 120 + 128 * alphaPart;
-  return [r, g, b, alpha];
+const colors = [
+  '#08589e',
+  '#2b8cbe',
+  '#4eb3d3',
+  '#7bccc4',
+  '#a8ddb5',
+  '#ccebc5',
+  '#e0f3db',
+  '#f7fcf0'
+].map(hex => hexToRgb(hex));
+
+function streamOrderToColor(n: number, colors: number[][]) {
+  // const [r, g, b] = hexToRgb('#d5d5d7');
+  // const alphaPart = Math.min(n / 10, 1);
+  // const alpha = 120 + 128 * alphaPart;
+  // return [r, g, b, alpha];
+  const rgb = colors[Math.min(n - 1, 7)];
+  const alpha = Math.min(50 + n * 20, 255); // Gradually increases opacity with stream order
+  return new Uint8Array([...rgb, alpha]);
 }
+
+/**
+ * MINIMUM STREAM ORDER
+ * Our tileset was generated in a way that it drops water streams of low orders at low zoom levels.
+ * Let's add logic in our app to handle this.
+ */
+function getMinStreamOrder(zoomLevel: number) {
+  if (zoomLevel < 5.5) {
+    return 4; // at zoom 5.5, this tileset only uses streams of order 4 and above
+  } else if (zoomLevel < 6.5) {
+    return 3; // at zoom 6.5, this tileset only uses streams of order 3 and above
+  } else if (zoomLevel < 7.5) {
+    return 2; // at zoom 7.5, this tileset only uses streams of order 2 and above
+  } else {
+    return 1; // at zoom 10, we show all streams
+  }
+}
+
+const MAX_STREAM_ORDER = 10;
 
 /****************************************************************************
  * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
@@ -81,13 +114,13 @@ const layers = computed(() => [
     visible: layerVisibility.value[LAYER_ID],
     data: data.value,
     getLineColor: (d) => {
-      return streamOrderToColor(d.properties.streamOrder) as Color;
+      return streamOrderToColor(d.properties.streamOrder, colors) as Color;
     },
     getLineWidth: (d) => {
-      const n = d.properties.streamOrder;
-      return n * 0.5;
+      return Math.pow(d.properties.streamOrder, 2);
     },
-    lineWidthUnits: 'pixels',
+    lineWidthScale: 20,
+    lineWidthUnits: 'meters',
     lineWidthMinPixels: 1,
     onViewportLoad(tiles) {
       data.value?.then((res) => {
@@ -126,6 +159,16 @@ const droppingPercent = computed(() => {
   const clampedZoom = clamp(roundedZoom, minzoom.value, maxzoom.value);
   const percent = fractionsDropped.value[clampedZoom];
   return percent;
+});
+
+const minStreamOrder = computed(() => getMinStreamOrder(viewState.value.zoom));
+
+const histogramTicks = computed(() => {
+  const ticks = [];
+  for (let i = minStreamOrder.value; i <= MAX_STREAM_ORDER; i++) {
+    ticks.push(i);
+  }
+  return ticks;
 });
 
 // Update the map view when the viewstate ref changes.
@@ -190,7 +233,6 @@ onUnmounted(() => {
   map.value?.remove();
 });
 
-const TICKS = Array.from({ length: 10 }, (_, i) => i + 1);
 </script>
 <template>
   <aside class="sidebar">
@@ -210,6 +252,13 @@ const TICKS = Array.from({ length: 10 }, (_, i) => i + 1);
     </Card>
     <span class="flex-space" />
     <div v-if="tilesLoaded">
+      <section
+        class="small"
+        style="padding: 4px 8px"
+      >
+        At this zoom level, this tileset only shows streams of order >
+        <code id="min-stream-order">{{ minStreamOrder }}</code> and above.
+      </section>
       <section
         v-if="droppingPercent > 0 && droppingPercent <= 0.05"
         style="padding: 4px 8px"
@@ -243,7 +292,8 @@ const TICKS = Array.from({ length: 10 }, (_, i) => i + 1);
           column="streamOrder"
           :data="data"
           :view-state="viewStateDebounced as MapViewState"
-          :ticks="TICKS"
+          :ticks="histogramTicks"
+          :min="minStreamOrder"
         />
       </Card>
     </div>
@@ -270,7 +320,7 @@ const TICKS = Array.from({ length: 10 }, (_, i) => i + 1);
         subtitle="By stream order"
         :values="Array.from({ length: 10 }, (_, i) => (i + 1).toString())"
         :get-swatch-color="
-          (value) => streamOrderToColor(Number(value)) as Color
+          (value) => streamOrderToColor(Number(value), colors) as Color
         "
       />
     </Card>
