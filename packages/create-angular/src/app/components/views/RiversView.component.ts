@@ -149,7 +149,7 @@ const MAX_STREAM_ORDER = 10;
             [ticks]="histogramTicks()"
             [min]="minStreamOrder()"
           ></histogram-widget>
-        </app-card-collapsible> 
+        </app-card-collapsible>
       }
     </aside>
     <main class="map">

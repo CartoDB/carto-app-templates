@@ -1,7 +1,21 @@
-import { Component, effect, ElementRef, input, output, signal, ViewChild } from "@angular/core";
-import { AggregationType, Filter, HistogramResponse, WidgetSource, WidgetSourceProps } from "@carto/api-client";
-import { MapViewState } from "@deck.gl/core";
-import { createSpatialFilter, WidgetStatus } from "../../../utils";
+import {
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import {
+  AggregationType,
+  Filter,
+  HistogramResponse,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
+import { MapViewState } from '@deck.gl/core';
+import { createSpatialFilter, WidgetStatus } from '../../../utils';
 import * as echarts from 'echarts';
 
 function getOption(data: HistogramResponse, min: number, ticks: number[]) {
@@ -34,8 +48,11 @@ function getOption(data: HistogramResponse, min: number, ticks: number[]) {
       type: 'value',
       axisLabel: {
         formatter: (value: number) =>
-          Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
-      }
+          Intl.NumberFormat('en-US', {
+            compactDisplay: 'short',
+            notation: 'compact',
+          }).format(value),
+      },
     },
     series: [
       {
@@ -64,7 +81,7 @@ function getOption(data: HistogramResponse, min: number, ticks: number[]) {
     <div style="min-height: 200px; position: relative">
       <div id="histogram-container" #container></div>
     </div>
-  `
+  `,
 })
 export class HistogramWidgetComponent {
   @ViewChild('container') histogramContainer?: ElementRef<HTMLDivElement>;
@@ -96,7 +113,7 @@ export class HistogramWidgetComponent {
   chart: echarts.ECharts | null = null;
 
   ngAfterViewInit() {
-    const container = this.histogramContainer?.nativeElement
+    const container = this.histogramContainer?.nativeElement;
     if (container) {
       console.log('Histogram container found', container);
       this.chart = echarts.init(container, null, {
@@ -126,30 +143,31 @@ export class HistogramWidgetComponent {
 
       this.status.set('loading');
 
-      this.data().then(({ widgetSource }) => {
-        return widgetSource.getHistogram({
-          column,
-          operation,
-          ticks,
-          abortController,
-          filterOwner: this.owner,
-          spatialFilter: viewState && createSpatialFilter(viewState),
+      this.data()
+        .then(({ widgetSource }) => {
+          return widgetSource.getHistogram({
+            column,
+            operation,
+            ticks,
+            abortController,
+            filterOwner: this.owner,
+            spatialFilter: viewState && createSpatialFilter(viewState),
+          });
         })
-      })
-      .then((response) => {
-        this.status.set('complete');
-        this.response.set(response);
-      })
-      .catch((error) => {
-        console.error(error);
-        if (!abortController.signal.aborted) {
-          this.status.set('error');
-        }
-        this.response.set([]);
-      })
+        .then((response) => {
+          this.status.set('complete');
+          this.response.set(response);
+        })
+        .catch((error) => {
+          console.error(error);
+          if (!abortController.signal.aborted) {
+            this.status.set('error');
+          }
+          this.response.set([]);
+        });
     },
     { allowSignalWrites: true },
-  )
+  );
 
   private updateChartEffect = effect(() => {
     const data = this.response();
@@ -158,7 +176,7 @@ export class HistogramWidgetComponent {
     if (this.chart) {
       this.chart.setOption(getOption(data, min, ticks));
     }
-  })
+  });
 
   // TODO: Add logic for filtering
 }

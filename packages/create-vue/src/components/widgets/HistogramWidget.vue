@@ -75,8 +75,11 @@ function getOption(data: HistogramResponse) {
       type: 'value',
       axisLabel: {
         formatter: (value: number) =>
-          Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
-      }
+          Intl.NumberFormat('en-US', {
+            compactDisplay: 'short',
+            notation: 'compact',
+          }).format(value),
+      },
     },
     series: [
       {
