@@ -1,17 +1,26 @@
-import { Component, computed, ContentChild, effect, signal } from "@angular/core";
-import { Color, Deck, MapViewState, WebMercatorViewport } from "@deck.gl/core";
-import { CardComponent } from "../Card.component";
-import { CardCollapsibleComponent } from "../CardCollapsible.component";
-import { CategoryWidgetComponent } from "../widgets/CategoryWidget.component";
-import { FormulaWidgetComponent } from "../widgets/FormulaWidget.component";
-import { LayersComponent } from "../Layers.component";
-import { LegendEntryCategoricalComponent } from "../legends/LegendEntryCategorical.component";
+import {
+  Component,
+  computed,
+  ContentChild,
+  effect,
+  signal,
+} from '@angular/core';
+import { Color, Deck, MapViewState, WebMercatorViewport } from '@deck.gl/core';
+import { CardComponent } from '../Card.component';
+import { CardCollapsibleComponent } from '../CardCollapsible.component';
+import { CategoryWidgetComponent } from '../widgets/CategoryWidget.component';
+import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
+import { LayersComponent } from '../Layers.component';
+import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
 import { context } from '../../../context';
-import { AccessTokenService } from "../../services/AccessToken.service";
-import { Map } from "maplibre-gl";
-import { BASEMAP, VectorTileLayer } from "@deck.gl/carto";
-import { createViewportSpatialFilter, vectorTilesetSource } from "@carto/api-client";
-import { debouncedSignal } from "../../../utils";
+import { AccessTokenService } from '../../services/AccessToken.service';
+import { Map } from 'maplibre-gl';
+import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
+import {
+  createViewportSpatialFilter,
+  vectorTilesetSource,
+} from '@carto/api-client';
+import { debouncedSignal } from '../../../utils';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -108,25 +117,19 @@ const MAX_STREAM_ORDER = 10;
           <code id="min-stream-order">{{ minStreamOrder() }}</code> and above.
         </section>
         @if (droppingPercent() > 0 && droppingPercent() <= 0.05) {
-          <section
-            style="padding: 4px 8px"
-            class="caption"
-          >
+          <section style="padding: 4px 8px" class="caption">
             <strong>Warning:</strong> There may be some data ({{
               (droppingPercent() * 100).toFixed(2)
-            }}%) missing at this zoom level ({{ roundedZoom() }})
-            because of the tileset dropping features.
+            }}%) missing at this zoom level ({{ roundedZoom() }}) because of the
+            tileset dropping features.
           </section>
         }
         @if (droppingPercent() > 0.05) {
-          <section
-            style="padding: 4px 8px"
-            class="caption"
-          >
+          <section style="padding: 4px 8px" class="caption">
             <strong>Warning:</strong> There is an important amount of data ({{
               (droppingPercent() * 100).toFixed(2)
-            }}%) missing at this zoom level ({{ roundedZoom() }})
-            because of the tileset dropping features.
+            }}%) missing at this zoom level ({{ roundedZoom() }}) because of the
+            tileset dropping features.
           </section>
         }
         <app-card-collapsible title="Stream count">
@@ -274,7 +277,7 @@ export class RiversViewComponent {
             this.tilesLoaded.set(true);
             res.widgetSource.loadTiles(tiles);
             this.viewState.set({ ...this.viewState() });
-          })
+          });
         }
       },
     }),
@@ -290,8 +293,7 @@ export class RiversViewComponent {
 
   getSwatchColor = (value: string) => {
     return streamOrderToColor(Number(value), colors) as Color;
-  }
-
+  };
 
   /****************************************************************************
    * Effects (https://angular.dev/guide/signals#effects)
@@ -316,7 +318,7 @@ export class RiversViewComponent {
   });
 
   private extractEffect = effect(() => {
-    const data = this.data()
+    const data = this.data();
     if (this.tilesLoaded() && this.viewStateDebounced()) {
       data.then((res) => {
         const bbox = new WebMercatorViewport(
@@ -328,21 +330,21 @@ export class RiversViewComponent {
         }
       });
     }
-  })
+  });
 
   private droppingPercentEffect = effect(() => {
-    const data = this.data()
-    const zoom = this.roundedZoom()
+    const data = this.data();
+    const zoom = this.roundedZoom();
     if (this.tilesLoaded()) {
       data.then((res) => {
         const fractionsDropped = res.fraction_dropped_per_zoom;
-        if (fractionsDropped) {          
+        if (fractionsDropped) {
           const minzoom = res.minzoom;
           const maxzoom = res.maxzoom;
-  
+
           const clampedZoom = clamp(zoom, minzoom, maxzoom);
           const percent = fractionsDropped[clampedZoom];
-          
+
           this.droppingPercent.set(percent);
         }
       });

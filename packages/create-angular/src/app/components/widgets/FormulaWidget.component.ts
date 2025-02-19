@@ -5,7 +5,11 @@ import {
   numberFormatter,
   WidgetStatus,
 } from '../../../utils';
-import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
+import {
+  AggregationType,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
 
 /**
  * Formula widget, displaying a prominent 'scorecard' number.
@@ -29,7 +33,10 @@ import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-cli
 })
 export class FormulaWidgetComponent {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data = input.required<Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>>();
+  data =
+    input.required<
+      Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>
+    >();
   /** Column containing a value to be aggregated. */
   column = input<string>();
   /** Operation used to aggregate the specified column. */
