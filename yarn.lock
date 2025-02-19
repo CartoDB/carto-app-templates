@@ -2162,6 +2162,7 @@ __metadata:
     "@luma.gl/core": "npm:~9.1.1"
     "@luma.gl/engine": "npm:~9.1.1"
     "@luma.gl/shadertools": "npm:~9.1.1"
+    echarts: "npm:^5.6.0"
     maplibre-gl: "npm:^4.7.1"
     rxjs: "npm:~7.8.1"
     tslib: "npm:^2.8.1"

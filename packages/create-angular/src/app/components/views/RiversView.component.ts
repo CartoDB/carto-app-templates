@@ -8,7 +8,6 @@ import {
 import { Color, Deck, MapViewState, WebMercatorViewport } from '@deck.gl/core';
 import { CardComponent } from '../Card.component';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
-import { CategoryWidgetComponent } from '../widgets/CategoryWidget.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
 import { LayersComponent } from '../Layers.component';
 import { LegendEntryCategoricalComponent } from '../legends/LegendEntryCategorical.component';
@@ -21,6 +20,7 @@ import {
   vectorTilesetSource,
 } from '@carto/api-client';
 import { debouncedSignal } from '../../../utils';
+import { HistogramWidgetComponent } from '../widgets/HistogramWidget.component';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -87,8 +87,8 @@ const MAX_STREAM_ORDER = 10;
   imports: [
     CardComponent,
     CardCollapsibleComponent,
-    CategoryWidgetComponent,
     FormulaWidgetComponent,
+    HistogramWidgetComponent,
     LayersComponent,
     LegendEntryCategoricalComponent,
   ],
@@ -140,6 +140,16 @@ const MAX_STREAM_ORDER = 10;
             operation="count"
           ></formula-widget>
         </app-card-collapsible>
+        <app-card-collapsible title="Stream count">
+          <histogram-widget
+            [data]="data()"
+            [viewState]="viewStateDebounced()"
+            [column]="'streamOrder'"
+            [operation]="'count'"
+            [ticks]="histogramTicks()"
+            [min]="minStreamOrder()"
+          ></histogram-widget>
+        </app-card-collapsible> 
       }
     </aside>
     <main class="map">

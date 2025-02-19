@@ -46,7 +46,6 @@ const props = withDefaults(
 );
 
 function getOption(data: HistogramResponse) {
-  console.log(data, props.ticks);
   const option = {
     tooltip: {
       // trigger: 'axis',
@@ -74,10 +73,10 @@ function getOption(data: HistogramResponse) {
     },
     yAxis: {
       type: 'value',
-      // axisLabel: {
-      //   formatter: (value: number) =>
-      //     Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
-      // }
+      axisLabel: {
+        formatter: (value: number) =>
+          Intl.NumberFormat('en-US', {compactDisplay: 'short', notation: 'compact'}).format(value)
+      }
     },
     series: [
       {
