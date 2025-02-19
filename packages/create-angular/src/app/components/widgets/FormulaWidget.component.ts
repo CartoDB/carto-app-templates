@@ -5,7 +5,7 @@ import {
   numberFormatter,
   WidgetStatus,
 } from '../../../utils';
-import { AggregationType, WidgetSource } from '@carto/api-client';
+import { AggregationType, WidgetSource, WidgetSourceProps } from '@carto/api-client';
 
 /**
  * Formula widget, displaying a prominent 'scorecard' number.
@@ -29,7 +29,7 @@ import { AggregationType, WidgetSource } from '@carto/api-client';
 })
 export class FormulaWidgetComponent {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data = input.required<Promise<{ widgetSource: WidgetSource }>>();
+  data = input.required<Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>>();
   /** Column containing a value to be aggregated. */
   column = input<string>();
   /** Operation used to aggregate the specified column. */
@@ -64,7 +64,7 @@ export class FormulaWidgetComponent {
         )
         .then((response) => {
           this.status.set('complete');
-          this.value.set(response.value);
+          this.value.set(response.value ?? 0);
         })
         .catch(() => {
           if (!abortController.signal.aborted) {

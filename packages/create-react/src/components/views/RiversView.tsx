@@ -50,10 +50,6 @@ const colors = [
 ].map((hex) => hexToRgb(hex));
 
 function streamOrderToColor(n: number, colors: number[][]) {
-  // const [r, g, b] = hexToRgb('#d5d5d7');
-  // const alphaPart = Math.min(n / 10, 1);
-  // const alpha = 120 + 128 * alphaPart;
-  // return [r, g, b, alpha];
   const rgb = colors[Math.min(n - 1, 7)];
   const alpha = Math.min(50 + n * 20, 255); // Gradually increases opacity with stream order
   return new Uint8Array([...rgb, alpha]);
