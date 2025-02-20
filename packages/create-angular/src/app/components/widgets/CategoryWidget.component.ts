@@ -18,6 +18,7 @@ import {
   Filter,
   FilterType,
   WidgetSource,
+  WidgetSourceProps,
   addFilter,
   getFilter,
   hasFilter,
@@ -79,7 +80,10 @@ import {
 })
 export class CategoryWidgetComponent {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data = input.required<Promise<{ widgetSource: WidgetSource }>>();
+  data =
+    input.required<
+      Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>
+    >();
   /** Column containing category names. */
   column = input.required<string>();
   /** Operation used to aggregate features in each category. */
