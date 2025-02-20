@@ -247,7 +247,9 @@ export class RiversViewComponent {
 
   minStreamOrder = computed(() => getMinStreamOrder(this.viewState().zoom));
 
-  histogramTicks = computed(() => Array.from({length: MAX_STREAM_ORDER}, (_, i) => i));
+  histogramTicks = computed(() =>
+    Array.from({ length: MAX_STREAM_ORDER }, (_, i) => i),
+  );
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)

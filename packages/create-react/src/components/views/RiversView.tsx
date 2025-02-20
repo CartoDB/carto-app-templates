@@ -77,7 +77,7 @@ const MAX_STREAM_ORDER = 10;
 /**
  * Example application page, showing U.S. streams network.
  */
-export default function IncomeView() {
+export default function RiversView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
@@ -123,7 +123,7 @@ export default function IncomeView() {
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
-  const LAYER_ID = 'Income by block group';
+  const LAYER_ID = 'U.S. rivers';
 
   // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   const [layerVisibility, setLayerVisibility] = useState<
