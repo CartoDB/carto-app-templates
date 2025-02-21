@@ -2079,40 +2079,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carto/api-client@npm:0.5.0-alpha.2":
-  version: 0.5.0-alpha.2
-  resolution: "@carto/api-client@npm:0.5.0-alpha.2"
-  dependencies:
-    "@loaders.gl/schema": "npm:^4.3.3"
-    "@turf/bbox-clip": "npm:^7.1.0"
-    "@turf/bbox-polygon": "npm:^7.1.0"
-    "@turf/boolean-intersects": "npm:^7.1.0"
-    "@turf/boolean-within": "npm:^7.1.0"
-    "@turf/helpers": "npm:^7.1.0"
-    "@turf/intersect": "npm:^7.1.0"
-    "@turf/invariant": "npm:^7.1.0"
-    "@turf/union": "npm:^7.1.0"
-    "@types/geojson": "npm:^7946.0.15"
-    h3-js: "npm:4.1.0"
-  checksum: 10c0/fc67454045f90311bdbba361f28a650b096bae3c5fdb4befcde595a8b1b492e551c95935b9c10a10aeb83166240649d59533c07d7d7d725db06be764fd768ca7
-  languageName: node
-  linkType: hard
-
-"@carto/api-client@npm:^0.4.4":
-  version: 0.4.6
-  resolution: "@carto/api-client@npm:0.4.6"
-  dependencies:
-    "@turf/bbox-clip": "npm:^7.1.0"
-    "@turf/bbox-polygon": "npm:^7.1.0"
-    "@turf/helpers": "npm:^7.1.0"
-    "@turf/invariant": "npm:^7.1.0"
-    "@turf/union": "npm:^7.1.0"
-    "@types/geojson": "npm:^7946.0.15"
-  checksum: 10c0/0fecabaa58226603c2f200d811db07ef620690e619d18bbd1c906b093a0fe8215c5ecf1a0571416830a3564fd9b3a5379d7b261504e17cbdc08f4de80443fe7e
-  languageName: node
-  linkType: hard
-
-"@carto/api-client@npm:^0.5.0-alpha.3":
+"@carto/api-client@npm:0.5.0-alpha.3, @carto/api-client@npm:^0.5.0-alpha.3":
   version: 0.5.0-alpha.3
   resolution: "@carto/api-client@npm:0.5.0-alpha.3"
   dependencies:
@@ -2129,6 +2096,20 @@ __metadata:
     h3-js: "npm:4.1.0"
     quadbin: "npm:^0.4.0-alpha.2"
   checksum: 10c0/5490f4fd5cab0252d5bc315eaba455152dc74f60c6037197eb9499e8685384d143290a19b834ff3c1439e0e3acd675a6eaf2eba0fb79104b45503bcbc4742c8e
+  languageName: node
+  linkType: hard
+
+"@carto/api-client@npm:^0.4.4":
+  version: 0.4.6
+  resolution: "@carto/api-client@npm:0.4.6"
+  dependencies:
+    "@turf/bbox-clip": "npm:^7.1.0"
+    "@turf/bbox-polygon": "npm:^7.1.0"
+    "@turf/helpers": "npm:^7.1.0"
+    "@turf/invariant": "npm:^7.1.0"
+    "@turf/union": "npm:^7.1.0"
+    "@types/geojson": "npm:^7946.0.15"
+  checksum: 10c0/0fecabaa58226603c2f200d811db07ef620690e619d18bbd1c906b093a0fe8215c5ecf1a0571416830a3564fd9b3a5379d7b261504e17cbdc08f4de80443fe7e
   languageName: node
   linkType: hard
 
@@ -2192,7 +2173,7 @@ __metadata:
   resolution: "@carto/create-react@workspace:packages/create-react"
   dependencies:
     "@auth0/auth0-react": "npm:^2.3.0"
-    "@carto/api-client": "npm:0.5.0-alpha.2"
+    "@carto/api-client": "npm:0.5.0-alpha.3"
     "@carto/create-common": "npm:^0.1.4"
     "@deck.gl/aggregation-layers": "npm:~9.1.0"
     "@deck.gl/carto": "npm:~9.1.0"
@@ -2230,7 +2211,7 @@ __metadata:
   resolution: "@carto/create-vue@workspace:packages/create-vue"
   dependencies:
     "@auth0/auth0-vue": "npm:^2.4.0"
-    "@carto/api-client": "npm:0.5.0-alpha.2"
+    "@carto/api-client": "npm:0.5.0-alpha.3"
     "@carto/create-common": "npm:^0.1.4"
     "@deck.gl/aggregation-layers": "npm:~9.1.0"
     "@deck.gl/carto": "npm:~9.1.0"
