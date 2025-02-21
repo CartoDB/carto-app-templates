@@ -1,9 +1,15 @@
-import { AggregationType, CategoryResponse, Filter, WidgetSource, WidgetSourceProps } from "@carto/api-client";
-import { MapViewState } from "@deck.gl/core";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createSpatialFilter, WidgetStatus } from "../../utils";
+import {
+  AggregationType,
+  CategoryResponse,
+  Filter,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
+import { MapViewState } from '@deck.gl/core';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
-import { RASTER_CATEGORY_MAP } from "../../rasterCategoryMap";
+import { RASTER_CATEGORY_MAP } from '../../rasterCategoryMap';
 
 export interface TreeWidgetProps {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
@@ -64,10 +70,12 @@ export default function TreeWidget({
             name: 'Cropland categories',
             type: 'treemap',
             data: response.map((c) => ({
-              name: RASTER_CATEGORY_MAP[c.name as keyof typeof RASTER_CATEGORY_MAP],
+              name: RASTER_CATEGORY_MAP[
+                c.name as keyof typeof RASTER_CATEGORY_MAP
+              ],
               value: c.value,
               itemStyle: {
-                color: colors[Number(c.name)]
+                color: colors[Number(c.name)],
               },
             })),
             label: {
@@ -77,9 +85,9 @@ export default function TreeWidget({
               textBorderWidth: 3,
               fontSize: 10,
             },
-            leafSize: 10
-          }
-        ]
+            leafSize: 10,
+          },
+        ],
       };
     }
 

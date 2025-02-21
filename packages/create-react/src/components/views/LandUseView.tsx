@@ -21,17 +21,21 @@ import { Layers } from '../Layers';
 import TreeWidget from '../widgets/TreeWidget';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
-const TILESET_NAME = 'cartodb-on-gcp-pm-team.amanzanares_raster.classification_us_compressed';
+const TILESET_NAME =
+  'cartodb-on-gcp-pm-team.amanzanares_raster.classification_us_compressed';
 const MAP_VIEW = new MapView({ repeat: true });
 
 const INITIAL_VIEW_STATE: MapViewState = {
   latitude: 42.728,
   longitude: -78.731,
   zoom: 6,
-  minZoom: 5.5
+  minZoom: 5.5,
 };
 
-const getFillColorLayer = (bandColor: number, rasterMetadata: RasterMetadata | null) => {
+const getFillColorLayer = (
+  bandColor: number,
+  rasterMetadata: RasterMetadata | null,
+) => {
   if (rasterMetadata) {
     const meta = rasterMetadata.bands[0];
     if (meta.colorinterp === 'palette') {
@@ -62,7 +66,9 @@ export default function LandUseView() {
   const [minZoom, setMinZoom] = useState(0);
   const [maxZoom, setMaxZoom] = useState(20);
   const [tilesLoaded, setTilesLoaded] = useState(false);
-  const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(null);
+  const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(
+    null,
+  );
 
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -124,7 +130,13 @@ export default function LandUseView() {
 
   useEffect(() => {
     data?.then((res) => {
-      const { fraction_dropped_per_zoom, minzoom, maxzoom, attribution, raster_metadata } = res;
+      const {
+        fraction_dropped_per_zoom,
+        minzoom,
+        maxzoom,
+        attribution,
+        raster_metadata,
+      } = res;
       setFractionsDropped(fraction_dropped_per_zoom ?? []);
       setMinZoom(minzoom ?? 0);
       setMaxZoom(maxzoom ?? 20);

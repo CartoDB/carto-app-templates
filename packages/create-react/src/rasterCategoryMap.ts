@@ -131,5 +131,5 @@ export const RASTER_CATEGORY_MAP = {
   '248': 'Eggplants',
   '249': 'Gourds',
   '250': 'Cranberries',
-  '254': 'Dbl Crop Barley/Soybeans'
+  '254': 'Dbl Crop Barley/Soybeans',
 };
