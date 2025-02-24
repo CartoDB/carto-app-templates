@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { AggregationType, CategoryResponse, Filter, WidgetSource, WidgetSourceProps } from '@carto/api-client';
+import {
+  AggregationType,
+  CategoryResponse,
+  Filter,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
 import { MapViewState } from '@deck.gl/core';
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
@@ -7,26 +13,29 @@ import * as echarts from 'echarts';
 import { computedAsync, templateRef } from '@vueuse/core';
 import { RASTER_CATEGORY_MAP } from '../../rasterCategoryMap';
 
-const props = withDefaults(defineProps<{
-  data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
-  /** Column containing category names. */
-  column: string;
-  /** Operation used to aggregate features in each category. */
-  operation?: Exclude<AggregationType, 'custom'>;
-  /** Map view state. If specified, widget will be filtered to the view. */
-  viewState: MapViewState | undefined;
-  /** Colors for the treemap. */
-  colors: string[];
-  /** Filter state. If specified, widget will be filtered. */
-  filters?: Record<string, Filter>;
-  /** Callback, to be invoked by the widget when its filters are set or cleared. */
-  onFiltersChange?: (filters: Record<string, Filter>) => void;
-}>(), {
-  column: '',
-  operation: 'count',
-  filters: () => ({}),
-  onFiltersChange: () => {},
-});
+const props = withDefaults(
+  defineProps<{
+    data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
+    /** Column containing category names. */
+    column: string;
+    /** Operation used to aggregate features in each category. */
+    operation?: Exclude<AggregationType, 'custom'>;
+    /** Map view state. If specified, widget will be filtered to the view. */
+    viewState: MapViewState | undefined;
+    /** Colors for the treemap. */
+    colors: string[];
+    /** Filter state. If specified, widget will be filtered. */
+    filters?: Record<string, Filter>;
+    /** Callback, to be invoked by the widget when its filters are set or cleared. */
+    onFiltersChange?: (filters: Record<string, Filter>) => void;
+  }>(),
+  {
+    column: '',
+    operation: 'count',
+    filters: () => ({}),
+    onFiltersChange: () => {},
+  },
+);
 
 const owner = ref<string>(crypto.randomUUID());
 const status = ref<WidgetStatus>('loading');
@@ -124,8 +133,7 @@ watchEffect(() => {
 
     chartRef.value?.setOption(option);
   }
-})
-
+});
 </script>
 <template>
   <template v-if="status === 'loading'">

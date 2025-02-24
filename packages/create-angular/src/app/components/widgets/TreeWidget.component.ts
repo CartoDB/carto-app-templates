@@ -1,9 +1,23 @@
-import { Component, effect, ElementRef, input, output, signal, ViewChild } from "@angular/core";
-import { AggregationType, CategoryResponse, Filter, WidgetSource, WidgetSourceProps } from "@carto/api-client";
-import { MapViewState } from "@deck.gl/core";
-import { createSpatialFilter, WidgetStatus } from "../../../utils";
+import {
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import {
+  AggregationType,
+  CategoryResponse,
+  Filter,
+  WidgetSource,
+  WidgetSourceProps,
+} from '@carto/api-client';
+import { MapViewState } from '@deck.gl/core';
+import { createSpatialFilter, WidgetStatus } from '../../../utils';
 import * as echarts from 'echarts';
-import { RASTER_CATEGORY_MAP } from "../../rasterCategoriesMap";
+import { RASTER_CATEGORY_MAP } from '../../rasterCategoriesMap';
 
 function getOption(response: CategoryResponse, colors: string[]) {
   return {
@@ -13,9 +27,7 @@ function getOption(response: CategoryResponse, colors: string[]) {
         name: 'Cropland categories',
         type: 'treemap',
         data: response.map((c) => ({
-          name: RASTER_CATEGORY_MAP[
-            c.name as keyof typeof RASTER_CATEGORY_MAP
-          ],
+          name: RASTER_CATEGORY_MAP[c.name as keyof typeof RASTER_CATEGORY_MAP],
           value: c.value,
           itemStyle: {
             color: colors[Number(c.name)],
@@ -75,7 +87,7 @@ export class TreeWidgetComponent {
   response = signal<CategoryResponse>([]);
 
   chart: echarts.ECharts | null = null;
-  
+
   ngAfterViewInit() {
     const container = this.treeContainer?.nativeElement;
     if (container) {
