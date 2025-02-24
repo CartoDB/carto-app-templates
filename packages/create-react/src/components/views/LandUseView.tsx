@@ -252,16 +252,6 @@ export default function LandUseView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        {/* <Card title="Legend" className="legend">
-          <LegendEntryCategorical
-            title="U.S. Rivers"
-            subtitle="By stream order"
-            values={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
-            getSwatchColor={(value) =>
-              streamOrderToColor(Number(value), colors) as Color
-            }
-          />
-        </Card> */}
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}
