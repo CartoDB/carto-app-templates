@@ -24,7 +24,7 @@
     "@angular/platform-browser-dynamic": "^18.2.13",
     "@angular/router": "^18.2.13",
     "@auth0/auth0-angular": "^2.2.3",
-    "@carto/api-client": "^0.5.0-alpha.3",
+    "@carto/api-client": "0.5.0-alpha.3",
     "@carto/create-common": "^0.1.4",
     "@deck.gl/aggregation-layers": "~9.1.0",
     "@deck.gl/carto": "~9.1.0",
