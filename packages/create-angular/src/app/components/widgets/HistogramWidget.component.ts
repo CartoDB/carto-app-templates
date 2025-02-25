@@ -115,13 +115,10 @@ export class HistogramWidgetComponent {
   ngAfterViewInit() {
     const container = this.histogramContainer?.nativeElement;
     if (container) {
-      console.log('Histogram container found', container);
       this.chart = echarts.init(container, null, {
         height: 200,
         width: 300,
       });
-    } else {
-      console.log('Histogram container not found');
     }
   }
 
