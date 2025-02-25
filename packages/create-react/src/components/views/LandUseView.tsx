@@ -2,13 +2,13 @@ import {
   Color,
   MapView,
   MapViewState,
-  WebMercatorViewport,
 } from '@deck.gl/core';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
 import {
-  createViewportSpatialFilter,
+  Filters,
+  getDataFilterExtensionProps,
   RasterMetadata,
   rasterSource,
 } from '@carto/api-client';
@@ -19,6 +19,7 @@ import DeckGL from '@deck.gl/react';
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from '../Layers';
 import TreeWidget from '../widgets/TreeWidget';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -53,6 +54,26 @@ const getFillColorLayer = (
   return [0, 0, 0, 0] as Color;
 };
 
+function getRasterResolution(zoom: number) {
+  let resolution: string = '100m';
+  if (zoom > 11.5) {
+    resolution = '20m';
+  } else if (zoom > 10.5) {
+    resolution = '40m';
+  } else if (zoom > 9.5) {
+    resolution = '80m';
+  } else if (zoom > 8.5) {
+    resolution = '160m';
+  } else if (zoom > 7.5) {
+    resolution = '320m';
+  } else if (zoom > 6.5) {
+    resolution = '640m';
+  } else if (zoom > 5.5) {
+    resolution = '1280m';
+  }
+  return resolution;
+}
+
 /**
  * Example application page, showing U.S. Cropland data.
  */
@@ -69,6 +90,7 @@ export default function LandUseView() {
   const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(
     null,
   );
+  const [filters, setFilters] = useState<Filters>({});
 
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -120,9 +142,16 @@ export default function LandUseView() {
             setViewState({ ...viewState });
           });
         },
+        extensions: [new DataFilterExtension({ filterSize: 4 })],
+        ...getDataFilterExtensionProps(filters)
       }),
     ];
-  }, [data, viewState, setViewState, layerVisibility, rasterMetadata]);
+  }, [data, viewState, filters, setViewState, layerVisibility, rasterMetadata]);
+
+  const rasterResolution = useMemo(
+    () => getRasterResolution(viewState.zoom),
+    [viewState.zoom],
+  );
 
   /****************************************************************************
    * Attribution
@@ -146,18 +175,6 @@ export default function LandUseView() {
       }
     });
   }, [data]);
-
-  useEffect(() => {
-    if (data && viewState && tilesLoaded) {
-      data?.then((res) => {
-        const bbox = new WebMercatorViewport(viewState).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
-  }, [data, viewState, tilesLoaded]);
 
   function clamp(n: number, min: number, max: number) {
     return Math.min(Math.max(n, min), max);
@@ -223,7 +240,11 @@ export default function LandUseView() {
                 column={'*'}
                 operation={'count'}
                 viewState={viewState}
+                filters={filters}
               />
+              <div className="small">
+                <code>Raster resolution: {rasterResolution}</code>.
+              </div>
             </Card>
             <Card title="Cropland categories">
               <TreeWidget
@@ -232,6 +253,8 @@ export default function LandUseView() {
                 operation="count"
                 viewState={viewState}
                 colors={treeMapColors}
+                filters={filters}
+                onFiltersChange={setFilters}
               />
             </Card>
           </>

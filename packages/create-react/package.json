@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
-    "@carto/api-client": "0.5.0-alpha.3",
+    "@carto/api-client": "0.5.0-alpha.4",
     "@carto/create-common": "^0.1.4",
     "@deck.gl/aggregation-layers": "~9.1.0",
     "@deck.gl/carto": "~9.1.0",
