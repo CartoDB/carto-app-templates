@@ -3,13 +3,14 @@ import {
   AggregationType,
   Filters,
   FilterType,
+  hasFilter,
   HistogramResponse,
   removeFilter,
   WidgetSourceProps,
 } from '@carto/api-client';
 import { WidgetSource } from '@carto/api-client';
 import { MapViewState } from '@deck.gl/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
 
@@ -48,7 +49,12 @@ export function HistogramWidget({
   const [status, setStatus] = useState<WidgetStatus>('complete');
   const chartRef = useRef<echarts.ECharts | null>(null);
 
-  const hasFilters = Object.keys(filters).length > 0;
+  const _hasFilter = useMemo(() => {
+    return hasFilter(filters, {
+      column,
+      owner,
+    });
+  }, [filters, column, owner]);
 
   const createChart = useCallback(
     (ref: HTMLDivElement | null) => {
@@ -78,6 +84,8 @@ export function HistogramWidget({
             owner,
           });
         }
+
+        console.log('newFilters', newFilters);
 
         onFiltersChange?.({ ...newFilters });
       }
@@ -185,7 +193,6 @@ export function HistogramWidget({
       column,
       owner,
     });
-    console.log('newFilters', newFilters);
     onFiltersChange?.({ ...newFilters });
   }
 
@@ -195,7 +202,7 @@ export function HistogramWidget({
 
   return (
     <div>
-      {hasFilters && (
+      {_hasFilter && (
         <button
           style={{ marginLeft: 'auto', display: 'block' }}
           onClick={clearFilters}

@@ -4,12 +4,13 @@ import {
   CategoryResponse,
   Filters,
   FilterType,
+  hasFilter,
   removeFilter,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
 import { MapViewState } from '@deck.gl/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
 import { RASTER_CATEGORY_MAP } from '../../rasterCategoryMap';
@@ -49,7 +50,12 @@ export default function TreeWidget({
   const [status, setStatus] = useState<WidgetStatus>('complete');
   const chartRef = useRef<echarts.ECharts | null>(null);
 
-  const hasFilters = Object.keys(filters).length > 0;
+  const _hasFilter = useMemo(() => {
+    return hasFilter(filters, {
+      column,
+      owner,
+    });
+  }, [filters, column, owner]);
 
   // Initialize echarts when container is mounted
   const createChart = useCallback(
@@ -183,7 +189,7 @@ export default function TreeWidget({
   // render the treemap container
   return (
     <div>
-      {hasFilters && (
+      {_hasFilter && (
         <button
           style={{ marginLeft: 'auto', display: 'block' }}
           onClick={clearFilters}
