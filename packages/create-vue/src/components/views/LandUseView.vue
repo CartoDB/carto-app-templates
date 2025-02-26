@@ -13,84 +13,61 @@ import {
 } from 'vue';
 import { Map } from 'maplibre-gl';
 import { Deck, MapViewState, Color } from '@deck.gl/core';
-import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
+import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
 import {
+  rasterSource,
+  RasterMetadata,
   Filters,
   getDataFilterExtensionProps,
-  vectorTilesetSource,
 } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
 import { context } from '../../context';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
-import HistogramWidget from '../widgets/HistogramWidget.vue';
+import TreeWidget from '../widgets/TreeWidget.vue';
 import { refDebounced } from '@vueuse/core';
-import LegendEntryCategorical from '../legends/LegendEntryCategorical.vue';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
-  'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
+  'cartodb-on-gcp-pm-team.amanzanares_raster.classification_us_compressed';
 
 const INITIAL_VIEW_STATE: MapViewState = {
-  latitude: 37.0902,
-  longitude: -95.7129,
-  zoom: 3.5,
+  latitude: 42.728,
+  longitude: -78.731,
+  zoom: 6,
+  minZoom: 5.5,
 };
 
-function hexToRgb(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return [r, g, b];
-}
+const getFillColorLayer = (
+  bandColor: number,
+  rasterMetadata: RasterMetadata | null,
+) => {
+  if (rasterMetadata) {
+    const meta = rasterMetadata.bands[0];
+    if (meta.colorinterp === 'palette') {
+      const category = meta.colortable?.[bandColor];
+      if (category) {
+        const [r, g, b] = category;
+        if (r === 0 && g === 0 && b === 0) {
+          return [0, 0, 0, 0] as Color;
+        }
 
-const colors = [
-  '#08589e',
-  '#2b8cbe',
-  '#4eb3d3',
-  '#7bccc4',
-  '#a8ddb5',
-  '#ccebc5',
-  '#e0f3db',
-  '#f7fcf0',
-].map((hex) => hexToRgb(hex));
-
-function streamOrderToColor(n: number, colors: number[][]) {
-  // const [r, g, b] = hexToRgb('#d5d5d7');
-  // const alphaPart = Math.min(n / 10, 1);
-  // const alpha = 120 + 128 * alphaPart;
-  // return [r, g, b, alpha];
-  const rgb = colors[Math.min(n - 1, 7)];
-  const alpha = Math.min(50 + n * 20, 255); // Gradually increases opacity with stream order
-  return new Uint8Array([...rgb, alpha]);
-}
-
-/**
- * MINIMUM STREAM ORDER
- * Our tileset was generated in a way that it drops water streams of low orders at low zoom levels.
- * Let's add logic in our app to handle this.
- */
-function getMinStreamOrder(zoomLevel: number) {
-  if (zoomLevel < 5.5) {
-    return 4; // at zoom 5.5, this tileset only uses streams of order 4 and above
-  } else if (zoomLevel < 6.5) {
-    return 3; // at zoom 6.5, this tileset only uses streams of order 3 and above
-  } else if (zoomLevel < 7.5) {
-    return 2; // at zoom 7.5, this tileset only uses streams of order 2 and above
-  } else {
-    return 1; // at zoom 10, we show all streams
+        return category as Color;
+      }
+    }
   }
-}
+  return [0, 0, 0, 0] as Color;
+};
 
-const MAX_STREAM_ORDER = 10;
+const rasterMetadata = ref<RasterMetadata | null>(null);
 
 /****************************************************************************
  * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
  */
 
 const data = computed(() =>
-  vectorTilesetSource({
+  rasterSource({
     accessToken: context.accessToken,
     apiBaseUrl: context.apiBaseUrl,
     connectionName: CONNECTION_NAME,
@@ -102,7 +79,7 @@ const data = computed(() =>
  * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
  */
 
-const LAYER_ID = 'U.S. rivers';
+const LAYER_ID = 'U.S. cropland';
 
 // Layer visibility represented as name/visibility pairs, managed by the Layers component.
 const layerVisibility = ref<Record<string, boolean>>({
@@ -111,19 +88,15 @@ const layerVisibility = ref<Record<string, boolean>>({
 
 // Update layers when data or visualization parameters change.
 const layers = computed(() => [
-  new VectorTileLayer({
+  new RasterTileLayer({
     id: LAYER_ID,
+    pickable: true,
     visible: layerVisibility.value[LAYER_ID],
     data: data.value,
-    getLineColor: (d) => {
-      return streamOrderToColor(d.properties.streamOrder, colors) as Color;
+    getFillColor: (d) => {
+      const value = d.properties.band_1;
+      return getFillColorLayer(value, rasterMetadata.value);
     },
-    getLineWidth: (d) => {
-      return Math.pow(d.properties.streamOrder, 2);
-    },
-    lineWidthScale: 20,
-    lineWidthUnits: 'meters',
-    lineWidthMinPixels: 1,
     onViewportLoad(tiles) {
       data.value?.then((res) => {
         tilesLoaded.value = true;
@@ -160,20 +133,24 @@ const droppingPercent = computed(() => {
   if (!fractionsDropped.value.length) {
     return 0;
   }
-  const roundedZoom = Math.round(viewState.value.zoom);
+  const roundedZoom = Math.round(viewStateDebounced.value.zoom);
   const clampedZoom = clamp(roundedZoom, minzoom.value, maxzoom.value);
   const percent = fractionsDropped.value[clampedZoom];
   return percent;
 });
 
-const minStreamOrder = computed(() => getMinStreamOrder(viewState.value.zoom));
-
-const histogramTicks = computed(() => {
-  const ticks = [];
-  for (let i = minStreamOrder.value + 1; i <= MAX_STREAM_ORDER; i++) {
-    ticks.push(i);
+const treeColors = computed(() => {
+  const raster = rasterMetadata.value;
+  if (!raster) {
+    return [];
   }
-  return ticks;
+
+  const colors = Array.from({ length: 255 }, (_, i) => {
+    const rgb = getFillColorLayer(i, raster);
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rgb[3]})`;
+  });
+
+  return colors;
 });
 
 function onFiltersChange(newFilters: Filters) {
@@ -199,6 +176,9 @@ watchEffect(() => {
     maxzoom.value = res.maxzoom;
     if (res.fraction_dropped_per_zoom) {
       fractionsDropped.value = res.fraction_dropped_per_zoom;
+    }
+    if (res.raster_metadata) {
+      rasterMetadata.value = res.raster_metadata;
     }
   });
 });
@@ -232,7 +212,7 @@ onUnmounted(() => {
   <aside class="sidebar">
     <Card>
       <p class="overline">✨👀 You're viewing</p>
-      <h1 class="title">U.S. Rivers</h1>
+      <h1 class="title">U.S. Cropland</h1>
       <p class="body1">
         Chupa chups chocolate cupcake cake soufflé. Wafer carrot cake danish
         gummi bears jelly. Sugar plum wafer cake chocolate bar caramels sesame
@@ -246,10 +226,6 @@ onUnmounted(() => {
     </Card>
     <span class="flex-space" />
     <div v-if="tilesLoaded">
-      <section class="small" style="padding: 4px 8px">
-        At this zoom level, this tileset only shows streams of order >
-        <code id="min-stream-order">{{ minStreamOrder }}</code> and above.
-      </section>
       <section
         v-if="droppingPercent > 0 && droppingPercent <= 0.05"
         style="padding: 4px 8px"
@@ -270,7 +246,7 @@ onUnmounted(() => {
         }}%) missing at this zoom level ({{ Math.round(viewState.zoom) }})
         because of the tileset dropping features.
       </section>
-      <Card title="Stream count">
+      <Card title="Total cells">
         <FormulaWidget
           column="*"
           operation="count"
@@ -279,13 +255,12 @@ onUnmounted(() => {
           :filters="filters"
         />
       </Card>
-      <Card title="Stream by stream order">
-        <HistogramWidget
-          column="streamOrder"
+      <Card title="Cropland categories">
+        <TreeWidget
           :data="data"
+          column="band_1"
           :view-state="viewStateDebounced as MapViewState"
-          :ticks="histogramTicks"
-          :min="minStreamOrder"
+          :colors="treeColors"
           :filters="filters"
           @filters-change="onFiltersChange"
         />
@@ -308,16 +283,6 @@ onUnmounted(() => {
         (nextLayerVisibility) => (layerVisibility = nextLayerVisibility)
       "
     />
-    <Card title="Legend" class="legend">
-      <LegendEntryCategorical
-        title="U.S. Rivers"
-        subtitle="By stream order"
-        :values="Array.from({ length: 10 }, (_, i) => (i + 1).toString())"
-        :get-swatch-color="
-          (value) => streamOrderToColor(Number(value), colors) as Color
-        "
-      />
-    </Card>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <aside class="map-footer" v-html="attributionHTML"></aside>
   </main>

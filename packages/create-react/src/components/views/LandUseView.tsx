@@ -5,76 +5,75 @@ import { useDebouncedState } from '../../hooks/useDebouncedState';
 import {
   Filters,
   getDataFilterExtensionProps,
-  vectorTilesetSource,
+  RasterMetadata,
+  rasterSource,
 } from '@carto/api-client';
-import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
+import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
 import { Card } from '../Card';
 import { FormulaWidget } from '../widgets/FormulaWidget';
 import DeckGL from '@deck.gl/react';
 import { Map } from 'react-map-gl/maplibre';
 import { Layers } from '../Layers';
-import { HistogramWidget } from '../widgets/HistogramWidget';
-import { LegendEntryCategorical } from '../legends/LegendEntryCategorical';
+import TreeWidget from '../widgets/TreeWidget';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
-  'cartodb-on-gcp-pm-team.amanzanares_opensource_demo.national_water_model_tileset_final_test_4';
+  'cartodb-on-gcp-pm-team.amanzanares_raster.classification_us_compressed';
 const MAP_VIEW = new MapView({ repeat: true });
 
 const INITIAL_VIEW_STATE: MapViewState = {
-  latitude: 30.5,
-  longitude: -90.1,
+  latitude: 42.728,
+  longitude: -78.731,
   zoom: 6,
+  minZoom: 5.5,
 };
 
-function hexToRgb(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return [r, g, b];
-}
+const getFillColorLayer = (
+  bandColor: number,
+  rasterMetadata: RasterMetadata | null,
+) => {
+  if (rasterMetadata) {
+    const meta = rasterMetadata.bands[0];
+    if (meta.colorinterp === 'palette') {
+      const category = meta.colortable?.[bandColor];
+      if (category) {
+        const [r, g, b] = category;
+        if (r === 0 && g === 0 && b === 0) {
+          return [0, 0, 0, 0] as Color;
+        }
 
-const colors = [
-  '#08589e',
-  '#2b8cbe',
-  '#4eb3d3',
-  '#7bccc4',
-  '#a8ddb5',
-  '#ccebc5',
-  '#e0f3db',
-  '#f7fcf0',
-].map((hex) => hexToRgb(hex));
-
-function streamOrderToColor(n: number, colors: number[][]) {
-  const rgb = colors[Math.min(n - 1, 7)];
-  const alpha = Math.min(50 + n * 20, 255); // Gradually increases opacity with stream order
-  return new Uint8Array([...rgb, alpha]);
-}
-
-/**
- * MINIMUM STREAM ORDER
- * Our tileset was generated in a way that it drops water streams of low orders at low zoom levels.
- * Let's add logic in our app to handle this.
- */
-function getMinStreamOrder(zoomLevel: number) {
-  if (zoomLevel < 5.5) {
-    return 4; // at zoom 5.5, this tileset only uses streams of order 4 and above
-  } else if (zoomLevel < 6.5) {
-    return 3; // at zoom 6.5, this tileset only uses streams of order 3 and above
-  } else if (zoomLevel < 7.5) {
-    return 2; // at zoom 7.5, this tileset only uses streams of order 2 and above
-  } else {
-    return 1; // at zoom 10, we show all streams
+        return category as Color;
+      }
+    }
   }
+  return [0, 0, 0, 0] as Color;
+};
+
+function getRasterResolution(zoom: number) {
+  let resolution: string = '100m';
+  if (zoom > 11.5) {
+    resolution = '20m';
+  } else if (zoom > 10.5) {
+    resolution = '40m';
+  } else if (zoom > 9.5) {
+    resolution = '80m';
+  } else if (zoom > 8.5) {
+    resolution = '160m';
+  } else if (zoom > 7.5) {
+    resolution = '320m';
+  } else if (zoom > 6.5) {
+    resolution = '640m';
+  } else if (zoom > 5.5) {
+    resolution = '1280m';
+  }
+  return resolution;
 }
 
-const MAX_STREAM_ORDER = 10;
-
 /**
- * Example application page, showing U.S. streams network.
+ * Example application page, showing U.S. Cropland data.
  */
-export default function RiversView() {
+export default function LandUseView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
@@ -85,6 +84,9 @@ export default function RiversView() {
   const [minZoom, setMinZoom] = useState(0);
   const [maxZoom, setMaxZoom] = useState(20);
   const [tilesLoaded, setTilesLoaded] = useState(false);
+  const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(
+    null,
+  );
 
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -95,7 +97,7 @@ export default function RiversView() {
 
   const data = useMemo(
     () =>
-      vectorTilesetSource({
+      rasterSource({
         accessToken,
         apiBaseUrl,
         connectionName: CONNECTION_NAME,
@@ -104,24 +106,11 @@ export default function RiversView() {
     [accessToken, apiBaseUrl],
   );
 
-  const minStreamOrder = useMemo(
-    () => getMinStreamOrder(viewState.zoom),
-    [viewState.zoom],
-  );
-
-  const histogramTicks = useMemo(() => {
-    const ticks = [];
-    for (let i = minStreamOrder; i <= MAX_STREAM_ORDER; i++) {
-      ticks.push(i);
-    }
-    return ticks;
-  }, [minStreamOrder]);
-
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
    */
 
-  const LAYER_ID = 'U.S. rivers';
+  const LAYER_ID = 'U.S. Cropland';
 
   // Layer visibility represented as name/visibility pairs, managed by the Layers component.
   const [layerVisibility, setLayerVisibility] = useState<
@@ -133,20 +122,15 @@ export default function RiversView() {
   // Update layers when data or visualization parameters change.
   const layers = useMemo(() => {
     return [
-      new VectorTileLayer({
+      new RasterTileLayer({
         id: LAYER_ID,
         pickable: true,
         visible: layerVisibility[LAYER_ID],
         data,
-        getLineColor: (d) => {
-          return streamOrderToColor(d.properties.streamOrder, colors) as Color;
+        getFillColor: (d) => {
+          const value = d.properties.band_1;
+          return getFillColorLayer(value, rasterMetadata);
         },
-        getLineWidth: (d) => {
-          return Math.pow(d.properties.streamOrder, 2);
-        },
-        lineWidthScale: 20,
-        lineWidthUnits: 'meters',
-        lineWidthMinPixels: 1,
         onViewportLoad(tiles) {
           data?.then((res) => {
             setTilesLoaded(true);
@@ -158,7 +142,12 @@ export default function RiversView() {
         ...getDataFilterExtensionProps(filters),
       }),
     ];
-  }, [data, viewState, setViewState, layerVisibility, filters]);
+  }, [data, viewState, filters, setViewState, layerVisibility, rasterMetadata]);
+
+  const rasterResolution = useMemo(
+    () => getRasterResolution(viewState.zoom),
+    [viewState.zoom],
+  );
 
   /****************************************************************************
    * Attribution
@@ -166,11 +155,20 @@ export default function RiversView() {
 
   useEffect(() => {
     data?.then((res) => {
-      const { fraction_dropped_per_zoom, minzoom, maxzoom, attribution } = res;
+      const {
+        fraction_dropped_per_zoom,
+        minzoom,
+        maxzoom,
+        attribution,
+        raster_metadata,
+      } = res;
       setFractionsDropped(fraction_dropped_per_zoom ?? []);
       setMinZoom(minzoom ?? 0);
       setMaxZoom(maxzoom ?? 20);
       setAttributionHTML(attribution);
+      if (raster_metadata) {
+        setRasterMetadata(raster_metadata);
+      }
     });
   }, [data]);
 
@@ -188,12 +186,19 @@ export default function RiversView() {
     return percent;
   }, [minZoom, maxZoom, fractionsDropped, viewState.zoom]);
 
+  const treeMapColors = useMemo(() => {
+    return Array.from({ length: 255 }, (_, i) => {
+      const rgb = getFillColorLayer(i, rasterMetadata);
+      return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rgb[3]})`;
+    });
+  }, [rasterMetadata]);
+
   return (
     <>
       <aside className="sidebar">
         <Card>
           <p className="overline">✨👀 You're viewing</p>
-          <h1 className="title">U.S. Streams Network</h1>
+          <h1 className="title">U.S. Cropland data</h1>
           <p className="body1">
             Cheesecake caramels sesame snaps gummi bears oat cake chupa chups.
             Chupa chups sugar plum tootsie roll powder candy canes. Biscuit cake
@@ -209,11 +214,6 @@ export default function RiversView() {
         <span className="flex-space" />
         {tilesLoaded && (
           <>
-            <section className="small" style={{ padding: '4px 8px' }}>
-              At this zoom level, this tileset only shows streams of order{' '}
-              {'> '}
-              <code id="min-stream-order">{minStreamOrder}</code> and above.
-            </section>
             {droppingPercent > 0 && droppingPercent <= 0.05 && (
               <section className="caption" style={{ padding: '4px 8px' }}>
                 <strong>Warning:</strong> There may be some data (
@@ -230,7 +230,7 @@ export default function RiversView() {
                 dropping features. Widget calculations will not be accurate.
               </section>
             )}
-            <Card title="Stream count">
+            <Card title="Total cells">
               <FormulaWidget
                 data={data}
                 column={'*'}
@@ -238,17 +238,19 @@ export default function RiversView() {
                 viewState={viewState}
                 filters={filters}
               />
+              <div className="small">
+                <code>Raster resolution: {rasterResolution}</code>.
+              </div>
             </Card>
-            <Card title="Stream count by stream order">
-              <HistogramWidget
+            <Card title="Cropland categories">
+              <TreeWidget
                 data={data}
-                column="streamOrder"
-                ticks={histogramTicks}
-                min={minStreamOrder}
-                viewState={viewState}
+                column="band_1"
                 operation="count"
-                onFiltersChange={setFilters}
+                viewState={viewState}
+                colors={treeMapColors}
                 filters={filters}
+                onFiltersChange={setFilters}
               />
             </Card>
           </>
@@ -269,16 +271,6 @@ export default function RiversView() {
           layerVisibility={layerVisibility}
           onLayerVisibilityChange={setLayerVisibility}
         />
-        <Card title="Legend" className="legend">
-          <LegendEntryCategorical
-            title="U.S. Rivers"
-            subtitle="By stream order"
-            values={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
-            getSwatchColor={(value) =>
-              streamOrderToColor(Number(value), colors) as Color
-            }
-          />
-        </Card>
         <aside
           className="map-footer"
           dangerouslySetInnerHTML={{ __html: attributionHTML }}

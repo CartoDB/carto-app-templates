@@ -7,6 +7,7 @@ import NotFoundView from './components/views/NotFoundView';
 import LoginView from './components/views/LoginView';
 import LogoutView from './components/views/LogoutView';
 import RiversView from './components/views/RiversView';
+import LanduseView from './components/views/LandUseView';
 
 /**
  * Available paths (URLs) in the application.
@@ -18,6 +19,7 @@ export const RoutePath = {
   LOGIN: '/login',
   LOGOUT: '/logout',
   NOT_FOUND: '/404',
+  LANDUSE: '/landuse',
 };
 
 /**
@@ -27,6 +29,7 @@ export const NAV_ROUTES: { text: string; path: string }[] = [
   { text: 'Cell towers', path: RoutePath.CELL_TOWERS },
   { text: 'U.S. population', path: RoutePath.POPULATION },
   { text: 'U.S. rivers', path: RoutePath.RIVERS },
+  { text: 'U.S. cropland', path: RoutePath.LANDUSE },
 ];
 
 /**
@@ -44,6 +47,7 @@ export const routes: RouteObject[] = [
       { path: RoutePath.CELL_TOWERS, element: <CellTowersView /> },
       { path: RoutePath.POPULATION, element: <PopulationView /> },
       { path: RoutePath.RIVERS, element: <RiversView /> },
+      { path: RoutePath.LANDUSE, element: <LanduseView /> },
     ],
   },
   { path: RoutePath.LOGIN, element: <LoginView /> },
