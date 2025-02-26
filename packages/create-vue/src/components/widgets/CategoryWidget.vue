@@ -55,6 +55,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;
   const viewState = props.viewState;
+  const filters = props.filters;
   const abortController = new AbortController();
 
   onCancel(() => abortController.abort());
@@ -69,6 +70,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
         spatialFilter: viewState && createSpatialFilter(viewState),
         abortController,
         filterOwner: owner.value,
+        filters,
       }),
     )
     .then((response) => {

@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import {
+addFilter,
   AggregationType,
   CategoryResponse,
   Filter,
+  FilterType,
+  hasFilter,
+  removeFilter,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
 import { MapViewState } from '@deck.gl/core';
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
 import { computedAsync, templateRef } from '@vueuse/core';
@@ -42,9 +46,40 @@ const status = ref<WidgetStatus>('loading');
 const containerRef = templateRef<HTMLDivElement>('container');
 const chartRef = ref<echarts.ECharts>();
 
+const _hasFilter = computed(() => {
+  return hasFilter(props.filters, {
+    column: props.column,
+    owner: owner.value,
+  });
+});
+
 const onClick = (params: echarts.ECElementEvent) => {
+  const filters = props.filters;
+  const onFiltersChange = props.onFiltersChange;
+  const column = props.column;
+  const _owner = owner.value;
+
   if (params.componentType === 'series') {
-    // filterViaHistogram(params.dataIndex);
+    const category = params.name;
+    const entry = Object.entries(RASTER_CATEGORY_MAP).find(
+      (entry) => entry[1] === category,
+    );
+    if (entry) {
+      const value = Number(entry[0]);
+      const newFilters = addFilter(filters, {
+        column,
+        type: FilterType.IN,
+        values: [value],
+        owner: _owner,
+      });
+      onFiltersChange?.({ ...newFilters });
+    } else {
+      const newFilters = removeFilter(filters, {
+        column,
+        owner: _owner,
+      });
+      onFiltersChange?.({ ...newFilters });
+    }
   }
 };
 
@@ -71,6 +106,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;
   const viewState = props.viewState;
+  const filters = props.filters;
   const abortController = new AbortController();
 
   onCancel(() => abortController.abort());
@@ -85,6 +121,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
         spatialFilter: viewState && createSpatialFilter(viewState),
         abortController,
         filterOwner: owner.value,
+        filters,
       }),
     )
     .then((response) => {
@@ -134,6 +171,22 @@ watchEffect(() => {
     chartRef.value?.setOption(option);
   }
 });
+
+function onClearFilters() {
+  if (props.filters && props.onFiltersChange) {
+    // Replace, not mutate, the filters object.
+    props.onFiltersChange(
+      removeFilter(
+        { ...props.filters },
+        {
+          column: props.column,
+          owner: owner.value,
+        },
+      ),
+    );
+  }
+}
+
 </script>
 <template>
   <template v-if="status === 'loading'">
@@ -142,7 +195,11 @@ watchEffect(() => {
   <template v-if="status === 'error'">
     <span class="title">⚠ Error</span>
   </template>
-
+  <template v-if="_hasFilter">
+    <button style="margin-left: auto; display: block" @click="onClearFilters">
+      Clear filter
+    </button>
+  </template>
   <div style="min-height: 220px; position: relative">
     <div ref="container"></div>
   </div>

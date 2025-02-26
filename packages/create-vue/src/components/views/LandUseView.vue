@@ -12,12 +12,13 @@ import {
   watchEffect,
 } from 'vue';
 import { Map } from 'maplibre-gl';
-import { Deck, MapViewState, Color, WebMercatorViewport } from '@deck.gl/core';
+import { Deck, MapViewState, Color } from '@deck.gl/core';
 import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
 import {
-  createViewportSpatialFilter,
   rasterSource,
   RasterMetadata,
+Filters,
+getDataFilterExtensionProps,
 } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
@@ -25,6 +26,7 @@ import { context } from '../../context';
 import FormulaWidget from '../widgets/FormulaWidget.vue';
 import TreeWidget from '../widgets/TreeWidget.vue';
 import { refDebounced } from '@vueuse/core';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -102,6 +104,8 @@ const layers = computed(() => [
         viewState.value = { ...viewState.value };
       });
     },
+    extensions: [new DataFilterExtension({ filterSize: 4 })],
+    ...getDataFilterExtensionProps(filters.value),
   }),
 ]);
 
@@ -114,6 +118,7 @@ const deck = shallowRef<Deck | null>(null);
 const viewState = ref<MapViewState>(INITIAL_VIEW_STATE);
 const viewStateDebounced = refDebounced(viewState, 200);
 const attributionHTML = ref<string>('');
+const filters = ref<Filters>({});
 
 const minzoom = ref<number>(0);
 const maxzoom = ref<number>(20);
@@ -148,6 +153,10 @@ const treeColors = computed(() => {
   return colors;
 });
 
+function onFiltersChange(newFilters: Filters) {
+  filters.value = newFilters;
+}
+
 // Update the map view when the viewstate ref changes.
 watchEffect(() => {
   const { longitude, latitude, ...rest } = viewState.value;
@@ -172,20 +181,6 @@ watchEffect(() => {
       rasterMetadata.value = res.raster_metadata;
     }
   });
-});
-
-watchEffect(() => {
-  if (tilesLoaded.value && viewStateDebounced.value) {
-    data.value?.then((res) => {
-      const bbox = new WebMercatorViewport(
-        viewStateDebounced.value,
-      ).getBounds();
-      const spatialFilter = createViewportSpatialFilter(bbox);
-      if (spatialFilter) {
-        res.widgetSource.extractTileFeatures({ spatialFilter });
-      }
-    });
-  }
 });
 
 // Initialize the map and deck.
@@ -257,6 +252,7 @@ onUnmounted(() => {
           operation="count"
           :data="data"
           :view-state="viewStateDebounced as MapViewState"
+          :filters="filters"
         />
       </Card>
       <Card title="Cropland categories">
@@ -265,6 +261,8 @@ onUnmounted(() => {
           column="band_1"
           :view-state="viewStateDebounced as MapViewState"
           :colors="treeColors"
+          :filters="filters"
+          @filters-change="onFiltersChange"
         />
       </Card>
     </div>

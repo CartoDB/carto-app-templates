@@ -3,16 +3,20 @@
  * Histogram widget, displaying a histogram of a numeric column.
  */
 
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { computedAsync, templateRef } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
 
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 // import { useToggleFilter } from '../../hooks/useToggleFilter';
 import {
+addFilter,
   AggregationType,
   Filter,
+  FilterType,
+  hasFilter,
   HistogramResponse,
+  removeFilter,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
@@ -100,9 +104,49 @@ const status = ref<WidgetStatus>('loading');
 const containerRef = templateRef<HTMLDivElement>('container');
 const chartRef = ref<echarts.ECharts>();
 
+const _hasFilter = computed(() => {
+  return hasFilter(props.filters, {
+    column: props.column,
+    owner: owner.value,
+  });
+});
+
 const onClick = (params: echarts.ECElementEvent) => {
+  const filters = props.filters;
+  const onFiltersChange = props.onFiltersChange;
+  const column = props.column;
+  const _owner = owner.value;
+  const ticks = props.ticks;
+
   if (params.componentType === 'series') {
-    // filterViaHistogram(params.dataIndex);
+    let newFilters = removeFilter(filters, {
+      column,
+      owner: _owner,
+    });
+
+    const dataIndex = params.dataIndex;
+    const minValue = ticks[dataIndex];
+    const maxValue = ticks[dataIndex + 1] - 0.0001;
+
+    if (dataIndex === ticks.length - 1) {
+      // For the last category, use CLOSED_OPEN
+      newFilters = addFilter(filters, {
+        column,
+        type: FilterType.CLOSED_OPEN,
+        values: [[minValue, Infinity]],
+        owner: _owner,
+      });
+    } else {
+      // For first and middle categories, use BETWEEN
+      newFilters = addFilter(filters, {
+        column,
+        type: FilterType.BETWEEN,
+        values: [[minValue, maxValue]],
+        owner: _owner,
+      });
+    }
+
+    onFiltersChange?.({ ...newFilters });
   }
 };
 
@@ -130,6 +174,7 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
   const operation = props.operation;
   const ticks = props.ticks;
   const viewState = props.viewState;
+  const filters = props.filters;
   const abortController = new AbortController();
 
   onCancel(() => abortController.abort());
@@ -145,6 +190,7 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
         spatialFilter: viewState && createSpatialFilter(viewState),
         abortController,
         filterOwner: owner.value,
+        filters,
       }),
     )
     .then((response) => {
@@ -164,6 +210,22 @@ watch(response, (value) => {
     chartRef.value?.setOption(getOption(value));
   }
 });
+
+function onClearFilters() {
+  if (props.filters && props.onFiltersChange) {
+    // Replace, not mutate, the filters object.
+    props.onFiltersChange(
+      removeFilter(
+        { ...props.filters },
+        {
+          column: props.column,
+          owner: owner.value,
+        },
+      ),
+    );
+  }
+}
+
 </script>
 <template>
   <template v-if="status === 'loading'">
@@ -171,6 +233,11 @@ watch(response, (value) => {
   </template>
   <template v-else-if="status === 'error'">
     <span class="title">⚠ Error</span>
+  </template>
+  <template v-if="_hasFilter">
+    <button style="margin-left: auto; display: block" @click="onClearFilters">
+      Clear filter
+    </button>
   </template>
 
   <div style="min-height: 260px; position: relative">

@@ -2232,7 +2232,7 @@ __metadata:
   resolution: "@carto/create-vue@workspace:packages/create-vue"
   dependencies:
     "@auth0/auth0-vue": "npm:^2.4.0"
-    "@carto/api-client": "npm:0.5.0-alpha.3"
+    "@carto/api-client": "npm:0.5.0-alpha.4"
     "@carto/create-common": "npm:^0.1.4"
     "@deck.gl/aggregation-layers": "npm:~9.1.0"
     "@deck.gl/carto": "npm:~9.1.0"
