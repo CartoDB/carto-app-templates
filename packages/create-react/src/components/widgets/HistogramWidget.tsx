@@ -68,7 +68,7 @@ export function HistogramWidget({
         const maxValue = ticks[dataIndex + 1] - 0.0001;
 
         if (dataIndex === ticks.length - 1) {
-          // For the last category (> 600), use CLOSED_OPEN
+          // For the last category, use CLOSED_OPEN
           newFilters = addFilter(filters, {
             column,
             type: FilterType.CLOSED_OPEN,
@@ -84,8 +84,6 @@ export function HistogramWidget({
             owner,
           });
         }
-
-        console.log('newFilters', newFilters);
 
         onFiltersChange?.({ ...newFilters });
       }
