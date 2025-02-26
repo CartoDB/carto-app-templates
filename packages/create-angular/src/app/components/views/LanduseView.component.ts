@@ -5,7 +5,7 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { Color, Deck, MapViewState, WebMercatorViewport } from '@deck.gl/core';
+import { Color, Deck, MapViewState } from '@deck.gl/core';
 import { CardComponent } from '../Card.component';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
@@ -16,13 +16,15 @@ import { AccessTokenService } from '../../services/AccessToken.service';
 import { Map } from 'maplibre-gl';
 import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
 import {
-  createViewportSpatialFilter,
+  Filters,
+  getDataFilterExtensionProps,
   RasterMetadata,
   rasterSource,
   vectorTilesetSource,
 } from '@carto/api-client';
 import { debouncedSignal } from '../../../utils';
 import { TreeWidgetComponent } from '../widgets/TreeWidget.component';
+import { DataFilterExtension } from '@deck.gl/extensions'
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -115,6 +117,7 @@ const getFillColorLayer = (
             [viewState]="viewStateDebounced()"
             column="*"
             operation="count"
+            [filters]="filters()"
           ></formula-widget>
         </app-card-collapsible>
         <app-card-collapsible title="Cropland categories">
@@ -123,6 +126,8 @@ const getFillColorLayer = (
             [viewState]="viewStateDebounced()"
             column="band_1"
             [colors]="treeColors()"
+            [filters]="filters()"
+            (onFiltersChange)="onFiltersChange($event)"
           ></tree-widget>
         </app-card-collapsible>
       }
@@ -174,6 +179,10 @@ export class LanduseViewComponent {
     });
   }
 
+  onFiltersChange(filters: Filters) {
+    this.filters.set(filters);
+  }
+
   /****************************************************************************
    * DeckGL
    */
@@ -187,6 +196,7 @@ export class LanduseViewComponent {
 
   attributionHTML = signal('');
   droppingPercent = signal(0);
+  filters = signal<Filters>({});
 
   /****************************************************************************
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
@@ -252,6 +262,8 @@ export class LanduseViewComponent {
           });
         }
       },
+      extensions: [new DataFilterExtension({ filterSize: 4 })],
+      ...getDataFilterExtensionProps(this.filters()),
     }),
   ]);
 
@@ -275,21 +287,6 @@ export class LanduseViewComponent {
     this.data().then(({ attribution }: { attribution: string }) =>
       this.attributionHTML.set(attribution),
     );
-  });
-
-  private extractEffect = effect(() => {
-    const data = this.data();
-    if (this.tilesLoaded() && this.viewStateDebounced()) {
-      data.then((res) => {
-        const bbox = new WebMercatorViewport(
-          this.viewStateDebounced(),
-        ).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
   });
 
   private rasterMetadataEffect = effect(() => {

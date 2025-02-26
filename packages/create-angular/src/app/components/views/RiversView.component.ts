@@ -5,7 +5,7 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { Color, Deck, MapViewState, WebMercatorViewport } from '@deck.gl/core';
+import { Color, Deck, MapViewState } from '@deck.gl/core';
 import { CardComponent } from '../Card.component';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
@@ -16,11 +16,13 @@ import { AccessTokenService } from '../../services/AccessToken.service';
 import { Map } from 'maplibre-gl';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
 import {
-  createViewportSpatialFilter,
+  Filters,
+  getDataFilterExtensionProps,
   vectorTilesetSource,
 } from '@carto/api-client';
 import { debouncedSignal } from '../../../utils';
 import { HistogramWidgetComponent } from '../widgets/HistogramWidget.component';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -138,6 +140,7 @@ const MAX_STREAM_ORDER = 10;
             [viewState]="viewStateDebounced()"
             column="*"
             operation="count"
+            [filters]="filters()"
           ></formula-widget>
         </app-card-collapsible>
         <app-card-collapsible title="Stream count">
@@ -148,6 +151,8 @@ const MAX_STREAM_ORDER = 10;
             [operation]="'count'"
             [ticks]="histogramTicks()"
             [min]="minStreamOrder()"
+            [filters]="filters()"
+            (onFiltersChange)="onFiltersChange($event)"
           ></histogram-widget>
         </app-card-collapsible>
       }
@@ -207,6 +212,10 @@ export class RiversViewComponent {
     });
   }
 
+  onFiltersChange(filters: Filters) {
+    this.filters.set(filters);
+  }
+
   /****************************************************************************
    * DeckGL
    */
@@ -220,6 +229,7 @@ export class RiversViewComponent {
 
   attributionHTML = signal('');
   droppingPercent = signal(0);
+  filters = signal<Filters>({});
 
   /****************************************************************************
    * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
@@ -247,9 +257,13 @@ export class RiversViewComponent {
 
   minStreamOrder = computed(() => getMinStreamOrder(this.viewState().zoom));
 
-  histogramTicks = computed(() =>
-    Array.from({ length: MAX_STREAM_ORDER }, (_, i) => i),
-  );
+  histogramTicks = computed(() => {
+    const ticks = [];
+    for (let i = this.minStreamOrder() + 1; i <= MAX_STREAM_ORDER; i++) {
+      ticks.push(i);
+    }
+    return ticks;
+  });
 
   /****************************************************************************
    * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
@@ -286,6 +300,8 @@ export class RiversViewComponent {
           });
         }
       },
+      extensions: [new DataFilterExtension({ filterSize: 4 })],
+      ...getDataFilterExtensionProps(this.filters()),
     }),
   ]);
 
@@ -321,21 +337,6 @@ export class RiversViewComponent {
     this.data().then(({ attribution }: { attribution: string }) =>
       this.attributionHTML.set(attribution),
     );
-  });
-
-  private extractEffect = effect(() => {
-    const data = this.data();
-    if (this.tilesLoaded() && this.viewStateDebounced()) {
-      data.then((res) => {
-        const bbox = new WebMercatorViewport(
-          this.viewStateDebounced(),
-        ).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
   });
 
   private droppingPercentEffect = effect(() => {

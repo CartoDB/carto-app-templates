@@ -7,6 +7,7 @@ import {
 } from '../../../utils';
 import {
   AggregationType,
+  Filters,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
@@ -43,7 +44,10 @@ export class FormulaWidgetComponent {
   operation = input<Exclude<AggregationType, 'custom'>>();
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState = input<MapViewState>();
+  /** Filter state. If specified, widget will be filtered. */
+  filters = input<Filters>();
 
+  owner = crypto.randomUUID();
   status = signal<WidgetStatus>('loading');
   value = signal(-1);
 
@@ -54,6 +58,7 @@ export class FormulaWidgetComponent {
       const column = this.column() || '';
       const operation = this.operation() || 'count';
       const viewState = this.viewState();
+      const filters = this.filters();
       const abortController = new AbortController();
 
       onCleanup(() => abortController.abort());
@@ -67,6 +72,8 @@ export class FormulaWidgetComponent {
             operation,
             spatialFilter: viewState && createSpatialFilter(viewState),
             abortController,
+            filterOwner: this.owner,
+            filters,
           }),
         )
         .then((response) => {

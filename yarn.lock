@@ -2079,26 +2079,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carto/api-client@npm:0.5.0-alpha.3":
-  version: 0.5.0-alpha.3
-  resolution: "@carto/api-client@npm:0.5.0-alpha.3"
-  dependencies:
-    "@loaders.gl/schema": "npm:^4.3.3"
-    "@turf/bbox-clip": "npm:^7.1.0"
-    "@turf/bbox-polygon": "npm:^7.1.0"
-    "@turf/boolean-intersects": "npm:^7.1.0"
-    "@turf/boolean-within": "npm:^7.1.0"
-    "@turf/helpers": "npm:^7.1.0"
-    "@turf/intersect": "npm:^7.1.0"
-    "@turf/invariant": "npm:^7.1.0"
-    "@turf/union": "npm:^7.1.0"
-    "@types/geojson": "npm:^7946.0.15"
-    h3-js: "npm:4.1.0"
-    quadbin: "npm:^0.4.0-alpha.2"
-  checksum: 10c0/5490f4fd5cab0252d5bc315eaba455152dc74f60c6037197eb9499e8685384d143290a19b834ff3c1439e0e3acd675a6eaf2eba0fb79104b45503bcbc4742c8e
-  languageName: node
-  linkType: hard
-
 "@carto/api-client@npm:0.5.0-alpha.4":
   version: 0.5.0-alpha.4
   resolution: "@carto/api-client@npm:0.5.0-alpha.4"
@@ -2150,7 +2130,7 @@ __metadata:
     "@angular/platform-browser-dynamic": "npm:^18.2.13"
     "@angular/router": "npm:^18.2.13"
     "@auth0/auth0-angular": "npm:^2.2.3"
-    "@carto/api-client": "npm:0.5.0-alpha.3"
+    "@carto/api-client": "npm:0.5.0-alpha.4"
     "@carto/create-common": "npm:^0.1.4"
     "@deck.gl/aggregation-layers": "npm:~9.1.0"
     "@deck.gl/carto": "npm:~9.1.0"
@@ -5268,7 +5248,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/boolean-intersects@npm:^7.1.0, @turf/boolean-intersects@npm:^7.2.0":
+"@turf/boolean-intersects@npm:^7.2.0":
   version: 7.2.0
   resolution: "@turf/boolean-intersects@npm:7.2.0"
   dependencies:
@@ -5306,7 +5286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/boolean-within@npm:^7.1.0, @turf/boolean-within@npm:^7.2.0":
+"@turf/boolean-within@npm:^7.2.0":
   version: 7.2.0
   resolution: "@turf/boolean-within@npm:7.2.0"
   dependencies:
@@ -5359,7 +5339,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/intersect@npm:^7.1.0, @turf/intersect@npm:^7.2.0":
+"@turf/intersect@npm:^7.2.0":
   version: 7.2.0
   resolution: "@turf/intersect@npm:7.2.0"
   dependencies:
