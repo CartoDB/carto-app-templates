@@ -170,7 +170,7 @@ const minStreamOrder = computed(() => getMinStreamOrder(viewState.value.zoom));
 
 const histogramTicks = computed(() => {
   const ticks = [];
-  for (let i = minStreamOrder.value; i <= MAX_STREAM_ORDER; i++) {
+  for (let i = minStreamOrder.value + 1; i <= MAX_STREAM_ORDER; i++) {
     ticks.push(i);
   }
   return ticks;
