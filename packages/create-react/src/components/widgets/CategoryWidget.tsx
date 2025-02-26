@@ -74,6 +74,7 @@ export function CategoryWidget({
           spatialFilter: viewState && createSpatialFilter(viewState),
           abortController,
           filterOwner: owner,
+          filters,
         }),
       )
       .then((response) => {
@@ -89,7 +90,7 @@ export function CategoryWidget({
     setStatus('loading');
 
     return () => abortController.abort();
-  }, [data, column, operation, operationColumn, viewState, owner]);
+  }, [data, filters, column, operation, operationColumn, viewState, owner]);
 
   // Compute min/max over category values.
   const [min, max] = useMemo(() => {
