@@ -1,8 +1,4 @@
-import {
-  Color,
-  MapView,
-  MapViewState,
-} from '@deck.gl/core';
+import { Color, MapView, MapViewState } from '@deck.gl/core';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
@@ -81,6 +77,7 @@ export default function LandUseView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
+  const [filters, setFilters] = useState<Filters>({});
 
   // data to calculate feature dropping for each zoom level
   const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
@@ -90,7 +87,6 @@ export default function LandUseView() {
   const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(
     null,
   );
-  const [filters, setFilters] = useState<Filters>({});
 
   // Debounce view state to avoid excessive re-renders during pan and zoom.
   const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
@@ -143,7 +139,7 @@ export default function LandUseView() {
           });
         },
         extensions: [new DataFilterExtension({ filterSize: 4 })],
-        ...getDataFilterExtensionProps(filters)
+        ...getDataFilterExtensionProps(filters),
       }),
     ];
   }, [data, viewState, filters, setViewState, layerVisibility, rasterMetadata]);

@@ -1,14 +1,10 @@
-import {
-  Color,
-  MapView,
-  MapViewState,
-  WebMercatorViewport,
-} from '@deck.gl/core';
+import { Color, MapView, MapViewState } from '@deck.gl/core';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
 import {
-  createViewportSpatialFilter,
+  Filters,
+  getDataFilterExtensionProps,
   vectorTilesetSource,
 } from '@carto/api-client';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
@@ -19,6 +15,7 @@ import { Map } from 'react-map-gl/maplibre';
 import { Layers } from '../Layers';
 import { HistogramWidget } from '../widgets/HistogramWidget';
 import { LegendEntryCategorical } from '../legends/LegendEntryCategorical';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
@@ -81,6 +78,7 @@ export default function RiversView() {
   // With authentication enabled, access token may change.
   const { accessToken, apiBaseUrl } = useContext(AppContext);
   const [attributionHTML, setAttributionHTML] = useState('');
+  const [filters, setFilters] = useState<Filters>({});
 
   // data to calculate feature dropping for each zoom level
   const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
@@ -156,9 +154,11 @@ export default function RiversView() {
             setViewState({ ...viewState });
           });
         },
+        extensions: [new DataFilterExtension({ filterSize: 4 })],
+        ...getDataFilterExtensionProps(filters),
       }),
     ];
-  }, [data, viewState, setViewState, layerVisibility]);
+  }, [data, viewState, setViewState, layerVisibility, filters]);
 
   /****************************************************************************
    * Attribution
@@ -173,18 +173,6 @@ export default function RiversView() {
       setAttributionHTML(attribution);
     });
   }, [data]);
-
-  useEffect(() => {
-    if (data && viewState && tilesLoaded) {
-      data?.then((res) => {
-        const bbox = new WebMercatorViewport(viewState).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
-  }, [data, viewState, tilesLoaded]);
 
   function clamp(n: number, min: number, max: number) {
     return Math.min(Math.max(n, min), max);
@@ -248,6 +236,7 @@ export default function RiversView() {
                 column={'*'}
                 operation={'count'}
                 viewState={viewState}
+                filters={filters}
               />
             </Card>
             <Card title="Stream count by stream order">
@@ -258,6 +247,8 @@ export default function RiversView() {
                 min={minStreamOrder}
                 viewState={viewState}
                 operation="count"
+                onFiltersChange={setFilters}
+                filters={filters}
               />
             </Card>
           </>

@@ -33,6 +33,8 @@ export interface TreeWidgetProps {
   onFiltersChange?: (filters: Filters) => void;
 }
 
+const EMPTY_OBJ = {};
+
 export default function TreeWidget({
   data,
   column,
@@ -40,7 +42,7 @@ export default function TreeWidget({
   operationColumn,
   viewState,
   colors,
-  filters = {},
+  filters = EMPTY_OBJ,
   onFiltersChange,
 }: TreeWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
@@ -50,36 +52,41 @@ export default function TreeWidget({
   const hasFilters = Object.keys(filters).length > 0;
 
   // Initialize echarts when container is mounted
-  const createChart = useCallback((ref: HTMLDivElement | null) => {
-    const onClick = (params: echarts.ECElementEvent) => {
-      if (params.componentType === 'series') {
-        const category = params.name;
-        const entry = Object.entries(RASTER_CATEGORY_MAP).find((entry) => entry[1] === category);
-        if (entry) {
-          const value = Number(entry[0]);
-          const newFilters = addFilter(filters, {
-            column,
-            type: FilterType.IN,
-            values: [value],
-            owner,
-          });
-          onFiltersChange?.({ ...newFilters });
-        } else {
-          const newFilters = removeFilter(filters, {
-            column,
-            owner,
-          });
-          onFiltersChange?.({ ...newFilters });
+  const createChart = useCallback(
+    (ref: HTMLDivElement | null) => {
+      const onClick = (params: echarts.ECElementEvent) => {
+        if (params.componentType === 'series') {
+          const category = params.name;
+          const entry = Object.entries(RASTER_CATEGORY_MAP).find(
+            (entry) => entry[1] === category,
+          );
+          if (entry) {
+            const value = Number(entry[0]);
+            const newFilters = addFilter(filters, {
+              column,
+              type: FilterType.IN,
+              values: [value],
+              owner,
+            });
+            onFiltersChange?.({ ...newFilters });
+          } else {
+            const newFilters = removeFilter(filters, {
+              column,
+              owner,
+            });
+            onFiltersChange?.({ ...newFilters });
+          }
         }
-      }
-    };
+      };
 
-    if (ref && !chartRef.current) {
-      const chart = echarts.init(ref, null, { height: 200, width: 300 });
-      chartRef.current = chart;
-      chartRef.current?.on('click', onClick);
-    }
-  }, [owner, column, filters, onFiltersChange]);
+      if (ref && !chartRef.current) {
+        const chart = echarts.init(ref, null, { height: 200, width: 300 });
+        chartRef.current = chart;
+        chartRef.current?.on('click', onClick);
+      }
+    },
+    [owner, column, filters, onFiltersChange],
+  );
 
   // recreate the chart options when the data changes
   useEffect(() => {
@@ -95,7 +102,7 @@ export default function TreeWidget({
             return `${
               params.name
             }<br/>Count: ${params.value.toLocaleString()}<br/>Percentage: ${percentage}%`;
-          }
+          },
         },
         series: [
           {
@@ -149,7 +156,24 @@ export default function TreeWidget({
       });
 
     return () => abortController.abort();
-  }, [data, filters, column, operation, operationColumn, colors, viewState, owner]);
+  }, [
+    data,
+    filters,
+    column,
+    operation,
+    operationColumn,
+    colors,
+    viewState,
+    owner,
+  ]);
+
+  function clearFilters() {
+    const newFilters = removeFilter(filters, {
+      column,
+      owner,
+    });
+    onFiltersChange?.({ ...newFilters });
+  }
 
   // display an error message if the data fails to load
   if (status === 'error') {
@@ -160,11 +184,14 @@ export default function TreeWidget({
   return (
     <div>
       {hasFilters && (
-        <button style={{ marginLeft: 'auto', display: 'block' }} onClick={() => onFiltersChange?.({})}>
+        <button
+          style={{ marginLeft: 'auto', display: 'block' }}
+          onClick={clearFilters}
+        >
           Clear filter
         </button>
       )}
       <div ref={createChart} style={{ minHeight: '220px' }}></div>
     </div>
-  )
+  );
 }

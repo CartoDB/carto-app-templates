@@ -1,7 +1,10 @@
 import {
+  addFilter,
   AggregationType,
-  Filter,
+  Filters,
+  FilterType,
   HistogramResponse,
+  removeFilter,
   WidgetSourceProps,
 } from '@carto/api-client';
 import { WidgetSource } from '@carto/api-client';
@@ -22,12 +25,14 @@ export interface HistogramWidgetProps {
   /** Minimum value to use for the histogram calculation. */
   min?: number;
   /** Filter state. If specified, widget will be filtered. */
-  filters?: Record<string, Filter>;
+  filters?: Filters;
   /** Callback, to be invoked by the widget when its filters are set or cleared. */
-  onFiltersChange?: (filters: Record<string, Filter>) => void;
+  onFiltersChange?: (filters: Filters) => void;
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
 }
+
+const EMPTY_OBJ = {};
 
 export function HistogramWidget({
   data,
@@ -36,24 +41,61 @@ export function HistogramWidget({
   ticks,
   min,
   viewState,
+  filters = EMPTY_OBJ,
+  onFiltersChange,
 }: HistogramWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
   const [status, setStatus] = useState<WidgetStatus>('complete');
   const chartRef = useRef<echarts.ECharts | null>(null);
 
-  const createChart = useCallback((ref: HTMLDivElement | null) => {
-    const onClick = (params: echarts.ECElementEvent) => {
-      if (params.componentType === 'series') {
-        // filterViaHistogram(params.dataIndex);
-      }
-    };
+  const hasFilters = Object.keys(filters).length > 0;
 
-    if (ref && !chartRef.current) {
-      const chart = echarts.init(ref, null, { height: 200, width: 300 });
-      chartRef.current = chart;
-      chartRef.current?.on('click', onClick);
-    }
-  }, []);
+  const createChart = useCallback(
+    (ref: HTMLDivElement | null) => {
+      function applyFilter(dataIndex: number) {
+        let newFilters = removeFilter(filters, {
+          column,
+          owner,
+        });
+
+        const minValue = ticks[dataIndex];
+        const maxValue = ticks[dataIndex + 1] - 0.0001;
+
+        if (dataIndex === ticks.length - 1) {
+          // For the last category (> 600), use CLOSED_OPEN
+          newFilters = addFilter(filters, {
+            column,
+            type: FilterType.CLOSED_OPEN,
+            values: [[minValue, Infinity]],
+            owner,
+          });
+        } else {
+          // For first and middle categories, use BETWEEN
+          newFilters = addFilter(filters, {
+            column,
+            type: FilterType.BETWEEN,
+            values: [[minValue, maxValue]],
+            owner,
+          });
+        }
+
+        onFiltersChange?.({ ...newFilters });
+      }
+
+      const onClick = (params: echarts.ECElementEvent) => {
+        if (params.componentType === 'series') {
+          applyFilter(params.dataIndex);
+        }
+      };
+
+      if (ref && !chartRef.current) {
+        const chart = echarts.init(ref, null, { height: 200, width: 300 });
+        chartRef.current = chart;
+        chartRef.current?.on('click', onClick);
+      }
+    },
+    [onFiltersChange, column, filters, owner, ticks],
+  );
 
   // Fetches data for the widget to display, watching changes to filters,
   // view state, and widget configuration to refresh.
@@ -120,6 +162,7 @@ export function HistogramWidget({
           spatialFilter: viewState && createSpatialFilter(viewState),
           abortController,
           filterOwner: owner,
+          filters,
         }),
       )
       .then((response) => {
@@ -135,55 +178,32 @@ export function HistogramWidget({
       });
 
     return () => abortController.abort();
-  }, [data, column, operation, ticks, viewState, min, owner]);
+  }, [data, filters, column, operation, ticks, viewState, min, owner]);
 
-  // function onClearFilters() {
-  //   if (filters && onFiltersChange) {
-  //     // Replace, not mutate, the filters object.
-  //     onFiltersChange(removeFilter({ ...filters }, { column, owner }));
-  //   }
-  // }
-
-  // function filterViaHistogram(dataIndex: number) {
-  //   // clearFiltersButton.style.display = 'inherit';
-
-  //   // removeFilter(filters, {
-  //   //   column: 'streamOrder'
-  //   // });
-
-  //   // const minValue = histogramTicks[dataIndex];
-  //   // const maxValue = histogramTicks[dataIndex + 1] - 0.0001;
-
-  //   // if (dataIndex === histogramTicks.length - 1) {
-  //   //   // For the last category (> 600), use CLOSED_OPEN
-  //   //   addFilter(filters, {
-  //   //     column: 'streamOrder',
-  //   //     type: FilterType.CLOSED_OPEN,
-  //   //     values: [[minValue, Infinity]]
-  //   //   });
-  //   // } else {
-  //   //   // For first and middle categories, use BETWEEN
-  //   //   addFilter(filters, {
-  //   //     column: 'streamOrder',
-  //   //     type: FilterType.BETWEEN,
-  //   //     values: [[minValue, maxValue]]
-  //   //   });
-  //   // }
-
-  //   // initialize();
-  // }
-
-  // if (status === 'loading') {
-  //   return <span className="title">...</span>;
-  // }
+  function clearFilters() {
+    const newFilters = removeFilter(filters, {
+      column,
+      owner,
+    });
+    console.log('newFilters', newFilters);
+    onFiltersChange?.({ ...newFilters });
+  }
 
   if (status === 'error') {
     return <span className="title">⚠ Error</span>;
   }
 
-  // if (!response || !response.length) {
-  //   return <span className="title">No data</span>;
-  // }
-
-  return <div ref={createChart} style={{ minHeight: '260px' }}></div>;
+  return (
+    <div>
+      {hasFilters && (
+        <button
+          style={{ marginLeft: 'auto', display: 'block' }}
+          onClick={clearFilters}
+        >
+          Clear filter
+        </button>
+      )}
+      <div ref={createChart} style={{ minHeight: '260px' }}></div>
+    </div>
+  );
 }
