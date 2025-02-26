@@ -10,7 +10,7 @@ import { MapViewState } from '@deck.gl/core';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 // import { useToggleFilter } from '../../hooks/useToggleFilter';
 import {
-addFilter,
+  addFilter,
   AggregationType,
   Filter,
   FilterType,
@@ -225,7 +225,6 @@ function onClearFilters() {
     );
   }
 }
-
 </script>
 <template>
   <template v-if="status === 'loading'">

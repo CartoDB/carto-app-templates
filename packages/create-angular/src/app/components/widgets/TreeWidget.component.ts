@@ -61,7 +61,10 @@ function getOption(response: CategoryResponse, colors: string[]) {
       <span class="title">⚠ Error</span>
     }
     @if (isFiltering()) {
-      <button style="margin-left: auto; display: block" (click)="clearFilters()">
+      <button
+        style="margin-left: auto; display: block"
+        (click)="clearFilters()"
+      >
         Clear filter
       </button>
     }
@@ -145,7 +148,10 @@ export class TreeWidgetComponent {
   }
 
   isFiltering() {
-    return hasFilter(this.filters(), { column: this.column(), owner: this.owner });
+    return hasFilter(this.filters(), {
+      column: this.column(),
+      owner: this.owner,
+    });
   }
 
   clearFilters() {

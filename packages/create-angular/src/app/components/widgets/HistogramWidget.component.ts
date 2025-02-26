@@ -83,7 +83,10 @@ function getOption(data: HistogramResponse, min: number, ticks: number[]) {
       <span class="title">⚠ Error</span>
     }
     @if (isFiltering()) {
-      <button style="margin-left: auto; display: block" (click)="clearFilters()">
+      <button
+        style="margin-left: auto; display: block"
+        (click)="clearFilters()"
+      >
         Clear filter
       </button>
     }
@@ -177,7 +180,10 @@ export class HistogramWidgetComponent {
   }
 
   isFiltering() {
-    return hasFilter(this.filters(), { column: this.column(), owner: this.owner });
+    return hasFilter(this.filters(), {
+      column: this.column(),
+      owner: this.owner,
+    });
   }
 
   clearFilters() {

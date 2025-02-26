@@ -17,8 +17,8 @@ import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
 import {
   rasterSource,
   RasterMetadata,
-Filters,
-getDataFilterExtensionProps,
+  Filters,
+  getDataFilterExtensionProps,
 } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';

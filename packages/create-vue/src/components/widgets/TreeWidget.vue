@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-addFilter,
+  addFilter,
   AggregationType,
   CategoryResponse,
   Filter,
@@ -186,7 +186,6 @@ function onClearFilters() {
     );
   }
 }
-
 </script>
 <template>
   <template v-if="status === 'loading'">

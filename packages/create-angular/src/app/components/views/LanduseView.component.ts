@@ -24,7 +24,7 @@ import {
 } from '@carto/api-client';
 import { debouncedSignal } from '../../../utils';
 import { TreeWidgetComponent } from '../widgets/TreeWidget.component';
-import { DataFilterExtension } from '@deck.gl/extensions'
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 const CONNECTION_NAME = 'amanzanares-pm-bq';
 const TILESET_NAME =
