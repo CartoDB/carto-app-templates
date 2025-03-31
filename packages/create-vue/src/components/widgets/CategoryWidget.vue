@@ -16,6 +16,7 @@ import {
   removeFilter,
   getFilter,
   hasFilter,
+  WidgetSourceProps,
 } from '@carto/api-client';
 import {
   createSpatialFilter,
@@ -27,7 +28,7 @@ import { useToggleFilter } from '../../hooks/useToggleFilter';
 const props = withDefaults(
   defineProps<{
     /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-    data: Promise<{ widgetSource: WidgetSource }>;
+    data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
     /** Column containing category names. */
     column: string;
     /** Operation used to aggregate features in each category. */

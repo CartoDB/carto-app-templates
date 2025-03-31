@@ -24,9 +24,9 @@ const MAP_STYLE =
   'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
 const INITIAL_VIEW_STATE: MapViewState = {
-  latitude: 37.0902,
-  longitude: -95.7129,
-  zoom: 3.5,
+  latitude: 31.8028,
+  longitude: -103.0078,
+  zoom: 2,
 };
 
 // TODO: Fetch domain/range from Widgets API?
