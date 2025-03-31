@@ -33,9 +33,7 @@
   "scripts": {
     "build": "microbundle --format cjs,modern --no-compress --target node --define VERSION=$npm_package_version",
     "dev": "microbundle watch --format cjs,modern --no-compress --target node --define VERSION=$npm_package_version",
-    "dev:ssl": "yarn dev",
-    "prepack": "yarn build",
-    "prepublish": "yarn lint"
+    "dev:ssl": "yarn dev"
   },
   "dependencies": {
     "glob": "^11.0.1",
