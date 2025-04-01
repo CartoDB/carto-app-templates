@@ -9,6 +9,7 @@ import {
   removeFilter,
   getFilter,
   hasFilter,
+  WidgetSourceProps,
 } from '@carto/api-client';
 import {
   createSpatialFilter,
@@ -21,7 +22,7 @@ const { IN } = FilterType;
 
 export interface CategoryWidgetProps {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
-  data: Promise<{ widgetSource: WidgetSource }>;
+  data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
   /** Column containing category names. */
   column: string;
   /** Operation used to aggregate features in each category. */

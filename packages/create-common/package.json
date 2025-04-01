@@ -2,7 +2,7 @@
   "name": "@carto/create-common",
   "packageManager": "yarn@4.2.2",
   "author": "Don McCurdy <donmccurdy@carto.com>",
-  "version": "0.1.4",
+  "version": "0.1.5-alpha.0",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -33,9 +33,7 @@
   "scripts": {
     "build": "microbundle --format cjs,modern --no-compress --target node --define VERSION=$npm_package_version",
     "dev": "microbundle watch --format cjs,modern --no-compress --target node --define VERSION=$npm_package_version",
-    "dev:ssl": "yarn dev",
-    "prepack": "yarn build",
-    "prepublish": "yarn lint"
+    "dev:ssl": "yarn dev"
   },
   "dependencies": {
     "glob": "^11.0.1",

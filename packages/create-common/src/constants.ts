@@ -11,7 +11,7 @@ export const TEMPLATE_EXCLUDE_PATHS = [
 ];
 
 /** List of dependencies in the template to be _removed_ from new projects. */
-export const TEMPLATE_EXCLUDE_DEPS = ['@carto/create-common'];
+export const TEMPLATE_EXCLUDE_DEPS = ['@carto/create-common', 'meow'];
 
 /**
  * List of package.json fields to clear from new projects.
