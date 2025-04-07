@@ -33,14 +33,14 @@
     "@luma.gl/shadertools": "~9.1.6",
     "maplibre-gl": "^4.7.1",
     "meow": "^13.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-map-gl": "^7.1.9",
-    "react-router-dom": "^6.30.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-map-gl": "^8.0.2",
+    "react-router-dom": "^7.4.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.20",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-basic-ssl": "^1.2.0",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "<5.6.0",
