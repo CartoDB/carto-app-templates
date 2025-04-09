@@ -118,7 +118,7 @@ export function HistogramWidget({
           operation,
           ticks,
           spatialFilter: viewState && createSpatialFilter(viewState),
-          abortController,
+          signal: abortController.signal,
           filterOwner: owner,
         }),
       )

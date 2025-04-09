@@ -28,7 +28,7 @@ function App() {
           scope: DEFAULT_APP_CONTEXT.oauth.scopes.join(' '),
         }}
       >
-        <RouterProvider router={router} />
+        <RouterProvider router={router} future={{ v7_startTransition: true }} />
       </Auth0Provider>
     </AppContext.Provider>
   );
