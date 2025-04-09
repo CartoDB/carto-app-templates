@@ -5040,7 +5040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox-clip@npm:^7.1.0, @turf/bbox-clip@npm:^7.2.0":
+"@turf/bbox-clip@npm:^7.1.0":
   version: 7.2.0
   resolution: "@turf/bbox-clip@npm:7.2.0"
   dependencies:
@@ -5052,7 +5052,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox-polygon@npm:^7.1.0, @turf/bbox-polygon@npm:^7.2.0":
+"@turf/bbox-polygon@npm:^7.1.0":
   version: 7.2.0
   resolution: "@turf/bbox-polygon@npm:7.2.0"
   dependencies:
@@ -5151,7 +5151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/union@npm:^7.1.0, @turf/union@npm:^7.2.0":
+"@turf/union@npm:^7.1.0":
   version: 7.2.0
   resolution: "@turf/union@npm:7.2.0"
   dependencies:
@@ -9809,15 +9809,6 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 10c0/782aba6cba65b1bb5af3b095d96249d20edbe8df32dbf4696fd49be2583faf676173bf4809386588828e4dd76a3354fcbeb577bab1c833ccd9fc4577f26103f8
-  languageName: node
-  linkType: hard
-
-"geojson-equality-ts@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "geojson-equality-ts@npm:1.0.2"
-  dependencies:
-    "@types/geojson": "npm:^7946.0.14"
-  checksum: 10c0/f582c6a549673f238b1eb450511e7be222ded8af039924fd21d03ab201de003a5b1769c44b35ca59406533322165520d7aea77e7e1011722259a1485edb30e24
   languageName: node
   linkType: hard
 
