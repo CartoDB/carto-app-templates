@@ -119,7 +119,7 @@ const response = computedAsync<CategoryResponse>(async (onCancel) => {
         column,
         operation,
         spatialFilter: viewState && createSpatialFilter(viewState),
-        abortController,
+        signal: abortController.signal,
         filterOwner: owner.value,
         filters,
       }),

@@ -184,11 +184,10 @@ export class TreeWidgetComponent {
           return widgetSource.getCategories({
             column,
             operation,
-            abortController,
+            signal: abortController.signal,
             filterOwner: this.owner,
             filters,
             spatialFilter: viewState && createSpatialFilter(viewState),
-            spatialIndexReferenceViewState: viewState,
           });
         })
         .then((response) => {
