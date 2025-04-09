@@ -5,7 +5,7 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { Color, Deck, MapViewState, WebMercatorViewport } from '@deck.gl/core';
+import { Color, Deck, MapViewState } from '@deck.gl/core';
 import { CardComponent } from '../Card.component';
 import { CardCollapsibleComponent } from '../CardCollapsible.component';
 import { FormulaWidgetComponent } from '../widgets/FormulaWidget.component';
@@ -15,10 +15,7 @@ import { context } from '../../../context';
 import { AccessTokenService } from '../../services/AccessToken.service';
 import { Map } from 'maplibre-gl';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
-import {
-  createViewportSpatialFilter,
-  vectorTilesetSource,
-} from '@carto/api-client';
+import { vectorTilesetSource } from '@carto/api-client';
 import { debouncedSignal } from '../../../utils';
 import { HistogramWidgetComponent } from '../widgets/HistogramWidget.component';
 
@@ -321,21 +318,6 @@ export class RiversViewComponent {
     this.data().then(({ attribution }: { attribution: string }) =>
       this.attributionHTML.set(attribution),
     );
-  });
-
-  private extractEffect = effect(() => {
-    const data = this.data();
-    if (this.tilesLoaded() && this.viewStateDebounced()) {
-      data.then((res) => {
-        const bbox = new WebMercatorViewport(
-          this.viewStateDebounced(),
-        ).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
   });
 
   private droppingPercentEffect = effect(() => {

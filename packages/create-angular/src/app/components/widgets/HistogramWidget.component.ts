@@ -149,7 +149,7 @@ export class HistogramWidgetComponent {
             column,
             operation,
             ticks,
-            abortController,
+            signal: abortController.signal,
             filterOwner: this.owner,
             spatialFilter: viewState && createSpatialFilter(viewState),
           });

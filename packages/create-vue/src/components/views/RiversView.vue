@@ -12,12 +12,9 @@ import {
   watchEffect,
 } from 'vue';
 import { Map } from 'maplibre-gl';
-import { Deck, MapViewState, Color, WebMercatorViewport } from '@deck.gl/core';
+import { Deck, MapViewState, Color } from '@deck.gl/core';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
-import {
-  createViewportSpatialFilter,
-  vectorTilesetSource,
-} from '@carto/api-client';
+import { vectorTilesetSource } from '@carto/api-client';
 import Layers from '../Layers.vue';
 import Card from '../Card.vue';
 import { context } from '../../context';
@@ -192,20 +189,6 @@ watchEffect(() => {
       fractionsDropped.value = res.fraction_dropped_per_zoom;
     }
   });
-});
-
-watchEffect(() => {
-  if (tilesLoaded.value && viewStateDebounced.value) {
-    data.value?.then((res) => {
-      const bbox = new WebMercatorViewport(
-        viewStateDebounced.value,
-      ).getBounds();
-      const spatialFilter = createViewportSpatialFilter(bbox);
-      if (spatialFilter) {
-        res.widgetSource.extractTileFeatures({ spatialFilter });
-      }
-    });
-  }
 });
 
 // Initialize the map and deck.

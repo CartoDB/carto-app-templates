@@ -143,7 +143,7 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
         operation,
         ticks,
         spatialFilter: viewState && createSpatialFilter(viewState),
-        abortController,
+        signal: abortController.signal,
         filterOwner: owner.value,
       }),
     )

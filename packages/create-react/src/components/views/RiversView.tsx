@@ -1,16 +1,8 @@
-import {
-  Color,
-  MapView,
-  MapViewState,
-  WebMercatorViewport,
-} from '@deck.gl/core';
+import { Color, MapView, MapViewState } from '@deck.gl/core';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context';
 import { useDebouncedState } from '../../hooks/useDebouncedState';
-import {
-  createViewportSpatialFilter,
-  vectorTilesetSource,
-} from '@carto/api-client';
+import { vectorTilesetSource } from '@carto/api-client';
 import { BASEMAP, VectorTileLayer } from '@deck.gl/carto';
 import { Card } from '../Card';
 import { FormulaWidget } from '../widgets/FormulaWidget';
@@ -173,18 +165,6 @@ export default function RiversView() {
       setAttributionHTML(attribution);
     });
   }, [data]);
-
-  useEffect(() => {
-    if (data && viewState && tilesLoaded) {
-      data?.then((res) => {
-        const bbox = new WebMercatorViewport(viewState).getBounds();
-        const spatialFilter = createViewportSpatialFilter(bbox);
-        if (spatialFilter) {
-          res.widgetSource.extractTileFeatures({ spatialFilter });
-        }
-      });
-    }
-  }, [data, viewState, tilesLoaded]);
 
   function clamp(n: number, min: number, max: number) {
     return Math.min(Math.max(n, min), max);
