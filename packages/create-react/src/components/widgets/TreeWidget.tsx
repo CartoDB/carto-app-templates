@@ -1,50 +1,51 @@
 import {
   addFilter,
   AggregationType,
+  CategoryResponse,
   Filters,
   FilterType,
   hasFilter,
-  HistogramResponse,
   removeFilter,
+  WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
-import { WidgetSource } from '@carto/api-client';
 import { MapViewState } from '@deck.gl/core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
+import { RASTER_CATEGORY_MAP } from '../../rasterCategoryMap';
 
-export interface HistogramWidgetProps {
+export interface TreeWidgetProps {
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
   data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
-  /** Column containing a value to be aggregated. */
+  /** Column containing category names. */
   column: string;
-  /** Operation used to aggregate the specified column. */
+  /** Operation used to aggregate features in each category. */
   operation?: Exclude<AggregationType, 'custom'>;
-  /** Ticks to use for the histogram calculation. */
-  ticks: number[];
-  /** Minimum value to use for the histogram calculation. */
-  min?: number;
+  /** Column containing a value to be aggregated. */
+  operationColumn?: string;
+  /** Map view state. If specified, widget will be filtered to the view. */
+  viewState?: MapViewState;
+  /** Colors for the treemap. */
+  colors: string[];
   /** Filter state. If specified, widget will be filtered. */
   filters?: Filters;
   /** Callback, to be invoked by the widget when its filters are set or cleared. */
   onFiltersChange?: (filters: Filters) => void;
-  /** Map view state. If specified, widget will be filtered to the view. */
-  viewState?: MapViewState;
 }
 
 const EMPTY_OBJ = {};
 
-export function HistogramWidget({
+export default function TreeWidget({
   data,
   column,
   operation,
-  ticks,
-  min,
+  operationColumn,
   viewState,
+  colors,
   filters = EMPTY_OBJ,
   onFiltersChange,
-}: HistogramWidgetProps) {
+}: TreeWidgetProps) {
   const [owner] = useState<string>(crypto.randomUUID());
   const [status, setStatus] = useState<WidgetStatus>('complete');
   const chartRef = useRef<echarts.ECharts | null>(null);
@@ -56,41 +57,31 @@ export function HistogramWidget({
     });
   }, [filters, column, owner]);
 
+  // Initialize echarts when container is mounted
   const createChart = useCallback(
     (ref: HTMLDivElement | null) => {
-      function applyFilter(dataIndex: number) {
-        let newFilters = removeFilter(filters, {
-          column,
-          owner,
-        });
-
-        const minValue = ticks[dataIndex];
-        const maxValue = ticks[dataIndex + 1] - 0.0001;
-
-        if (dataIndex === ticks.length - 1) {
-          // For the last category, use CLOSED_OPEN
-          newFilters = addFilter(filters, {
-            column,
-            type: FilterType.CLOSED_OPEN,
-            values: [[minValue, Infinity]],
-            owner,
-          });
-        } else {
-          // For first and middle categories, use BETWEEN
-          newFilters = addFilter(filters, {
-            column,
-            type: FilterType.BETWEEN,
-            values: [[minValue, maxValue]],
-            owner,
-          });
-        }
-
-        onFiltersChange?.({ ...newFilters });
-      }
-
       const onClick = (params: echarts.ECElementEvent) => {
         if (params.componentType === 'series') {
-          applyFilter(params.dataIndex);
+          const category = params.name;
+          const entry = Object.entries(RASTER_CATEGORY_MAP).find(
+            (entry) => entry[1] === category,
+          );
+          if (entry) {
+            const value = Number(entry[0]);
+            const newFilters = addFilter(filters, {
+              column,
+              type: FilterType.IN,
+              values: [value],
+              owner,
+            });
+            onFiltersChange?.({ ...newFilters });
+          } else {
+            const newFilters = removeFilter(filters, {
+              column,
+              owner,
+            });
+            onFiltersChange?.({ ...newFilters });
+          }
         }
       };
 
@@ -100,71 +91,57 @@ export function HistogramWidget({
         chartRef.current?.on('click', onClick);
       }
     },
-    [onFiltersChange, column, filters, owner, ticks],
+    [owner, column, filters, onFiltersChange],
   );
 
-  // Fetches data for the widget to display, watching changes to filters,
-  // view state, and widget configuration to refresh.
+  // recreate the chart options when the data changes
   useEffect(() => {
     const abortController = new AbortController();
     chartRef.current?.showLoading();
 
-    function getOption(data: HistogramResponse) {
-      const option = {
+    function getOption(response: CategoryResponse) {
+      const total = response.reduce((sum, c) => sum + c.value, 0);
+      return {
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
-          },
-        },
-        grid: {
-          left: 60,
-          right: 30,
-          top: 20,
-          bottom: 20,
-          width: 'auto',
-          height: 'auto',
-        },
-        xAxis: {
-          type: 'category',
-          data: [min, ...ticks],
-          // axisLabel: {
-          //   interval: 4 // Show every 5th label
-          // },
-          axisTick: {
-            alignWithLabel: true,
-          },
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: (value: number) =>
-              Intl.NumberFormat('en-US', {
-                compactDisplay: 'short',
-                notation: 'compact',
-              }).format(value),
+          formatter: (params: { name: string; value: number }) => {
+            const percentage = ((params.value / total) * 100).toFixed(1);
+            return `${
+              params.name
+            }<br/>Count: ${params.value.toLocaleString()}<br/>Percentage: ${percentage}%`;
           },
         },
         series: [
           {
-            name: 'Count',
-            type: 'bar',
-            data,
-            itemStyle: {
-              color: '#3398DB',
+            name: 'Cropland categories',
+            type: 'treemap',
+            data: response.map((c) => ({
+              name: RASTER_CATEGORY_MAP[
+                c.name as keyof typeof RASTER_CATEGORY_MAP
+              ],
+              value: c.value,
+              itemStyle: {
+                color: colors[Number(c.name)],
+              },
+            })),
+            label: {
+              show: true,
+              color: 'white',
+              textBorderColor: 'rgba(0, 0, 0, 0.5)',
+              textBorderWidth: 3,
+              fontSize: 10,
             },
+            leafSize: 10,
           },
         ],
       };
-      return option;
     }
 
     data
       .then(({ widgetSource }) =>
-        widgetSource.getHistogram({
+        widgetSource.getCategories({
           column,
           operation,
-          ticks,
+          operationColumn,
           spatialFilter: viewState && createSpatialFilter(viewState),
           signal: abortController.signal,
           filterOwner: owner,
@@ -184,7 +161,16 @@ export function HistogramWidget({
       });
 
     return () => abortController.abort();
-  }, [data, filters, column, operation, ticks, viewState, min, owner]);
+  }, [
+    data,
+    filters,
+    column,
+    operation,
+    operationColumn,
+    colors,
+    viewState,
+    owner,
+  ]);
 
   function clearFilters() {
     const newFilters = removeFilter(filters, {
@@ -194,10 +180,12 @@ export function HistogramWidget({
     onFiltersChange?.({ ...newFilters });
   }
 
+  // display an error message if the data fails to load
   if (status === 'error') {
     return <span className="title">⚠ Error</span>;
   }
 
+  // render the treemap container
   return (
     <div>
       {_hasFilter && (
@@ -208,7 +196,7 @@ export function HistogramWidget({
           Clear filter
         </button>
       )}
-      <div ref={createChart} style={{ minHeight: '260px' }}></div>
+      <div ref={createChart} style={{ minHeight: '220px' }}></div>
     </div>
   );
 }

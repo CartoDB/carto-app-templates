@@ -10,10 +10,10 @@ import {
 import {
   addFilter,
   AggregationType,
+  CategoryResponse,
   Filters,
   FilterType,
   hasFilter,
-  HistogramResponse,
   removeFilter,
   WidgetSource,
   WidgetSourceProps,
@@ -21,59 +21,37 @@ import {
 import { MapViewState } from '@deck.gl/core';
 import { createSpatialFilter, WidgetStatus } from '../../../utils';
 import * as echarts from 'echarts';
+import { RASTER_CATEGORY_MAP } from '../../rasterCategoriesMap';
 
-function getOption(data: HistogramResponse, min: number, ticks: number[]) {
-  const option = {
-    tooltip: {
-      // trigger: 'axis',
-      // axisPointer: {
-      //   type: 'shadow'
-      // }
-    },
-    grid: {
-      left: 30,
-      right: 20,
-      top: 20,
-      bottom: 20,
-      width: 'auto',
-      height: 'auto',
-    },
-    xAxis: {
-      type: 'category',
-      data: [min, ...ticks],
-      // axisLabel: {
-      //   interval: 4 // Show every 5th label
-      // },
-      axisTick: {
-        alignWithLabel: true,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        formatter: (value: number) =>
-          Intl.NumberFormat('en-US', {
-            compactDisplay: 'short',
-            notation: 'compact',
-          }).format(value),
-      },
-    },
+function getOption(response: CategoryResponse, colors: string[]) {
+  return {
+    tooltip: {},
     series: [
       {
-        name: 'Count',
-        type: 'bar',
-        data,
-        itemStyle: {
-          color: '#3398DB',
+        name: 'Cropland categories',
+        type: 'treemap',
+        data: response.map((c) => ({
+          name: RASTER_CATEGORY_MAP[c.name as keyof typeof RASTER_CATEGORY_MAP],
+          value: c.value,
+          itemStyle: {
+            color: colors[Number(c.name)],
+          },
+        })),
+        label: {
+          show: true,
+          color: 'white',
+          textBorderColor: 'rgba(0, 0, 0, 0.5)',
+          textBorderWidth: 3,
+          fontSize: 10,
         },
+        leafSize: 10,
       },
     ],
   };
-  return option;
 }
 
 @Component({
-  selector: 'histogram-widget',
+  selector: 'tree-widget',
   standalone: true,
   template: `
     @if (status() === 'loading') {
@@ -91,12 +69,12 @@ function getOption(data: HistogramResponse, min: number, ticks: number[]) {
       </button>
     }
     <div style="min-height: 200px; position: relative">
-      <div id="histogram-container" #container></div>
+      <div id="tree-container" #container></div>
     </div>
   `,
 })
-export class HistogramWidgetComponent {
-  @ViewChild('container') histogramContainer?: ElementRef<HTMLDivElement>;
+export class TreeWidgetComponent {
+  @ViewChild('container') treeContainer?: ElementRef<HTMLDivElement>;
 
   /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
   data =
@@ -107,10 +85,8 @@ export class HistogramWidgetComponent {
   column = input.required<string>();
   /** Operation used to aggregate the specified column. */
   operation = input<Exclude<AggregationType, 'custom'>>();
-  /** Ticks to use for the histogram calculation. */
-  ticks = input.required<number[]>();
-  /** Minimum value to use for the histogram calculation. */
-  min = input.required<number>();
+  /** Colors to be used for the tree. */
+  colors = input<string[]>([]);
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState = input<MapViewState>();
   /** Filter state. If specified, widget will be filtered. */
@@ -120,12 +96,12 @@ export class HistogramWidgetComponent {
 
   owner = crypto.randomUUID();
   status = signal<WidgetStatus>('loading');
-  response = signal<HistogramResponse>([]);
+  response = signal<CategoryResponse>([]);
 
   chart: echarts.ECharts | null = null;
 
   ngAfterViewInit() {
-    const container = this.histogramContainer?.nativeElement;
+    const container = this.treeContainer?.nativeElement;
     if (container) {
       this.chart = echarts.init(container, null, {
         height: 200,
@@ -133,7 +109,7 @@ export class HistogramWidgetComponent {
       });
       this.chart.on('click', (params) => {
         if (params.componentType === 'series') {
-          this.applyFilter(params.dataIndex);
+          this.applyFilter(params.name);
         }
       });
     }
@@ -145,38 +121,30 @@ export class HistogramWidgetComponent {
     }
   }
 
-  applyFilter(dataIndex: number) {
-    const filters = this.filters();
+  applyFilter(category: string) {
     const column = this.column();
-    const ticks = this.ticks();
+    const filters = this.filters();
+    const owner = this.owner;
 
-    let newFilters = removeFilter(filters, {
-      column,
-      owner: this.owner,
-    });
-
-    const minValue = ticks[dataIndex];
-    const maxValue = ticks[dataIndex + 1] - 0.0001;
-
-    if (dataIndex === ticks.length - 1) {
-      // For the last category, use CLOSED_OPEN
-      newFilters = addFilter(filters, {
+    const entry = Object.entries(RASTER_CATEGORY_MAP).find(
+      (entry) => entry[1] === category,
+    );
+    if (entry) {
+      const value = Number(entry[0]);
+      const newFilters = addFilter(filters, {
         column,
-        type: FilterType.CLOSED_OPEN,
-        values: [[minValue, Infinity]],
-        owner: this.owner,
+        type: FilterType.IN,
+        values: [value],
+        owner,
       });
+      this.onFiltersChange.emit({ ...newFilters });
     } else {
-      // For first and middle categories, use BETWEEN
-      newFilters = addFilter(filters, {
+      const newFilters = removeFilter(filters, {
         column,
-        type: FilterType.BETWEEN,
-        values: [[minValue, maxValue]],
-        owner: this.owner,
+        owner,
       });
+      this.onFiltersChange.emit({ ...newFilters });
     }
-
-    this.onFiltersChange.emit({ ...newFilters });
   }
 
   isFiltering() {
@@ -203,7 +171,6 @@ export class HistogramWidgetComponent {
     (onCleanup) => {
       const column = this.column();
       const operation = this.operation();
-      const ticks = this.ticks();
       const viewState = this.viewState();
       const filters = this.filters();
       const abortController = new AbortController();
@@ -214,14 +181,13 @@ export class HistogramWidgetComponent {
 
       this.data()
         .then(({ widgetSource }) => {
-          return widgetSource.getHistogram({
+          return widgetSource.getCategories({
             column,
             operation,
-            ticks,
             signal: abortController.signal,
-            spatialFilter: viewState && createSpatialFilter(viewState),
             filterOwner: this.owner,
             filters,
+            spatialFilter: viewState && createSpatialFilter(viewState),
           });
         })
         .then((response) => {
@@ -241,10 +207,9 @@ export class HistogramWidgetComponent {
 
   private updateChartEffect = effect(() => {
     const data = this.response();
-    const min = this.min();
-    const ticks = this.ticks();
+    const colors = this.colors();
     if (this.chart) {
-      this.chart.setOption(getOption(data, min, ticks));
+      this.chart.setOption(getOption(data, colors));
     }
   });
 }

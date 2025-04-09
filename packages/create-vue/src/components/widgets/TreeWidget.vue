@@ -1,45 +1,37 @@
 <script setup lang="ts">
-/**
- * Histogram widget, displaying a histogram of a numeric column.
- */
-
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { computedAsync, templateRef } from '@vueuse/core';
-import { MapViewState } from '@deck.gl/core';
-
-import { createSpatialFilter, WidgetStatus } from '../../utils';
-// import { useToggleFilter } from '../../hooks/useToggleFilter';
 import {
   addFilter,
   AggregationType,
+  CategoryResponse,
   Filter,
   FilterType,
   hasFilter,
-  HistogramResponse,
   removeFilter,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
+import { MapViewState } from '@deck.gl/core';
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import { createSpatialFilter, WidgetStatus } from '../../utils';
 import * as echarts from 'echarts';
+import { computedAsync, templateRef } from '@vueuse/core';
+import { RASTER_CATEGORY_MAP } from '../../rasterCategoryMap';
 
 const props = withDefaults(
   defineProps<{
-    /** Widget-compatible data source, from vectorTableSource, vectorQuerySource, etc. */
     data: Promise<{ widgetSource: WidgetSource<WidgetSourceProps> }>;
-    /** Column containing a value to be aggregated. */
+    /** Column containing category names. */
     column: string;
-    /** Operation used to aggregate the specified column. */
+    /** Operation used to aggregate features in each category. */
     operation?: Exclude<AggregationType, 'custom'>;
-    /** Ticks to use for the histogram calculation. */
-    ticks: number[];
-    /** Minimum value to use for the histogram calculation. */
-    min: number;
+    /** Map view state. If specified, widget will be filtered to the view. */
+    viewState: MapViewState | undefined;
+    /** Colors for the treemap. */
+    colors: string[];
     /** Filter state. If specified, widget will be filtered. */
     filters?: Record<string, Filter>;
     /** Callback, to be invoked by the widget when its filters are set or cleared. */
     onFiltersChange?: (filters: Record<string, Filter>) => void;
-    /** Map view state. If specified, widget will be filtered to the view. */
-    viewState: MapViewState;
   }>(),
   {
     column: '',
@@ -48,56 +40,6 @@ const props = withDefaults(
     onFiltersChange: () => {},
   },
 );
-
-function getOption(data: HistogramResponse) {
-  const option = {
-    tooltip: {
-      // trigger: 'axis',
-      // axisPointer: {
-      //   type: 'shadow'
-      // }
-    },
-    grid: {
-      left: 60,
-      right: 30,
-      top: 20,
-      bottom: 20,
-      width: 'auto',
-      height: 'auto',
-    },
-    xAxis: {
-      type: 'category',
-      data: [props.min, ...props.ticks].map(String),
-      // axisLabel: {
-      //   interval: 4 // Show every 5th label
-      // },
-      axisTick: {
-        alignWithLabel: true,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        formatter: (value: number) =>
-          Intl.NumberFormat('en-US', {
-            compactDisplay: 'short',
-            notation: 'compact',
-          }).format(value),
-      },
-    },
-    series: [
-      {
-        name: 'Count',
-        type: 'bar',
-        data,
-        itemStyle: {
-          color: '#3398DB',
-        },
-      },
-    ],
-  };
-  return option;
-}
 
 const owner = ref<string>(crypto.randomUUID());
 const status = ref<WidgetStatus>('loading');
@@ -116,37 +58,28 @@ const onClick = (params: echarts.ECElementEvent) => {
   const onFiltersChange = props.onFiltersChange;
   const column = props.column;
   const _owner = owner.value;
-  const ticks = props.ticks;
 
   if (params.componentType === 'series') {
-    let newFilters = removeFilter(filters, {
-      column,
-      owner: _owner,
-    });
-
-    const dataIndex = params.dataIndex;
-    const minValue = ticks[dataIndex];
-    const maxValue = ticks[dataIndex + 1] - 0.0001;
-
-    if (dataIndex === ticks.length - 1) {
-      // For the last category, use CLOSED_OPEN
-      newFilters = addFilter(filters, {
+    const category = params.name;
+    const entry = Object.entries(RASTER_CATEGORY_MAP).find(
+      (entry) => entry[1] === category,
+    );
+    if (entry) {
+      const value = Number(entry[0]);
+      const newFilters = addFilter(filters, {
         column,
-        type: FilterType.CLOSED_OPEN,
-        values: [[minValue, Infinity]],
+        type: FilterType.IN,
+        values: [value],
         owner: _owner,
       });
+      onFiltersChange?.({ ...newFilters });
     } else {
-      // For first and middle categories, use BETWEEN
-      newFilters = addFilter(filters, {
+      const newFilters = removeFilter(filters, {
         column,
-        type: FilterType.BETWEEN,
-        values: [[minValue, maxValue]],
         owner: _owner,
       });
+      onFiltersChange?.({ ...newFilters });
     }
-
-    onFiltersChange?.({ ...newFilters });
   }
 };
 
@@ -169,10 +102,9 @@ onUnmounted(() => {
   }
 });
 
-const response = computedAsync<HistogramResponse>(async (onCancel) => {
+const response = computedAsync<CategoryResponse>(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;
-  const ticks = props.ticks;
   const viewState = props.viewState;
   const filters = props.filters;
   const abortController = new AbortController();
@@ -183,10 +115,9 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
 
   return props.data
     .then(({ widgetSource }) =>
-      widgetSource.getHistogram({
+      widgetSource.getCategories({
         column,
         operation,
-        ticks,
         spatialFilter: viewState && createSpatialFilter(viewState),
         signal: abortController.signal,
         filterOwner: owner.value,
@@ -197,17 +128,47 @@ const response = computedAsync<HistogramResponse>(async (onCancel) => {
       status.value = 'complete';
       return response;
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error(error);
       if (!abortController.signal.aborted) {
         status.value = 'error';
       }
       return [];
     });
-});
+}, []);
 
-watch(response, (value) => {
-  if (value) {
-    chartRef.value?.setOption(getOption(value));
+watchEffect(() => {
+  const data = response.value;
+  const colors = props.colors;
+  if (data.length && colors.length) {
+    const option = {
+      tooltip: {},
+      series: [
+        {
+          name: 'Cropland categories',
+          type: 'treemap',
+          data: data.map((c) => ({
+            name: RASTER_CATEGORY_MAP[
+              c.name as keyof typeof RASTER_CATEGORY_MAP
+            ],
+            value: c.value,
+            itemStyle: {
+              color: colors[Number(c.name)],
+            },
+          })),
+          label: {
+            show: true,
+            color: 'white',
+            textBorderColor: 'rgba(0, 0, 0, 0.5)',
+            textBorderWidth: 3,
+            fontSize: 10,
+          },
+          leafSize: 10,
+        },
+      ],
+    };
+
+    chartRef.value?.setOption(option);
   }
 });
 
@@ -230,7 +191,7 @@ function onClearFilters() {
   <template v-if="status === 'loading'">
     <span class="title">Loading ...</span>
   </template>
-  <template v-else-if="status === 'error'">
+  <template v-if="status === 'error'">
     <span class="title">⚠ Error</span>
   </template>
   <template v-if="_hasFilter">
@@ -238,8 +199,7 @@ function onClearFilters() {
       Clear filter
     </button>
   </template>
-
-  <div style="min-height: 260px; position: relative">
+  <div style="min-height: 220px; position: relative">
     <div ref="container"></div>
   </div>
 </template>
