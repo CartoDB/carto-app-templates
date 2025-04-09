@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.4.0",
-    "@carto/api-client": "^0.4.9",
+    "@carto/api-client": "0.5.0",
     "@carto/create-common": "^0.1.5-alpha.0",
     "@deck.gl/aggregation-layers": "~9.1.8",
     "@deck.gl/carto": "~9.1.8",
@@ -30,6 +30,7 @@
     "@luma.gl/engine": "~9.1.6",
     "@luma.gl/shadertools": "~9.1.6",
     "@vueuse/core": "^12.8.2",
+    "echarts": "^5.6.0",
     "maplibre-gl": "^4.7.1",
     "meow": "^13.2.0",
     "vue": "^3.5.13",
