@@ -72,7 +72,7 @@ export function CategoryWidget({
           operation,
           operationColumn,
           spatialFilter: viewState && createSpatialFilter(viewState),
-          abortController,
+          signal: abortController.signal,
           filterOwner: owner,
           filters,
         }),

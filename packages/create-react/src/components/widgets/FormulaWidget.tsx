@@ -50,7 +50,7 @@ export function FormulaWidget({
           column,
           operation,
           spatialFilter: viewState && createSpatialFilter(viewState),
-          abortController,
+          signal: abortController.signal,
           filterOwner: owner,
           filters,
         }),

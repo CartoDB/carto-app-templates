@@ -58,7 +58,7 @@ const value = computedAsync(async (onCancel) => {
         column,
         operation,
         spatialFilter: viewState && createSpatialFilter(viewState),
-        abortController,
+        signal: abortController.signal,
         filters,
       }),
     )

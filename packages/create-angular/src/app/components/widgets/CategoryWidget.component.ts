@@ -142,7 +142,7 @@ export class CategoryWidgetComponent {
             column: column,
             operation: operation,
             spatialFilter: viewState && createSpatialFilter(viewState),
-            abortController,
+            signal: abortController.signal,
             filterOwner: this.owner,
             filters,
           }),

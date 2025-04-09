@@ -71,7 +71,7 @@ export class FormulaWidgetComponent {
             column,
             operation,
             spatialFilter: viewState && createSpatialFilter(viewState),
-            abortController,
+            signal: abortController.signal,
             filterOwner: this.owner,
             filters,
           }),
