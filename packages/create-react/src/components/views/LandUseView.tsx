@@ -1,0 +1,281 @@
+import { Color, MapView, MapViewState } from '@deck.gl/core';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { AppContext } from '../../context';
+import { useDebouncedState } from '../../hooks/useDebouncedState';
+import {
+  Filters,
+  getDataFilterExtensionProps,
+  RasterMetadata,
+  rasterSource,
+} from '@carto/api-client';
+import { BASEMAP, RasterTileLayer } from '@deck.gl/carto';
+import { Card } from '../Card';
+import { FormulaWidget } from '../widgets/FormulaWidget';
+import DeckGL from '@deck.gl/react';
+import { Map } from 'react-map-gl/maplibre';
+import { Layers } from '../Layers';
+import TreeWidget from '../widgets/TreeWidget';
+import { DataFilterExtension } from '@deck.gl/extensions';
+
+const CONNECTION_NAME = 'amanzanares-pm-bq';
+const TILESET_NAME =
+  'cartodb-on-gcp-pm-team.amanzanares_raster.classification_us_compressed';
+const MAP_VIEW = new MapView({ repeat: true });
+
+const INITIAL_VIEW_STATE: MapViewState = {
+  latitude: 42.728,
+  longitude: -78.731,
+  zoom: 6,
+  minZoom: 5.5,
+};
+
+const getFillColorLayer = (
+  bandColor: number,
+  rasterMetadata: RasterMetadata | null,
+) => {
+  if (rasterMetadata) {
+    const meta = rasterMetadata.bands[0];
+    if (meta.colorinterp === 'palette') {
+      const category = meta.colortable?.[bandColor];
+      if (category) {
+        const [r, g, b] = category;
+        if (r === 0 && g === 0 && b === 0) {
+          return [0, 0, 0, 0] as Color;
+        }
+
+        return category as Color;
+      }
+    }
+  }
+  return [0, 0, 0, 0] as Color;
+};
+
+function getRasterResolution(zoom: number) {
+  let resolution: string = '100m';
+  if (zoom > 11.5) {
+    resolution = '20m';
+  } else if (zoom > 10.5) {
+    resolution = '40m';
+  } else if (zoom > 9.5) {
+    resolution = '80m';
+  } else if (zoom > 8.5) {
+    resolution = '160m';
+  } else if (zoom > 7.5) {
+    resolution = '320m';
+  } else if (zoom > 6.5) {
+    resolution = '640m';
+  } else if (zoom > 5.5) {
+    resolution = '1280m';
+  }
+  return resolution;
+}
+
+/**
+ * Example application page, showing U.S. Cropland data.
+ */
+export default function LandUseView() {
+  // With authentication enabled, access token may change.
+  const { accessToken, apiBaseUrl } = useContext(AppContext);
+  const [attributionHTML, setAttributionHTML] = useState('');
+  const [filters, setFilters] = useState<Filters>({});
+
+  // data to calculate feature dropping for each zoom level
+  const [fractionsDropped, setFractionsDropped] = useState<number[]>([]);
+  const [minZoom, setMinZoom] = useState(0);
+  const [maxZoom, setMaxZoom] = useState(20);
+  const [tilesLoaded, setTilesLoaded] = useState(false);
+  const [rasterMetadata, setRasterMetadata] = useState<RasterMetadata | null>(
+    null,
+  );
+
+  // Debounce view state to avoid excessive re-renders during pan and zoom.
+  const [viewState, setViewState] = useDebouncedState(INITIAL_VIEW_STATE, 200);
+
+  /****************************************************************************
+   * Sources (https://deck.gl/docs/api-reference/carto/data-sources)
+   */
+
+  const data = useMemo(
+    () =>
+      rasterSource({
+        accessToken,
+        apiBaseUrl,
+        connectionName: CONNECTION_NAME,
+        tableName: TILESET_NAME,
+      }),
+    [accessToken, apiBaseUrl],
+  );
+
+  /****************************************************************************
+   * Layers (https://deck.gl/docs/api-reference/carto/overview#carto-layers)
+   */
+
+  const LAYER_ID = 'U.S. Cropland';
+
+  // Layer visibility represented as name/visibility pairs, managed by the Layers component.
+  const [layerVisibility, setLayerVisibility] = useState<
+    Record<string, boolean>
+  >({
+    [LAYER_ID]: true,
+  });
+
+  // Update layers when data or visualization parameters change.
+  const layers = useMemo(() => {
+    return [
+      new RasterTileLayer({
+        id: LAYER_ID,
+        pickable: true,
+        visible: layerVisibility[LAYER_ID],
+        data,
+        getFillColor: (d) => {
+          const value = d.properties.band_1;
+          return getFillColorLayer(value, rasterMetadata);
+        },
+        onViewportLoad(tiles) {
+          data?.then((res) => {
+            setTilesLoaded(true);
+            res.widgetSource.loadTiles(tiles);
+            setViewState({ ...viewState });
+          });
+        },
+        extensions: [new DataFilterExtension({ filterSize: 4 })],
+        ...getDataFilterExtensionProps(filters),
+      }),
+    ];
+  }, [data, viewState, filters, setViewState, layerVisibility, rasterMetadata]);
+
+  const rasterResolution = useMemo(
+    () => getRasterResolution(viewState.zoom),
+    [viewState.zoom],
+  );
+
+  /****************************************************************************
+   * Attribution
+   */
+
+  useEffect(() => {
+    data?.then((res) => {
+      const {
+        fraction_dropped_per_zoom,
+        minzoom,
+        maxzoom,
+        attribution,
+        raster_metadata,
+      } = res;
+      setFractionsDropped(fraction_dropped_per_zoom ?? []);
+      setMinZoom(minzoom ?? 0);
+      setMaxZoom(maxzoom ?? 20);
+      setAttributionHTML(attribution);
+      if (raster_metadata) {
+        setRasterMetadata(raster_metadata);
+      }
+    });
+  }, [data]);
+
+  function clamp(n: number, min: number, max: number) {
+    return Math.min(Math.max(n, min), max);
+  }
+
+  const droppingPercent = useMemo(() => {
+    if (!fractionsDropped.length) {
+      return 0;
+    }
+    const roundedZoom = Math.round(viewState.zoom);
+    const clampedZoom = clamp(roundedZoom, minZoom, maxZoom);
+    const percent = fractionsDropped[clampedZoom];
+    return percent;
+  }, [minZoom, maxZoom, fractionsDropped, viewState.zoom]);
+
+  const treeMapColors = useMemo(() => {
+    return Array.from({ length: 255 }, (_, i) => {
+      const rgb = getFillColorLayer(i, rasterMetadata);
+      return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rgb[3]})`;
+    });
+  }, [rasterMetadata]);
+
+  return (
+    <>
+      <aside className="sidebar">
+        <Card>
+          <p className="overline">✨👀 You're viewing</p>
+          <h1 className="title">U.S. Cropland data</h1>
+          <p className="body1">
+            Cheesecake caramels sesame snaps gummi bears oat cake chupa chups.
+            Chupa chups sugar plum tootsie roll powder candy canes. Biscuit cake
+            gummies cheesecake cupcake biscuit bear claw icing. Jelly topping
+            caramels gummi bears carrot cake pudding.
+          </p>
+          <p className="body1">
+            Bear claw marshmallow gingerbread muffin sweet roll bear claw ice
+            cream cake macaroon. Lollipop brownie ice cream pudding sweet gummi
+            bears jelly jelly-o tart.
+          </p>
+        </Card>
+        <span className="flex-space" />
+        {tilesLoaded && (
+          <>
+            {droppingPercent > 0 && droppingPercent <= 0.05 && (
+              <section className="caption" style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There may be some data (
+                {(droppingPercent * 100).toFixed(2)}%) missing at this zoom
+                level ({Math.round(viewState.zoom)}) because of the tileset
+                dropping features.
+              </section>
+            )}
+            {droppingPercent > 0.05 && (
+              <section className="caption" style={{ padding: '4px 8px' }}>
+                <strong>Warning:</strong> There is an important amount of data (
+                {(droppingPercent * 100).toFixed(2)}%) missing at this zoom
+                level ({Math.round(viewState.zoom)}) because of the tileset
+                dropping features. Widget calculations will not be accurate.
+              </section>
+            )}
+            <Card title="Total cells">
+              <FormulaWidget
+                data={data}
+                column={'*'}
+                operation={'count'}
+                viewState={viewState}
+                filters={filters}
+              />
+              <div className="small">
+                <code>Raster resolution: {rasterResolution}</code>.
+              </div>
+            </Card>
+            <Card title="Cropland categories">
+              <TreeWidget
+                data={data}
+                column="band_1"
+                operation="count"
+                viewState={viewState}
+                colors={treeMapColors}
+                filters={filters}
+                onFiltersChange={setFilters}
+              />
+            </Card>
+          </>
+        )}
+      </aside>
+      <main className="map">
+        <DeckGL
+          layers={layers}
+          views={MAP_VIEW}
+          initialViewState={viewState}
+          controller={{ dragRotate: false }}
+          onViewStateChange={({ viewState }) => setViewState(viewState)}
+        >
+          <Map mapStyle={BASEMAP.DARK_MATTER} />
+        </DeckGL>
+        <Layers
+          layers={layers}
+          layerVisibility={layerVisibility}
+          onLayerVisibilityChange={setLayerVisibility}
+        />
+        <aside
+          className="map-footer"
+          dangerouslySetInnerHTML={{ __html: attributionHTML }}
+        ></aside>
+      </main>
+    </>
+  );
+}

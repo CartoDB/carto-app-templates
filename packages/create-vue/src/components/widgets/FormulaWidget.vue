@@ -7,6 +7,7 @@ import { computedAsync } from '@vueuse/core';
 import { MapViewState } from '@deck.gl/core';
 import {
   AggregationType,
+  Filters,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
@@ -26,10 +27,13 @@ const props = withDefaults(
     operation?: Exclude<AggregationType, 'custom'>;
     /** Map view state. If specified, widget will be filtered to the view. */
     viewState: MapViewState;
+    /** Filter state. If specified, widget will be filtered. */
+    filters?: Filters;
   }>(),
   {
     column: '',
     operation: 'count',
+    filters: () => ({}),
   },
 );
 
@@ -41,6 +45,7 @@ const value = computedAsync(async (onCancel) => {
   const column = props.column;
   const operation = props.operation;
   const viewState = props.viewState;
+  const filters = props.filters;
   const abortController = new AbortController();
 
   onCancel(() => abortController.abort());
@@ -53,7 +58,8 @@ const value = computedAsync(async (onCancel) => {
         column,
         operation,
         spatialFilter: viewState && createSpatialFilter(viewState),
-        abortController,
+        signal: abortController.signal,
+        filters,
       }),
     )
     .then((response) => {
@@ -79,8 +85,8 @@ const value = computedAsync(async (onCancel) => {
   </template>
 
   <template v-else>
-    <data class="title" :value="value as number"
-      >{{ numberFormatter.format(value as number) }}
+    <data class="title" :value="value ?? 0"
+      >{{ numberFormatter.format(value ?? 0) }}
     </data>
   </template>
 </template>
