@@ -3763,21 +3763,21 @@ __metadata:
   linkType: hard
 
 "@luma.gl/core@npm:^9.1.5, @luma.gl/core@npm:~9.1.6":
-  version: 9.1.6
-  resolution: "@luma.gl/core@npm:9.1.6"
+  version: 9.1.9
+  resolution: "@luma.gl/core@npm:9.1.9"
   dependencies:
     "@math.gl/types": "npm:^4.1.0"
     "@probe.gl/env": "npm:^4.0.8"
     "@probe.gl/log": "npm:^4.0.8"
     "@probe.gl/stats": "npm:^4.0.8"
     "@types/offscreencanvas": "npm:^2019.6.4"
-  checksum: 10c0/6ab54625ad25adc94c5a43de7bf39e26bbcd3cc81c5ef9c577478aaacdb23eb2cd5ef73d9b36972b0fa2a7386e2b0b4db19cba7d0c6c2f41f56f3b433bb26a8c
+  checksum: 10c0/17169004455df1c8c01c4b16c1f4d0abf0ab0eca35a127bcba4378aebdc5b64cc51fcf90305140a3c512acaf9dee00db8566f76da95d5595151f27f3c99eedd0
   languageName: node
   linkType: hard
 
 "@luma.gl/engine@npm:^9.1.5, @luma.gl/engine@npm:~9.1.6":
-  version: 9.1.6
-  resolution: "@luma.gl/engine@npm:9.1.6"
+  version: 9.1.9
+  resolution: "@luma.gl/engine@npm:9.1.9"
   dependencies:
     "@math.gl/core": "npm:^4.1.0"
     "@math.gl/types": "npm:^4.1.0"
@@ -3786,7 +3786,7 @@ __metadata:
   peerDependencies:
     "@luma.gl/core": ^9.1.0
     "@luma.gl/shadertools": ^9.1.0
-  checksum: 10c0/c37534c3679c1070378cb2162820ca69bcaee1a615aff316e254c88b27c1e19f236dcd2e8ab7af46a174e97310e528aa1785b5a3a5140288f0d14a0edef58164
+  checksum: 10c0/2d661818721996abddcb9dc9dc28c7f6da33c4c99e6b1084a912412a2b4dd49f2cfbde832fb874ea3ab90c247c5d1168a6f249b46461a12443c850d17f386000
   languageName: node
   linkType: hard
 
@@ -3806,15 +3806,15 @@ __metadata:
   linkType: hard
 
 "@luma.gl/shadertools@npm:^9.1.5, @luma.gl/shadertools@npm:~9.1.6":
-  version: 9.1.6
-  resolution: "@luma.gl/shadertools@npm:9.1.6"
+  version: 9.1.9
+  resolution: "@luma.gl/shadertools@npm:9.1.9"
   dependencies:
     "@math.gl/core": "npm:^4.1.0"
     "@math.gl/types": "npm:^4.1.0"
     wgsl_reflect: "npm:^1.2.0"
   peerDependencies:
     "@luma.gl/core": ^9.1.0
-  checksum: 10c0/2eac3dca8547c60ac2db7258cf59c8ea52c5ebd029bef7463222265fca6537ebfd5d3f17aa21e562056ee738fd7e2349f4838f027fdb165bcb05650ce232e9f0
+  checksum: 10c0/84b844cfb8a1a151bcc3260fb79ee8e69de585a9aa1a17e1e5bf7799058f83e4e44f8340fcbef72f3040230c03a119f2e46dbf87c3fa6fe75a69fb7d8f39a839
   languageName: node
   linkType: hard
 
