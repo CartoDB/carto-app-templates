@@ -16,7 +16,14 @@ export function toHexString(color: Color): string {
     Math.round(color[0]) * 65536 +
     Math.round(color[1]) * 256 +
     Math.round(color[2]);
-  return '#' + ('000000' + hex.toString(16)).slice(-6);
+
+  let a = Math.round(color[3] || 255);
+  if (a > 0 && a <= 1) {
+    a = Math.round(a * 255);
+  }
+
+  const alpha = a.toString(16).padStart(2, '0');
+  return '#' + ('000000' + hex.toString(16)).slice(-6) + alpha;
 }
 
 /**

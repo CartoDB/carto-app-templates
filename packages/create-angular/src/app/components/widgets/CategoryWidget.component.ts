@@ -129,6 +129,7 @@ export class CategoryWidgetComponent {
       const column = this.column();
       const operation = this.operation() || 'count';
       const viewState = this.viewState();
+      const filters = this.filters();
       const abortController = new AbortController();
 
       onCleanup(() => abortController.abort());
@@ -141,8 +142,9 @@ export class CategoryWidgetComponent {
             column: column,
             operation: operation,
             spatialFilter: viewState && createSpatialFilter(viewState),
-            abortController,
+            signal: abortController.signal,
             filterOwner: this.owner,
+            filters,
           }),
         )
         .then((response) => {

@@ -1,6 +1,7 @@
 import { MapViewState } from '@deck.gl/core';
 import {
   AggregationType,
+  Filter,
   WidgetSource,
   WidgetSourceProps,
 } from '@carto/api-client';
@@ -20,6 +21,8 @@ export interface FormulaWidgetProps {
   operation?: Exclude<AggregationType, 'custom'>;
   /** Map view state. If specified, widget will be filtered to the view. */
   viewState?: MapViewState;
+  /** Filter state. If specified, widget will be filtered. */
+  filters?: Record<string, Filter>;
 }
 
 /**
@@ -30,7 +33,9 @@ export function FormulaWidget({
   column,
   operation,
   viewState,
+  filters,
 }: FormulaWidgetProps) {
+  const [owner] = useState<string>(crypto.randomUUID());
   const [status, setStatus] = useState<WidgetStatus>('loading');
   const [value, setValue] = useState<number>(-1);
 
@@ -45,11 +50,13 @@ export function FormulaWidget({
           column,
           operation,
           spatialFilter: viewState && createSpatialFilter(viewState),
-          abortController,
+          signal: abortController.signal,
+          filterOwner: owner,
+          filters,
         }),
       )
       .then((response) => {
-        setValue(response.value as number);
+        setValue(response.value ?? 0);
         setStatus('complete');
       })
       .catch(() => {
@@ -61,7 +68,7 @@ export function FormulaWidget({
     setStatus('loading');
 
     return () => abortController.abort();
-  }, [data, column, operation, viewState]);
+  }, [data, filters, owner, column, operation, viewState]);
 
   if (status === 'loading') {
     return <span className="title">...</span>;
