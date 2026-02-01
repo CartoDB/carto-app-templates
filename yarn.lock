@@ -2025,9 +2025,9 @@ __metadata:
     "@deck.gl/layers": "npm:~9.1.8"
     "@deck.gl/mesh-layers": "npm:~9.1.8"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:~9.1.6"
-    "@luma.gl/engine": "npm:~9.1.6"
-    "@luma.gl/shadertools": "npm:~9.1.6"
+    "@luma.gl/core": "npm:~9.2.6"
+    "@luma.gl/engine": "npm:~9.2.6"
+    "@luma.gl/shadertools": "npm:~9.2.6"
     echarts: "npm:^5.6.0"
     maplibre-gl: "npm:^4.7.1"
     meow: "npm:^13.2.0"
@@ -2072,9 +2072,9 @@ __metadata:
     "@deck.gl/react": "npm:~9.1.8"
     "@deck.gl/widgets": "npm:~9.1.8"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:~9.1.6"
-    "@luma.gl/engine": "npm:~9.1.6"
-    "@luma.gl/shadertools": "npm:~9.1.6"
+    "@luma.gl/core": "npm:~9.2.6"
+    "@luma.gl/engine": "npm:~9.2.6"
+    "@luma.gl/shadertools": "npm:~9.2.6"
     "@types/react": "npm:^18.3.20"
     "@types/react-dom": "npm:^18.3.5"
     "@vitejs/plugin-basic-ssl": "npm:^1.2.0"
@@ -2109,9 +2109,9 @@ __metadata:
     "@deck.gl/layers": "npm:~9.1.8"
     "@deck.gl/mesh-layers": "npm:~9.1.8"
     "@loaders.gl/core": "npm:^4.3.3"
-    "@luma.gl/core": "npm:~9.1.6"
-    "@luma.gl/engine": "npm:~9.1.6"
-    "@luma.gl/shadertools": "npm:~9.1.6"
+    "@luma.gl/core": "npm:~9.2.6"
+    "@luma.gl/engine": "npm:~9.2.6"
+    "@luma.gl/shadertools": "npm:~9.2.6"
     "@vitejs/plugin-basic-ssl": "npm:^1.2.0"
     "@vitejs/plugin-vue": "npm:^5.2.3"
     "@vueuse/core": "npm:^12.8.2"
@@ -3758,7 +3758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/core@npm:^9.1.5, @luma.gl/core@npm:~9.1.6":
+"@luma.gl/core@npm:^9.1.5":
   version: 9.1.6
   resolution: "@luma.gl/core@npm:9.1.6"
   dependencies:
@@ -3771,7 +3771,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/engine@npm:^9.1.5, @luma.gl/engine@npm:~9.1.6":
+"@luma.gl/core@npm:~9.2.6":
+  version: 9.2.6
+  resolution: "@luma.gl/core@npm:9.2.6"
+  dependencies:
+    "@math.gl/types": "npm:^4.1.0"
+    "@probe.gl/env": "npm:^4.0.8"
+    "@probe.gl/log": "npm:^4.0.8"
+    "@probe.gl/stats": "npm:^4.0.8"
+    "@types/offscreencanvas": "npm:^2019.6.4"
+  checksum: 10c0/999a952de7e85abae144598c3d180946a64ebcac0850ac78bbd74f14b31e38dc4477b38d238bd27f0d07d6fa15d1e88bc63fc40f8a9264d1745a63a1807517d4
+  languageName: node
+  linkType: hard
+
+"@luma.gl/engine@npm:^9.1.5":
   version: 9.1.6
   resolution: "@luma.gl/engine@npm:9.1.6"
   dependencies:
@@ -3783,6 +3796,21 @@ __metadata:
     "@luma.gl/core": ^9.1.0
     "@luma.gl/shadertools": ^9.1.0
   checksum: 10c0/c37534c3679c1070378cb2162820ca69bcaee1a615aff316e254c88b27c1e19f236dcd2e8ab7af46a174e97310e528aa1785b5a3a5140288f0d14a0edef58164
+  languageName: node
+  linkType: hard
+
+"@luma.gl/engine@npm:~9.2.6":
+  version: 9.2.6
+  resolution: "@luma.gl/engine@npm:9.2.6"
+  dependencies:
+    "@math.gl/core": "npm:^4.1.0"
+    "@math.gl/types": "npm:^4.1.0"
+    "@probe.gl/log": "npm:^4.0.8"
+    "@probe.gl/stats": "npm:^4.0.8"
+  peerDependencies:
+    "@luma.gl/core": ~9.2.0
+    "@luma.gl/shadertools": ~9.2.0
+  checksum: 10c0/b1b538fc1b1573b786387954a58dc55c9c97c8e1374e6035a40fc782c45548c7f4c343d4d0de9d50bb2e4f9c93e563f728153682c15c4ba0d662cd30152ad2ad
   languageName: node
   linkType: hard
 
@@ -3801,7 +3829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/shadertools@npm:^9.1.5, @luma.gl/shadertools@npm:~9.1.6":
+"@luma.gl/shadertools@npm:^9.1.5":
   version: 9.1.6
   resolution: "@luma.gl/shadertools@npm:9.1.6"
   dependencies:
@@ -3811,6 +3839,19 @@ __metadata:
   peerDependencies:
     "@luma.gl/core": ^9.1.0
   checksum: 10c0/2eac3dca8547c60ac2db7258cf59c8ea52c5ebd029bef7463222265fca6537ebfd5d3f17aa21e562056ee738fd7e2349f4838f027fdb165bcb05650ce232e9f0
+  languageName: node
+  linkType: hard
+
+"@luma.gl/shadertools@npm:~9.2.6":
+  version: 9.2.6
+  resolution: "@luma.gl/shadertools@npm:9.2.6"
+  dependencies:
+    "@math.gl/core": "npm:^4.1.0"
+    "@math.gl/types": "npm:^4.1.0"
+    wgsl_reflect: "npm:^1.2.0"
+  peerDependencies:
+    "@luma.gl/core": ~9.2.0
+  checksum: 10c0/60b0d7c62a7a6198d1ddfb611426a271cd31491f22217f37cc46bb5091f88b4bf0bca7f28b093b92c7d1ddbfb6aaa5646ddfae2a50d17e23784e4b0aadefe89c
   languageName: node
   linkType: hard
 
