@@ -30,7 +30,7 @@
     "@luma.gl/engine": "~9.1.6",
     "@luma.gl/shadertools": "~9.1.6",
     "@vueuse/core": "^12.8.2",
-    "echarts": "^5.6.0",
+    "echarts": "^6.1.0",
     "maplibre-gl": "^4.7.1",
     "meow": "^13.2.0",
     "vue": "^3.5.13",
