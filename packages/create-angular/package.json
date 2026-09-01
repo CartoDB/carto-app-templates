@@ -15,14 +15,14 @@
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
-    "@angular/animations": "^18.2.13",
-    "@angular/common": "^18.2.13",
-    "@angular/compiler": "^18.2.13",
-    "@angular/core": "^18.2.13",
-    "@angular/forms": "^18.2.13",
-    "@angular/platform-browser": "^18.2.13",
-    "@angular/platform-browser-dynamic": "^18.2.13",
-    "@angular/router": "^18.2.13",
+    "@angular/animations": "^22.1.4",
+    "@angular/common": "^22.1.4",
+    "@angular/compiler": "^22.1.4",
+    "@angular/core": "^22.1.4",
+    "@angular/forms": "^22.1.4",
+    "@angular/platform-browser": "^22.1.4",
+    "@angular/platform-browser-dynamic": "^22.1.4",
+    "@angular/router": "^22.1.4",
     "@auth0/auth0-angular": "^2.2.3",
     "@carto/api-client": "0.5.0",
     "@carto/create-common": "^0.1.5-alpha.0",
@@ -43,7 +43,7 @@
     "meow": "^13.2.0",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.16.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.16",
